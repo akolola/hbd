@@ -21,7 +21,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
-import com.example.android.trackmysleepquality.database.Contact
+import com.example.android.trackmysleepquality.database.ContactPerson
 
 /**
  * ViewModel for SleepQualityFragment.
@@ -44,7 +44,7 @@ class SleepDetailViewModel(
      */
     private val viewModelJob = Job()
     */
-    private val night = MediatorLiveData<Contact>()
+    private val night = MediatorLiveData<ContactPerson>()
 
     fun getNight() = night
 

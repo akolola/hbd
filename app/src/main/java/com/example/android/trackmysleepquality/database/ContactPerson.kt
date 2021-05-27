@@ -27,7 +27,7 @@ import java.time.ZoneId
 import java.util.*
 
 @Entity(tableName = "contact_table")
-data class Contact(
+data class ContactPerson(
         @PrimaryKey(autoGenerate = true)
         var nightId: Long = 0L,
 

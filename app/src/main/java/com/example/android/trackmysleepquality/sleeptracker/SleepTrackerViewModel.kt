@@ -22,7 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
-import com.example.android.trackmysleepquality.database.Contact
+import com.example.android.trackmysleepquality.database.ContactPerson
 import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
@@ -53,7 +53,7 @@ class SleepTrackerViewModel(
      */
 
 
-    private var tonight = MutableLiveData<Contact?>()
+    private var tonight = MutableLiveData<ContactPerson?>()
 
     val nights = database.getAllNights()
 
@@ -104,7 +104,7 @@ class SleepTrackerViewModel(
      * This is private because we don't want to expose setting this value to the Fragment.
      */
 
-    private val _navigateToSleepQuality = MutableLiveData<Contact>()
+    private val _navigateToSleepQuality = MutableLiveData<ContactPerson>()
     /**
      * Call this immediately after calling `show()` on a toast.
      *
@@ -119,7 +119,7 @@ class SleepTrackerViewModel(
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
      */
-    val navigateToSleepQuality: LiveData<Contact>
+    val navigateToSleepQuality: LiveData<ContactPerson>
         get() = _navigateToSleepQuality
 
     /**
@@ -161,7 +161,7 @@ class SleepTrackerViewModel(
      *  If the start time and end time are not the same, then we do not have an unfinished
      *  recording.
      */
-    private suspend fun getTonightFromDatabase(): Contact? {
+    private suspend fun getTonightFromDatabase(): ContactPerson? {
         //return withContext(Dispatchers.IO) {
             var night = database.getTonight()
             if (night?.endTimeMilli != night?.startTimeMilli) {
@@ -177,13 +177,13 @@ class SleepTrackerViewModel(
         }
     }
 
-    private suspend fun update(night: Contact) {
+    private suspend fun update(night: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.update(night)
         }
     }
 
-    private suspend fun insert(night: Contact) {
+    private suspend fun insert(night: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.insert(night)
         }
@@ -196,7 +196,7 @@ class SleepTrackerViewModel(
         viewModelScope.launch {
             // Create a new night, which captures the current time,
             // and insert it into the database.
-            val newNight = Contact()
+            val newNight = ContactPerson()
 
             insert(newNight)
 

@@ -29,7 +29,7 @@ import androidx.room.Update
 interface ContactDatabaseDao {
 
     @Insert
-    suspend fun insert(night: Contact)
+    suspend fun insert(night: ContactPerson)
 
     /**
      * When updating a row with a value already set in a column,
@@ -38,7 +38,7 @@ interface ContactDatabaseDao {
      * @param night new value to write
      */
     @Update
-    suspend fun update(night: Contact)
+    suspend fun update(night: ContactPerson)
 
     /**
      * Selects and returns the row that matches the supplied start time, which is our key.
@@ -46,7 +46,7 @@ interface ContactDatabaseDao {
      * @param key startTimeMilli to match
      */
     @Query("SELECT * from contact_table WHERE nightId = :key")
-    suspend fun get(key: Long): Contact?
+    suspend fun get(key: Long): ContactPerson?
 
     /**
      * Deletes all values from the table.
@@ -62,18 +62,18 @@ interface ContactDatabaseDao {
      * sorted by start time in descending order.
      */
     @Query("SELECT * FROM contact_table ORDER BY nightId DESC")
-    fun getAllNights(): LiveData<List<Contact>>
+    fun getAllNights(): LiveData<List<ContactPerson>>
 
     /**
      * Selects and returns the latest night.
      */
     @Query("SELECT * FROM contact_table ORDER BY nightId DESC LIMIT 1")
-    suspend fun getTonight(): Contact?
+    suspend fun getTonight(): ContactPerson?
 
     /**
      * Selects and returns the night with given nightId.
      */
     @Query("SELECT * from contact_table WHERE nightId = :key")
-    fun getNightWithId(key: Long): LiveData<Contact>
+    fun getNightWithId(key: Long): LiveData<ContactPerson>
 }
 

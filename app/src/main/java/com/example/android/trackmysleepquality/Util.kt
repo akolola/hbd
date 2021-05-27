@@ -24,7 +24,7 @@ import android.text.Spanned
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.trackmysleepquality.database.Contact
+import com.example.android.trackmysleepquality.database.ContactPerson
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -113,7 +113,7 @@ fun convertLongToDateString(systemTime: Long): String {
  *           See: https://developer.android.com/reference/android/text/Spanned
  */
 
-fun formatNights(nights: List<Contact>, resources: Resources): Spanned {
+fun formatNights(nights: List<ContactPerson>, resources: Resources): Spanned {
     val sb = StringBuilder()
     sb.apply {
         append(resources.getString(R.string.title))
