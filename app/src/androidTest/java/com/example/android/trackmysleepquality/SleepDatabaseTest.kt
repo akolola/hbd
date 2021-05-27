@@ -20,7 +20,7 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.android.trackmysleepquality.database.SleepDatabase
-import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.Contact
 import org.junit.Assert.assertEquals
 import org.junit.After
@@ -38,7 +38,7 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class SleepDatabaseTest {
 
-    private lateinit var sleepDao: SleepDatabaseDao
+    private lateinit var contactDao: ContactDatabaseDao
     private lateinit var db: SleepDatabase
 
     @Before
@@ -50,7 +50,7 @@ class SleepDatabaseTest {
                 // Allowing main thread queries, just for testing.
                 .allowMainThreadQueries()
                 .build()
-        sleepDao = db.sleepDatabaseDao
+        contactDao = db.contactDatabaseDao
     }
 
     @After
@@ -63,8 +63,8 @@ class SleepDatabaseTest {
     @Throws(Exception::class)
     fun insertAndGetNight() {
         val night = Contact()
-        sleepDao.insert(night)
-        val tonight = sleepDao.getTonight()
+        contactDao.insert(night)
+        val tonight = contactDao.getTonight()
         assertEquals(tonight?.sleepQuality, -1)
     }
 }

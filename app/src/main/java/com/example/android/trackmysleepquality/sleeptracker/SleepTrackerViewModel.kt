@@ -21,7 +21,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.Contact
 import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.*
@@ -31,8 +31,8 @@ import androidx.lifecycle.viewModelScope
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        val database: SleepDatabaseDao,
-        application: Application) : AndroidViewModel(application) {
+    val database: ContactDatabaseDao,
+    application: Application) : AndroidViewModel(application) {
 
     /**
      * viewModelJob allows us to cancel all coroutines started by this ViewModel.

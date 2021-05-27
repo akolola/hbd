@@ -19,7 +19,7 @@ package com.example.android.trackmysleepquality.sleepquality
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 
@@ -30,7 +30,7 @@ import kotlinx.coroutines.*
  */
 class SleepQualityViewModel(
         private val sleepNightKey: Long = 0L,
-        val database: SleepDatabaseDao) : ViewModel() {
+        val database: ContactDatabaseDao) : ViewModel() {
 
     /*
     /** Coroutine setup variables */

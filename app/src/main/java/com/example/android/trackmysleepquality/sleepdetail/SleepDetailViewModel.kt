@@ -20,7 +20,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.android.trackmysleepquality.database.SleepDatabaseDao
+import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.Contact
 
 /**
@@ -30,7 +30,7 @@ import com.example.android.trackmysleepquality.database.Contact
  */
 class SleepDetailViewModel(
         private val sleepNightKey: Long = 0L,
-        dataSource: SleepDatabaseDao) : ViewModel() {
+        dataSource: ContactDatabaseDao) : ViewModel() {
 
     /**
      * Hold a reference to SleepDatabase via its SleepDatabaseDao.

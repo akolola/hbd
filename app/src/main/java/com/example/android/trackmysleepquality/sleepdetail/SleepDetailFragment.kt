@@ -52,7 +52,7 @@ class SleepDetailFragment : Fragment() {
         val arguments = SleepDetailFragmentArgs.fromBundle(arguments!!)
 
         // Create an instance of the ViewModel Factory.
-        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
+        val dataSource = SleepDatabase.getInstance(application).contactDatabaseDao
         val viewModelFactory = SleepDetailViewModelFactory(arguments.sleepNightKey, dataSource)
 
         // Get a reference to the ViewModel associated with this fragment.
