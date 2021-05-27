@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.database.Contact
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) : ListAdapter<Dat
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun addHeaderAndSubmitList(list: List<SleepNight>?) {
+    fun addHeaderAndSubmitList(list: List<Contact>?) {
         adapterScope.launch {
             val items = when (list) {
                 null -> listOf(DataItem.Header)
@@ -54,7 +54,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) : ListAdapter<Dat
         when (holder) {
             is ViewHolder -> {
                 val nightItem = getItem(position) as DataItem.SleepNightItem
-                holder.bind(clickListener, nightItem.sleepNight)
+                holder.bind(clickListener, nightItem.contact)
             }
         }
     }
@@ -87,7 +87,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) : ListAdapter<Dat
     class ViewHolder private constructor(val binding: ListItemSleepNightBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(clickListener: SleepNightListener, item: SleepNight) {
+        fun bind(clickListener: SleepNightListener, item: Contact) {
             binding.sleep = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -121,12 +121,12 @@ class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
 }
 
 class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
-    fun onClick(night: SleepNight) = clickListener(night.nightId)
+    fun onClick(night: Contact) = clickListener(night.nightId)
 }
 
 sealed class DataItem {
-    data class SleepNightItem(val sleepNight: SleepNight): DataItem() {
-        override val id = sleepNight.nightId
+    data class SleepNightItem(val contact: Contact): DataItem() {
+        override val id = contact.nightId
     }
 
     object Header: DataItem() {

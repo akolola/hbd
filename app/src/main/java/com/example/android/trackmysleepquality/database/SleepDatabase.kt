@@ -28,7 +28,7 @@ import androidx.room.RoomDatabase
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities = [SleepNight::class], version = 1, exportSchema = false)
+@Database(entities = [Contact::class], version = 1, exportSchema = false)
 abstract class SleepDatabase : RoomDatabase() {
 
     /**

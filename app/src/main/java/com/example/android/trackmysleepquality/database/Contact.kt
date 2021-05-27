@@ -19,9 +19,15 @@ package com.example.android.trackmysleepquality.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import java.sql.Date
+import java.time.Instant
+import java.time.Instant.now
+import java.time.ZoneId
+import java.util.*
 
 @Entity(tableName = "contact_table")
-data class SleepNight(
+data class Contact(
         @PrimaryKey(autoGenerate = true)
         var nightId: Long = 0L,
 
@@ -37,5 +43,10 @@ data class SleepNight(
         //-------------------------------------<
 
         @ColumnInfo(name = "name")
-        var name: String = "Unnamed"
+        var name: String = "Unnamed",
+
+        @ColumnInfo(name = "birthdate")
+        var birthdate: String = ""
+
+
 )

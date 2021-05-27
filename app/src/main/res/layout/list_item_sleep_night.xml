@@ -8,7 +8,7 @@
 
         <variable
             name="sleep"
-            type="com.example.android.trackmysleepquality.database.SleepNight" />
+            type="com.example.android.trackmysleepquality.database.Contact" />
 
         <variable
             name="clickListener"
