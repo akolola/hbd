@@ -25,14 +25,14 @@
     <data>
         <variable
             name="sleepTrackerViewModel"
-            type="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerViewModel" />
+            type="com.example.android.trackmysleepquality.contacttracker.ContactTrackerViewModel" />
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".sleeptracker.SleepTrackerFragment">
+        tools:context=".contacttracker.SleepTrackerFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/sleep_list"

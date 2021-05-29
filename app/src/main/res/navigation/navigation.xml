@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/sleep_tracker_fragment"
-        android:name="com.example.android.trackmysleepquality.sleeptracker.SleepTrackerFragment"
+        android:name="com.example.android.trackmysleepquality.contacttracker.SleepTrackerFragment"
         android:label="@string/sleep_tracker_fragment"
         tools:layout="@layout/fragment_sleep_tracker">
         <action

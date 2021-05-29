@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleeptracker
+package com.example.android.trackmysleepquality.contacttracker
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -28,9 +28,9 @@ import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 
 /**
- * ViewModel for SleepTrackerFragment.
+ * ViewModel for ContactTrackerViewModel.
  */
-class SleepTrackerViewModel(
+class ContactTrackerViewModel(
     val database: ContactDatabaseDao,
     application: Application) : AndroidViewModel(application) {
 

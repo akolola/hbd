@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleeptracker
+package com.example.android.trackmysleepquality.contacttracker
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -65,7 +65,7 @@ class SleepTrackerFragment : Fragment() {
 
         val sleepTrackerViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(SleepTrackerViewModel::class.java)
+                        this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
 
 
