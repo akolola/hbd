@@ -64,7 +64,7 @@ class ContactPersonDatabaseTest {
     fun insertAndGetNight() {
         val night = ContactPerson()
         contactDao.insert(night)
-        val tonight = contactDao.getTonight()
+        val tonight = contactDao.getPerson()
         assertEquals(tonight?.sleepQuality, -1)
     }
 }

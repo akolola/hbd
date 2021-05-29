@@ -34,57 +34,48 @@ class SleepTrackerViewModel(
     val database: ContactDatabaseDao,
     application: Application) : AndroidViewModel(application) {
 
-    /**
-     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
 
-    private var viewModelJob = Job()
+    //---------------------------  <-Person- DB  ---------------------------
+    private var person = MutableLiveData<ContactPerson?>()
 
-    /**
-     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
-     *
-     * Because we pass it [viewModelJob], any coroutine started in this uiScope can be cancelled
-     * by calling `viewModelJob.cancel()`
-     *
-     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
-     * the main thread on Android. This is a sensible default because most coroutines started by
-     * a [ViewModel] update the UI after performing some processing.
-     */
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-     */
-
-
-    private var tonight = MutableLiveData<ContactPerson?>()
-
-    val nights = database.getAllNights()
+    val persons = database.getAllPersons()
 
     /**
-     * Converted nights to Spanned for displaying.
+     * Converted persons to Spanned for displaying.
      */
-    val nightsString = Transformations.map(nights) { nights ->
-        formatNights(nights, application.resources)
+    val personsString = Transformations.map(persons) { persons ->
+        formatNights(persons, application.resources)
     }
 
+
+
+    //--------------------------- Buttons visibility---------------------------
     /**
-     * If tonight has not been set, then the START button should be visible.
+     * If person has not been set, then the START button should be visible.
      */
-    val startButtonVisible = Transformations.map(tonight) {
+    val startButtonVisible = Transformations.map(person) {
         null == it
     }
 
     /**
-     * If tonight has been set, then the STOP button should be visible.
+     * If person has been set, then the STOP button should be visible.
      */
-    val stopButtonVisible = Transformations.map(tonight) {
+    val stopButtonVisible = Transformations.map(person) {
         null != it
     }
 
     /**
-     * If there are any nights in the database, show the CLEAR button.
+     * If there are any persons in the database, show the CLEAR button.
      */
-    val clearButtonVisible = Transformations.map(nights) {
+    val clearButtonVisible = Transformations.map(persons) {
         it?.isNotEmpty()
     }
 
+
+
+
+
+    //--------------------------- Snackbar ---------------------------
     /**
      * Request a toast by setting this value to true.
      *
@@ -98,6 +89,10 @@ class SleepTrackerViewModel(
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
 
+
+
+
+    //--------------------------- Navigation ---------------------------
     /**
      * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
      *
@@ -144,13 +139,16 @@ class SleepTrackerViewModel(
         _navigateToSleepDataQuality.value = null
     }
 
+
+
+    //--------------------------- DB ---------------------------
     init {
-        initializeTonight()
+        initializePerson()
     }
 
-    private fun initializeTonight() {
+    private fun initializePerson() {
         viewModelScope.launch {
-            tonight.value = getTonightFromDatabase()
+            person.value = getPersonFromDatabase()
         }
     }
 
@@ -161,13 +159,13 @@ class SleepTrackerViewModel(
      *  If the start time and end time are not the same, then we do not have an unfinished
      *  recording.
      */
-    private suspend fun getTonightFromDatabase(): ContactPerson? {
+    private suspend fun getPersonFromDatabase(): ContactPerson? {
         //return withContext(Dispatchers.IO) {
-            var night = database.getTonight()
-            if (night?.endTimeMilli != night?.startTimeMilli) {
-                night = null
+            var person = database.getPerson()
+            if (person?.endTimeMilli != person?.startTimeMilli) {
+                person = null
             }
-            return night
+            return person
         //}
     }
 
@@ -177,30 +175,32 @@ class SleepTrackerViewModel(
         }
     }
 
-    private suspend fun update(night: ContactPerson) {
+    private suspend fun update(person: ContactPerson) {
         withContext(Dispatchers.IO) {
-            database.update(night)
+            database.update(person)
         }
     }
 
-    private suspend fun insert(night: ContactPerson) {
+    private suspend fun insert(person: ContactPerson) {
         withContext(Dispatchers.IO) {
-            database.insert(night)
+            database.insert(person)
         }
     }
 
+
+    //--------------------------- Buttons executions ---------------------------
     /**
      * Executes when the START button is clicked.
      */
     fun onStartTracking() {
         viewModelScope.launch {
-            // Create a new night, which captures the current time,
+            // Create a new person, which captures the current time,
             // and insert it into the database.
-            val newNight = ContactPerson()
+            val newPerson = ContactPerson()
 
-            insert(newNight)
+            insert(newPerson)
 
-            tonight.value = getTonightFromDatabase()
+            person.value = getPersonFromDatabase()
         }
     }
 
@@ -213,7 +213,7 @@ class SleepTrackerViewModel(
             // several nested ones this statement returns from.
             // In this case, we are specifying to return from launch(),
             // not the lambda.
-            val oldNight = tonight.value ?: return@launch
+            val oldNight = person.value ?: return@launch
 
             // Update the night in the database to add the end time.
             oldNight.endTimeMilli = System.currentTimeMillis()
@@ -233,23 +233,12 @@ class SleepTrackerViewModel(
             // Clear the database table.
             clear()
 
-            // And clear tonight since it's no longer in the database
-            tonight.value = null
+            // And clear person since it's no longer in the database
+            person.value = null
         }
 
         // Show a snackbar message, because it's friendly.
         _showSnackbarEvent.value = true
     }
 
-    /**
-     * Called when the ViewModel is dismantled.
-     * At this point, we want to cancel all coroutines;
-     * otherwise we end up with processes that have nowhere to return to
-     * using memory and resources.
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-     */
 }

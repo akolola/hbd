@@ -62,13 +62,13 @@ interface ContactDatabaseDao {
      * sorted by start time in descending order.
      */
     @Query("SELECT * FROM contact_table ORDER BY nightId DESC")
-    fun getAllNights(): LiveData<List<ContactPerson>>
+    fun getAllPersons(): LiveData<List<ContactPerson>>
 
     /**
      * Selects and returns the latest night.
      */
     @Query("SELECT * FROM contact_table ORDER BY nightId DESC LIMIT 1")
-    suspend fun getTonight(): ContactPerson?
+    suspend fun getPerson(): ContactPerson?
 
     /**
      * Selects and returns the night with given nightId.
