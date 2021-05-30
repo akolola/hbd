@@ -91,23 +91,23 @@ class ContactTrackerViewModel(
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Visibility
     /** If person has not been set, then the START button should be visible. */
-    val startButtonVisible = Transformations.map(person) {
+    val createButtonVisible = Transformations.map(person) {
         null == it
     }
 
-    /** If person has been set, then the STOP button should be visible.  */
+    /** If person has been set, then the STOP button should be visible. */
     val stopButtonVisible = Transformations.map(person) {
         null != it
     }
 
-    /** If there are any persons in the database, show the CLEAR button.  */
+    /** If there are any persons in the database, show the CLEAR button. */
     val clearButtonVisible = Transformations.map(persons) {
         it?.isNotEmpty()
     }
 
     //-------------------- Execution
-    /** Executes when the START button is clicked.     */
-    fun onStartTracking() {
+    /** Executes when the CREATE button is clicked. */
+    fun onCreateTracking() {
         viewModelScope.launch {
             val newPerson = ContactPerson()
             insert(newPerson)
@@ -130,37 +130,19 @@ class ContactTrackerViewModel(
         }
     }
 
-    /** Executes when the STOP button is clicked.     */
-    fun onStopTracking() {
-        viewModelScope.launch {
-            // In Kotlin, the return@label syntax is used for specifying which function among
-            // several nested ones this statement returns from.
-            // In this case, we are specifying to return from launch(), not the lambda.
-            val oldPerson = person.value ?: return@launch
-
-            // Update the person in the database to add the end time.
-            oldPerson.endTimeMilli = System.currentTimeMillis()
-
-            update(oldPerson)
-
-            // Set state to navigate to the ContactCreatorFragment.
-            _navigateToContactCreator.value = oldPerson
-        }
-    }
-
-    /**  Executes when the CLEAR button is clicked.     */
+    /**  Executes when the CLEAR button is clicked. */
     fun onClear() {
         viewModelScope.launch {
             // Clear the database table.
             clear()
-
             // And clear person since it's no longer in the database
             person.value = null
         }
-
         // Show a snackbar message, because it's friendly.
         _showSnackbarEvent.value = true
     }
+
+    fun onStopTracking() {}
 
     //-------------------- Navigation
     //---------- => ContactCreator
