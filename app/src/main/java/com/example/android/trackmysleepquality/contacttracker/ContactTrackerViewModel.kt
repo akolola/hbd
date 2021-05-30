@@ -35,71 +35,134 @@ class ContactTrackerViewModel(
     application: Application) : AndroidViewModel(application) {
 
 
-    //---------------------------  <-Person- DB  ---------------------------
-    private var person = MutableLiveData<ContactPerson?>()
 
+
+    //--------------------------- LiveData: <-(o) Person - DB  -------------------------------------
+    //-------------------- LiveData preparation
+    //---------- <list> persons
     val persons = database.getAllPersons()
-
-    /**
-     * Converted persons to Spanned for displaying.
-     */
     val personsString = Transformations.map(persons) { persons ->
         formatPersons(persons, application.resources)
     }
 
+    //---------- (v) person
+    private var person = MutableLiveData<ContactPerson?>()
+    init {
+        initializePerson()
+    }
+    private fun initializePerson() {
+        viewModelScope.launch {
+            person.value = getPersonFromDatabase()
+        }
+    }
+
+    //-------------------- Query (m)s
+    //---------- (m) Get
+    private suspend fun getPersonFromDatabase(): ContactPerson? {
+        var person = database.getPerson()
+        if (person?.endTimeMilli != person?.startTimeMilli) {
+            person = null
+        }
+        return person
+    }
+
+    //---------- (m)s remaining
+    private suspend fun insert(person: ContactPerson) {
+        withContext(Dispatchers.IO) {
+            database.insert(person)
+        }
+    }
+
+    private suspend fun update(person: ContactPerson) {
+        withContext(Dispatchers.IO) {
+            database.update(person)
+        }
+    }
+
+    private suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            database.clear()
+        }
+    }
 
 
-    //--------------------------- Buttons visibility---------------------------
-    /**
-     * If person has not been set, then the START button should be visible.
-     */
+
+
+    //--------------------------- Buttons ----------------------------------------------------------
+    //-------------------- Visibility
+    /** If person has not been set, then the START button should be visible. */
     val startButtonVisible = Transformations.map(person) {
         null == it
     }
 
-    /**
-     * If person has been set, then the STOP button should be visible.
-     */
+    /** If person has been set, then the STOP button should be visible.  */
     val stopButtonVisible = Transformations.map(person) {
         null != it
     }
 
-    /**
-     * If there are any persons in the database, show the CLEAR button.
-     */
+    /** If there are any persons in the database, show the CLEAR button.  */
     val clearButtonVisible = Transformations.map(persons) {
         it?.isNotEmpty()
     }
 
+    //-------------------- Execution
+    /** Executes when the START button is clicked.     */
+    fun onStartTracking() {
+        viewModelScope.launch {
+            val newPerson = ContactPerson()
+            insert(newPerson)
 
+            person.value = getPersonFromDatabase()
 
+            // In Kotlin, the return@label syntax is used for specifying which function among
+            // several nested ones this statement returns from.
+            // In this case, we are specifying to return from launch(), not the lambda.
+            val oldPerson = person.value ?: return@launch
 
+            // Update the person in the database to add the end time.
+            oldPerson.endTimeMilli = System.currentTimeMillis()
 
-    //--------------------------- Snackbar ---------------------------
-    /**
-     * Request a toast by setting this value to true.
-     */
-    private var _showSnackbarEvent = MutableLiveData<Boolean>()
+            update(oldPerson)
 
-    /**
-     * If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.
-     */
-    val showSnackBarEvent: LiveData<Boolean>
-        get() = _showSnackbarEvent
+            // Set state to navigate to the ContactCreatorFragment.
+            _navigateToContactCreator.value = oldPerson
 
-    /**
-     * Call this immediately after calling `show()` on a toast.
-     *
-     * It will clear the toast request, so if the user rotates their phone it won't show a duplicate
-     * toast.
-     */
-    fun doneShowingSnackbar() {
-        _showSnackbarEvent.value = false
+        }
     }
 
+    /** Executes when the STOP button is clicked.     */
+    fun onStopTracking() {
+        viewModelScope.launch {
+            // In Kotlin, the return@label syntax is used for specifying which function among
+            // several nested ones this statement returns from.
+            // In this case, we are specifying to return from launch(), not the lambda.
+            val oldPerson = person.value ?: return@launch
 
+            // Update the person in the database to add the end time.
+            oldPerson.endTimeMilli = System.currentTimeMillis()
 
-    //--------------------------- Navigation ---------------------------
+            update(oldPerson)
+
+            // Set state to navigate to the ContactCreatorFragment.
+            _navigateToContactCreator.value = oldPerson
+        }
+    }
+
+    /**  Executes when the CLEAR button is clicked.     */
+    fun onClear() {
+        viewModelScope.launch {
+            // Clear the database table.
+            clear()
+
+            // And clear person since it's no longer in the database
+            person.value = null
+        }
+
+        // Show a snackbar message, because it's friendly.
+        _showSnackbarEvent.value = true
+    }
+
+    //-------------------- Navigation
     //---------- => ContactCreator
     /**
      * Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]
@@ -139,107 +202,27 @@ class ContactTrackerViewModel(
 
 
 
-    //--------------------------- <-Person- DB  ---------------------------
-    //---------- Get, std behavior
-    init {
-        initializePerson()
-    }
-
-    private fun initializePerson() {
-        viewModelScope.launch {
-            person.value = getPersonFromDatabase()
-        }
-    }
-
-    //---------- Get, emergency behavior
+    //--------------------------- Snackbar ---------------------------------------------------------
     /**
-     *  Handling the case of the stopped app or forgotten recording,
-     *  the start and end times will be the same.j
+     * Request a toast by setting this value to true.
+     */
+    private var _showSnackbarEvent = MutableLiveData<Boolean>()
+
+    /**
+     * If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.
+     */
+    val showSnackBarEvent: LiveData<Boolean>
+        get() = _showSnackbarEvent
+
+    /**
+     * Call this immediately after calling `show()` on a toast.
      *
-     *  If the start time and end time are not the same, then we do not have an unfinished
-     *  recording.
+     * It will clear the toast request, so if the user rotates their phone it won't show a duplicate
+     * toast.
      */
-    private suspend fun getPersonFromDatabase(): ContactPerson? {
-        //return withContext(Dispatchers.IO) {
-            var person = database.getPerson()
-            if (person?.endTimeMilli != person?.startTimeMilli) {
-                person = null
-            }
-            return person
-        //}
+    fun doneShowingSnackbar() {
+        _showSnackbarEvent.value = false
     }
 
-    //---------- Remaining queries
-    private suspend fun clear() {
-        withContext(Dispatchers.IO) {
-            database.clear()
-        }
-    }
-
-    private suspend fun update(person: ContactPerson) {
-        withContext(Dispatchers.IO) {
-            database.update(person)
-        }
-    }
-
-    private suspend fun insert(person: ContactPerson) {
-        withContext(Dispatchers.IO) {
-            database.insert(person)
-        }
-    }
-
-
-    //--------------------------- Buttons executions ---------------------------
-    /**
-     * Executes when the START button is clicked.
-     */
-    fun onStartTracking() {
-        viewModelScope.launch {
-            // Create a new person, which captures the current time,
-            // and insert it into the database.
-            val newPerson = ContactPerson()
-
-            insert(newPerson)
-
-            person.value = getPersonFromDatabase()
-        }
-    }
-
-    /**
-     * Executes when the STOP button is clicked.
-     */
-    fun onStopTracking() {
-        viewModelScope.launch {
-            // In Kotlin, the return@label syntax is used for specifying which function among
-            // several nested ones this statement returns from.
-            // In this case, we are specifying to return from launch(),
-            // not the lambda.
-            val oldPerson = person.value ?: return@launch
-
-            // Update the person in the database to add the end time.
-            oldPerson.endTimeMilli = System.currentTimeMillis()
-
-            update(oldPerson)
-
-            // Set state to navigate to the SleepQualityFragment.
-            _navigateToContactCreator.value = oldPerson
-        }
-    }
-
-    /**
-     * Executes when the CLEAR button is clicked.
-     */
-    fun onClear() {
-        viewModelScope.launch {
-            // Clear the database table.
-            clear()
-
-            // And clear person since it's no longer in the database
-            person.value = null
-        }
-
-        // Show a snackbar message, because it's friendly.
-        _showSnackbarEvent.value = true
-    }
 
 }
