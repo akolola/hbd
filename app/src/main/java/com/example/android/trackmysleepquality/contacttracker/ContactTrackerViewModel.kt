@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.formatNights
+import com.example.android.trackmysleepquality.formatPersons
 import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 
@@ -44,7 +44,7 @@ class ContactTrackerViewModel(
      * Converted persons to Spanned for displaying.
      */
     val personsString = Transformations.map(persons) { persons ->
-        formatNights(persons, application.resources)
+        formatPersons(persons, application.resources)
     }
 
 
@@ -98,7 +98,9 @@ class ContactTrackerViewModel(
     }
 
 
+
     //--------------------------- Navigation ---------------------------
+    //---------- => ContactCreator
     /**
      * Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]
      */
@@ -107,7 +109,7 @@ class ContactTrackerViewModel(
     /**
      * If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating]
      */
-    val navigateToSleepQuality: LiveData<ContactPerson>
+    val navigateToContactCreator: LiveData<ContactPerson>
         get() = _navigateToContactCreator
 
     /**
@@ -120,11 +122,13 @@ class ContactTrackerViewModel(
         _navigateToContactCreator.value = null
     }
 
+    //---------- => ContactCreatorData
     private val _navigateToContactCreatorData = MutableLiveData<Long>()
-    val navigateToSleepDataQuality
+    val navigateToContactCreatorData
         get() = _navigateToContactCreatorData
 
-    fun onSleepNightClicked(id: Long) {
+
+    fun onContactClicked(id: Long) {
         _navigateToContactCreatorData.value = id
     }
 
@@ -134,7 +138,9 @@ class ContactTrackerViewModel(
 
 
 
-    //--------------------------- DB ---------------------------
+
+    //--------------------------- <-Person- DB  ---------------------------
+    //---------- Get, std behavior
     init {
         initializePerson()
     }
@@ -145,6 +151,7 @@ class ContactTrackerViewModel(
         }
     }
 
+    //---------- Get, emergency behavior
     /**
      *  Handling the case of the stopped app or forgotten recording,
      *  the start and end times will be the same.j
@@ -162,6 +169,7 @@ class ContactTrackerViewModel(
         //}
     }
 
+    //---------- Remaining queries
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
             database.clear()

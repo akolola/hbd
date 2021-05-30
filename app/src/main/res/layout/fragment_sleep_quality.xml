@@ -26,14 +26,14 @@
 
         <variable
             name="sleepQualityViewModel"
-            type="com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel" />
+            type="com.example.android.trackmysleepquality.contactcreator.SleepQualityViewModel" />
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".sleepquality.SleepQualityFragment">
+        tools:context=".contactcreator.ContactCreatorFragment">
 
         <TextView
             android:id="@+id/title_text"

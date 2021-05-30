@@ -102,7 +102,7 @@ class SleepTrackerFragment : Fragment() {
 
         //---------- Observer, 'Stop' button
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
-        sleepTrackerViewModel.navigateToSleepQuality.observe(viewLifecycleOwner, Observer { night ->
+        sleepTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
                 // We need to get the navController from this, because button is not ready, and it
                 // just has to be a view. For some reason, this only matters if we hit stop again
@@ -120,7 +120,7 @@ class SleepTrackerFragment : Fragment() {
             }
         })
 
-        sleepTrackerViewModel.navigateToSleepDataQuality.observe(viewLifecycleOwner, Observer { night ->
+        sleepTrackerViewModel.navigateToContactCreatorData.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
 
                 this.findNavController().navigate(
@@ -151,7 +151,7 @@ class SleepTrackerFragment : Fragment() {
 
 
         val adapter = SleepNightAdapter(SleepNightListener { nightId ->
-            sleepTrackerViewModel.onSleepNightClicked(nightId)
+            sleepTrackerViewModel.onContactClicked(nightId)
         })
 
         binding.sleepList.adapter = adapter

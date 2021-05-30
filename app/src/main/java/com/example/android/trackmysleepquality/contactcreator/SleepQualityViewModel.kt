@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleepquality
+package com.example.android.trackmysleepquality.contactcreator
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

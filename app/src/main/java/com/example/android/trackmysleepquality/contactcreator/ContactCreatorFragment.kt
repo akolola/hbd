@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleepquality
+package com.example.android.trackmysleepquality.contactcreator
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +35,7 @@ import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityB
  * Once the user taps an icon, the quality is set in the current sleepNight
  * and the database is updated.
  */
-class SleepQualityFragment : Fragment() {
+class ContactCreatorFragment : Fragment() {
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -51,7 +51,7 @@ class SleepQualityFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
-        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
+        val arguments = ContactCreatorFragmentArgs.fromBundle(arguments!!)
 
         // Create an instance of the ViewModel Factory.
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
@@ -70,7 +70,7 @@ class SleepQualityFragment : Fragment() {
         sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
-                        SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
+                    ContactCreatorFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 sleepQualityViewModel.doneNavigating()
