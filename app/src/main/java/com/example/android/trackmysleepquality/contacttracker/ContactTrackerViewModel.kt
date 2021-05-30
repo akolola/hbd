@@ -78,8 +78,6 @@ class ContactTrackerViewModel(
     //--------------------------- Snackbar ---------------------------
     /**
      * Request a toast by setting this value to true.
-     *
-     * This is private because we don't want to expose setting this value to the Fragment.
      */
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
 
@@ -89,54 +87,49 @@ class ContactTrackerViewModel(
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
 
-
-
-
-    //--------------------------- Navigation ---------------------------
-    /**
-     * Variable that tells the Fragment to navigate to a specific [SleepQualityFragment]
-     *
-     * This is private because we don't want to expose setting this value to the Fragment.
-     */
-
-    private val _navigateToSleepQuality = MutableLiveData<ContactPerson>()
     /**
      * Call this immediately after calling `show()` on a toast.
      *
      * It will clear the toast request, so if the user rotates their phone it won't show a duplicate
      * toast.
      */
-
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
     }
 
+
+    //--------------------------- Navigation ---------------------------
     /**
-     * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
+     * Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]
      */
-    val navigateToSleepQuality: LiveData<ContactPerson>
-        get() = _navigateToSleepQuality
+    private val _navigateToContactCreator = MutableLiveData<ContactPerson>()
 
     /**
-     * Call this immediately after navigating to [SleepQualityFragment]
+     * If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating]
+     */
+    val navigateToSleepQuality: LiveData<ContactPerson>
+        get() = _navigateToContactCreator
+
+    /**
+     * Call this immediately after navigating to [ContactCreatorFragment]
      *
      * It will clear the navigation request, so if the user rotates their phone it won't navigate
      * twice.
      */
     fun doneNavigating() {
-        _navigateToSleepQuality.value = null
+        _navigateToContactCreator.value = null
     }
 
-    private val _navigateToSleepDataQuality = MutableLiveData<Long>()
+    private val _navigateToContactCreatorData = MutableLiveData<Long>()
     val navigateToSleepDataQuality
-        get() = _navigateToSleepDataQuality
+        get() = _navigateToContactCreatorData
 
     fun onSleepNightClicked(id: Long) {
-        _navigateToSleepDataQuality.value = id
+        _navigateToContactCreatorData.value = id
     }
 
-    fun onSleepDataQualityNavigated() {
-        _navigateToSleepDataQuality.value = null
+    fun onContactCreatorDataNavigated() {
+        _navigateToContactCreatorData.value = null
     }
 
 
@@ -213,15 +206,15 @@ class ContactTrackerViewModel(
             // several nested ones this statement returns from.
             // In this case, we are specifying to return from launch(),
             // not the lambda.
-            val oldNight = person.value ?: return@launch
+            val oldPerson = person.value ?: return@launch
 
-            // Update the night in the database to add the end time.
-            oldNight.endTimeMilli = System.currentTimeMillis()
+            // Update the person in the database to add the end time.
+            oldPerson.endTimeMilli = System.currentTimeMillis()
 
-            update(oldNight)
+            update(oldPerson)
 
             // Set state to navigate to the SleepQualityFragment.
-            _navigateToSleepQuality.value = oldNight
+            _navigateToContactCreator.value = oldPerson
         }
     }
 
