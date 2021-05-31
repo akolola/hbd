@@ -71,12 +71,22 @@ class ContactCreatorViewModel(
         _navigateToContactTracker.value = null
     }
 
+    /** Sets the name and updates th DB. Then navigates back to the ContactTrackerFragment.*/
+    fun onSetName(name: String) {
+        viewModelScope.launch {
+            // IO is a thread pool for running operations that access the disk, such as
+            // our Room database.
+            val person = database.get(sleepNightKey) ?: return@launch
+            person.name = name
+
+            database.update(person)
+        }
+    }
+
     //--- Old
     /** Sets the sleep quality and updates th DB. Then navigates back to the ContactTrackerFragment.*/
     fun onSetSleepQuality(quality: Int) {
         viewModelScope.launch {
-            // IO is a thread pool for running operations that access the disk, such as
-            // our Room database.
             val person = database.get(sleepNightKey) ?: return@launch
             person.sleepQuality = quality
 
@@ -86,6 +96,9 @@ class ContactCreatorViewModel(
             _navigateToContactTracker.value = true
         }
     }
+
+
+
 
 
 
