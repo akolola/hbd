@@ -26,7 +26,7 @@
 
         <variable
             name="sleepQualityViewModel"
-            type="com.example.android.trackmysleepquality.contactcreator.SleepQualityViewModel" />
+            type="com.example.android.trackmysleepquality.contactcreator.ContactCreatorViewModel" />
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->

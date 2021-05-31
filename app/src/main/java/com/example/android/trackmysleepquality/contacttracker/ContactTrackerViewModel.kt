@@ -109,22 +109,22 @@ class ContactTrackerViewModel(
     /** Executes when the CREATE button is clicked. */
     fun onCreateTracking() {
         viewModelScope.launch {
+
+            //--- 1
             val newPerson = ContactPerson()
             insert(newPerson)
 
-            person.value = getPersonFromDatabase()
 
-            // In Kotlin, the return@label syntax is used for specifying which function among
-            // several nested ones this statement returns from.
-            // In this case, we are specifying to return from launch(), not the lambda.
+            //--- 2
+            person.value = getPersonFromDatabase()
             val oldPerson = person.value ?: return@launch
 
-            // Update the person in the database to add the end time.
-            oldPerson.endTimeMilli = System.currentTimeMillis()
 
+            //--- 3
+            oldPerson.endTimeMilli = System.currentTimeMillis()
             update(oldPerson)
 
-            // Set state to navigate to the ContactCreatorFragment.
+            //--- 4
             _navigateToContactCreator.value = oldPerson
 
         }
@@ -146,22 +146,16 @@ class ContactTrackerViewModel(
 
     //-------------------- Navigation
     //---------- => ContactCreator
-    /**
-     * Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]
-     */
+    /** Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]  */
     private val _navigateToContactCreator = MutableLiveData<ContactPerson>()
-
-    /**
-     * If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating]
-     */
+    /**  If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating] */
     val navigateToContactCreator: LiveData<ContactPerson>
         get() = _navigateToContactCreator
 
     /**
      * Call this immediately after navigating to [ContactCreatorFragment]
      *
-     * It will clear the navigation request, so if the user rotates their phone it won't navigate
-     * twice.
+     * It will clear the navigation request, so if the user rotates their phone it won't navigate twice.
      */
     fun doneNavigating() {
         _navigateToContactCreator.value = null

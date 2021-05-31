@@ -60,14 +60,14 @@ class ContactCreatorFragment : Fragment() {
         // Get a reference to the ViewModel associated with this fragment.
         val sleepQualityViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(SleepQualityViewModel::class.java)
+                        this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
         binding.sleepQualityViewModel = sleepQualityViewModel
 
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
-        sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner, Observer {
+        sleepQualityViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
                     ContactCreatorFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())

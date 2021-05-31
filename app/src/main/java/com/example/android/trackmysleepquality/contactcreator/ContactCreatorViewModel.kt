@@ -28,7 +28,7 @@ import kotlinx.coroutines.*
  *
  * @param sleepNightKey The key of the current night we are working on.
  */
-class SleepQualityViewModel(
+class ContactCreatorViewModel(
         private val sleepNightKey: Long = 0L,
         val database: ContactDatabaseDao) : ViewModel() {
 
@@ -54,56 +54,41 @@ class SleepQualityViewModel(
     */
 
     /**
-     * Variable that tells the fragment whether it should navigate to [SleepTrackerFragment].
+     * Variable that tells the fragment whether it should navigate to [ContactTrackerFragment].
      *
      * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
      * the [Fragment]
      */
-    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    private val _navigateToContactTracker = MutableLiveData<Boolean?>()
 
-    /**
-     * When true immediately navigate back to the [SleepTrackerFragment]
-     */
-    val navigateToSleepTracker: LiveData<Boolean?>
-        get() = _navigateToSleepTracker
+    /**  When true immediately navigate back to the [ContactTrackerFragment]     */
+    val navigateToContactTracker: LiveData<Boolean?>
+        get() = _navigateToContactTracker
 
-    /*
-    /**
-     * Cancels all coroutines when the ViewModel is cleared, to cleanup any pending work.
-     *
-     * onCleared() gets called when the ViewModel is destroyed.
-     */
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-     */
 
-    /**
-     * Call this immediately after navigating to [SleepTrackerFragment]
-     */
+    /**  Call this immediately after navigating to [ContactTrackerFragment]     */
     fun doneNavigating() {
-        _navigateToSleepTracker.value = null
+        _navigateToContactTracker.value = null
     }
 
-    /**
-     * Sets the sleep quality and updates the database.
-     *
-     * Then navigates back to the SleepTrackerFragment.
-     */
+    //--- Old
+    /** Sets the sleep quality and updates th DB. Then navigates back to the ContactTrackerFragment.*/
     fun onSetSleepQuality(quality: Int) {
         viewModelScope.launch {
             // IO is a thread pool for running operations that access the disk, such as
             // our Room database.
-            //withContext(Dispatchers.IO) {
-                val tonight = database.get(sleepNightKey) ?: return@launch
-                tonight.sleepQuality = quality
-                database.update(tonight)
-            //}
+            val person = database.get(sleepNightKey) ?: return@launch
+            person.sleepQuality = quality
+
+            database.update(person)
 
             // Setting this state variable to true will alert the observer and trigger navigation.
-            _navigateToSleepTracker.value = true
+            _navigateToContactTracker.value = true
         }
     }
+
+
+
+
 }
 
