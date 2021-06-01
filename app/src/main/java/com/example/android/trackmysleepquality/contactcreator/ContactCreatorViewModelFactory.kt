@@ -25,7 +25,7 @@ import com.example.android.trackmysleepquality.database.ContactDatabaseDao
  *
  * Provides the key for the night and the SleepDatabaseDao to the ViewModel.
  */
-class SleepQualityViewModelFactory(
+class ContactCreatorViewModelFactory(
         private val sleepNightKey: Long,
         private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")

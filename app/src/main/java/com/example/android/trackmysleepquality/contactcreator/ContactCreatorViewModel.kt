@@ -26,11 +26,11 @@ import kotlinx.coroutines.*
 /**
  * ViewModel for SleepQualityFragment.
  *
- * @param sleepNightKey The key of the current night we are working on.
+ * @param contactPersonKey The key of the current night we are working on.
  */
 class ContactCreatorViewModel(
-        private val sleepNightKey: Long = 0L,
-        val database: ContactDatabaseDao) : ViewModel() {
+    private val contactPersonKey: Long = 0L,
+    val database: ContactDatabaseDao) : ViewModel() {
 
     /*
     /** Coroutine setup variables */
@@ -76,18 +76,17 @@ class ContactCreatorViewModel(
         viewModelScope.launch {
             // IO is a thread pool for running operations that access the disk, such as
             // our Room database.
-            val person = database.get(sleepNightKey) ?: return@launch
+            val person = database.get(contactPersonKey) ?: return@launch
             person.name = name
 
             database.update(person)
         }
     }
 
-    //--- Old
     /** Sets the sleep quality and updates th DB. Then navigates back to the ContactTrackerFragment.*/
     fun onSetSleepQuality(quality: Int) {
         viewModelScope.launch {
-            val person = database.get(sleepNightKey) ?: return@launch
+            val person = database.get(contactPersonKey) ?: return@launch
             person.sleepQuality = quality
 
             database.update(person)

@@ -43,7 +43,7 @@
         android:id="@+id/sleep_quality_fragment"
         android:name="com.example.android.trackmysleepquality.contactcreator.ContactCreatorFragment"
         android:label="@string/sleep_quality_fragment"
-        tools:layout="@layout/fragment_sleep_quality">
+        tools:layout="@layout/fragment_contact_creator">
         <argument
             android:name="sleepNightKey"
             app:argType="long" />

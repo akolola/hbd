@@ -27,7 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
 
 /**
  * Fragment that displays a list of clickable icons,
@@ -46,8 +46,8 @@ class ContactCreatorFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         // Get a reference to the binding object and inflate the fragment views.
-        val binding: FragmentSleepQualityBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_sleep_quality, container, false)
+        val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_contact_creator, container, false)
 
         val application = requireNotNull(this.activity).application
 
@@ -55,25 +55,25 @@ class ContactCreatorFragment : Fragment() {
 
         // Create an instance of the ViewModel Factory.
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
-        val viewModelFactory = SleepQualityViewModelFactory(arguments.sleepNightKey, dataSource)
+        val viewModelFactory = ContactCreatorViewModelFactory(arguments.sleepNightKey, dataSource)
 
         // Get a reference to the ViewModel associated with this fragment.
-        val sleepQualityViewModel =
+        val contactCreatorViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
-        binding.sleepQualityViewModel = sleepQualityViewModel
+        binding.contactCreatorViewModel = contactCreatorViewModel
 
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
-        sleepQualityViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
+        contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
                     ContactCreatorFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
-                sleepQualityViewModel.doneNavigating()
+                contactCreatorViewModel.doneNavigating()
             }
         })
 

@@ -23,7 +23,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.formatPersons
 import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 
@@ -35,15 +34,10 @@ class ContactTrackerViewModel(
     application: Application) : AndroidViewModel(application) {
 
 
-
-
-    //--------------------------- LiveData: <-(o) Person - DB  -------------------------------------
+    //--------------------------- LiveData: <-(o) Person - DB --------------------------------------
     //-------------------- LiveData preparation
     //---------- <list> persons
     val persons = database.getAllPersons()
-    val personsString = Transformations.map(persons) { persons ->
-        formatPersons(persons, application.resources)
-    }
 
     //---------- (v) person
     private var person = MutableLiveData<ContactPerson?>()
@@ -86,8 +80,6 @@ class ContactTrackerViewModel(
     }
 
 
-
-
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Visibility
     /** If person has not been set, then the START button should be visible. */
@@ -117,15 +109,15 @@ class ContactTrackerViewModel(
 
             //--- 2
             person.value = getPersonFromDatabase()
-            val oldPerson = person.value ?: return@launch
+            val liveDataPerson = person.value ?: return@launch
 
 
             //--- 3
-            oldPerson.endTimeMilli = System.currentTimeMillis()
-            update(oldPerson)
+            liveDataPerson.endTimeMilli = System.currentTimeMillis()
+            update(liveDataPerson)
 
             //--- 4
-            _navigateToContactCreator.value = oldPerson
+            _navigateToContactCreator.value = liveDataPerson
 
         }
     }
