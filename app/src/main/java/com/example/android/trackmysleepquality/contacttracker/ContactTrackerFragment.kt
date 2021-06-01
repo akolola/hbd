@@ -36,11 +36,8 @@ import com.google.android.material.snackbar.Snackbar
  * a database. Cumulative data is displayed in a simple scrollable TextView.
  * (Because we have not learned about RecyclerView yet.)
  */
-class SleepTrackerFragment : Fragment() {
+class ContactTrackerFragment : Fragment() {
 
-
-    //--------------------------- Preparation ---------------------------
-    //---------- SleepTracker Fragment
     /**
      * Called when the Fragment is ready to display content to the screen.
      *
@@ -49,45 +46,37 @@ class SleepTrackerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-
-        //---------- SleepTracker Activity
+        //--------------------------- Preparation --------------------------------------------------
+        //---------- ContactTrackerActivity
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
 
         val application = requireNotNull(this.activity).application
 
-        //---------- Contact DAO
+        //---------- ContactDao
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- SleepTracker ViewModel
-        val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
+        //---------- ContactTrackerViewModel
+        val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
 
-        val sleepTrackerViewModel =
+        val contactTrackerViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
 
 
-        //--------------------------- Processing ---------------------------
-
-
-
-
-        binding.sleepTrackerViewModel = sleepTrackerViewModel
+        //--------------------------- Processing ---------------------------------------------------
+        binding.sleepTrackerViewModel = contactTrackerViewModel
 
         //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
 
 
-
-
-
-
         //---------- Observer, 'Clear' button
         // Add an Observer on the state variable for showing a Snackbar message
         // when the CLEAR button is pressed.
-        sleepTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
+        contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 Snackbar.make(
                         requireActivity().findViewById(android.R.id.content),
@@ -96,13 +85,13 @@ class SleepTrackerFragment : Fragment() {
                 ).show()
                 // Reset state to make sure the snackbar is only shown once, even if the device
                 // has a configuration change.
-                sleepTrackerViewModel.doneShowingSnackbar()
+                contactTrackerViewModel.doneShowingSnackbar()
             }
         })
 
         //---------- Observer, 'Stop' button
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
-        sleepTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { night ->
+        contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
                 // We need to get the navController from this, because button is not ready, and it
                 // just has to be a view. For some reason, this only matters if we hit stop again
@@ -112,26 +101,23 @@ class SleepTrackerFragment : Fragment() {
                 // followed by back.
                 // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
                 this.findNavController().navigate(
-                        SleepTrackerFragmentDirections
+                    ContactTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepQualityFragment(night.nightId))
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
-                sleepTrackerViewModel.doneNavigating()
+                contactTrackerViewModel.doneNavigating()
             }
         })
 
-        sleepTrackerViewModel.navigateToContactCreatorData.observe(viewLifecycleOwner, Observer { night ->
+        contactTrackerViewModel.navigateToContactCreatorData.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
 
                 this.findNavController().navigate(
-                        SleepTrackerFragmentDirections
+                    ContactTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepDetailFragment(night))
-                sleepTrackerViewModel.onContactCreatorDataNavigated()
+                contactTrackerViewModel.onContactCreatorDataNavigated()
             }
         })
-
-
-
 
 
 
@@ -151,12 +137,12 @@ class SleepTrackerFragment : Fragment() {
 
 
         val adapter = SleepNightAdapter(SleepNightListener { nightId ->
-            sleepTrackerViewModel.onContactClicked(nightId)
+            contactTrackerViewModel.onContactClicked(nightId)
         })
 
         binding.sleepList.adapter = adapter
 
-        sleepTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
+        contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }

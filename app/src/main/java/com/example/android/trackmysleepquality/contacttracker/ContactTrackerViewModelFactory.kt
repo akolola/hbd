@@ -26,7 +26,7 @@ import com.example.android.trackmysleepquality.database.ContactDatabaseDao
  *
  * Provides the SleepDatabaseDao and context to the ViewModel.
  */
-class SleepTrackerViewModelFactory(
+class ContactTrackerViewModelFactory(
     private val dataSource: ContactDatabaseDao,
     private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
