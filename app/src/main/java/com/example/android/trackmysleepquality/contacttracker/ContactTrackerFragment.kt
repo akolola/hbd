@@ -28,7 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -49,8 +49,8 @@ class ContactTrackerFragment : Fragment() {
         //--------------------------- Preparation --------------------------------------------------
         //---------- ContactTrackerActivity
         // Get a reference to the binding object and inflate the fragment views.
-        val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_sleep_tracker, container, false)
+        val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_contact_tracker, container, false)
 
         val application = requireNotNull(this.activity).application
 
@@ -67,7 +67,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
-        binding.sleepTrackerViewModel = contactTrackerViewModel
+        binding.contactTrackerViewModel = contactTrackerViewModel
 
         //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
