@@ -54,12 +54,15 @@ class ContactTrackerFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
+
+
         //---------- ContactDao
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- ContactTrackerViewModel
         val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
 
+        // Get a reference to the ViewModel associated with this fragment.
         val contactTrackerViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactTrackerViewModel::class.java)
@@ -72,10 +75,29 @@ class ContactTrackerFragment : Fragment() {
         //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
 
+        //---------- Observer, 'Stop' button
+        // Add an Observer on the state variable for Navigating when STOP button is pressed.
+        contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { person ->
+            person?.let {
+                // We need to get the navController from this, because button is not ready, and it
+                // just has to be a view. For some reason, this only matters if we hit stop again
+                // after using the back button, not if we hit stop and choose a quality.
+                // Also, in the Navigation Editor, for Quality -> Tracker, check "Inclusive" for
+                // popping the stack to get the correct behavior if we press stop multiple times
+                // followed by back.
+                // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
+                this.findNavController().navigate(
+                    ContactTrackerFragmentDirections
+                        .actionSleepTrackerFragmentToSleepQualityFragment(person.personId))
+                // Reset state to make sure we only navigate once, even if the device
+                // has a configuration change.
+                contactTrackerViewModel.doneNavigating()
+            }
+        })
 
-        //---------- Observer, 'Clear' button
+        //---------- Observer; 'Clear' button
         // Add an Observer on the state variable for showing a Snackbar message
-        // when the CLEAR button is pressed.
+        // when the 'Clear' button is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 Snackbar.make(
@@ -86,26 +108,6 @@ class ContactTrackerFragment : Fragment() {
                 // Reset state to make sure the snackbar is only shown once, even if the device
                 // has a configuration change.
                 contactTrackerViewModel.doneShowingSnackbar()
-            }
-        })
-
-        //---------- Observer, 'Stop' button
-        // Add an Observer on the state variable for Navigating when STOP button is pressed.
-        contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { night ->
-            night?.let {
-                // We need to get the navController from this, because button is not ready, and it
-                // just has to be a view. For some reason, this only matters if we hit stop again
-                // after using the back button, not if we hit stop and choose a quality.
-                // Also, in the Navigation Editor, for Quality -> Tracker, check "Inclusive" for
-                // popping the stack to get the correct behavior if we press stop multiple times
-                // followed by back.
-                // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
-                this.findNavController().navigate(
-                    ContactTrackerFragmentDirections
-                                .actionSleepTrackerFragmentToSleepQualityFragment(night.nightId))
-                // Reset state to make sure we only navigate once, even if the device
-                // has a configuration change.
-                contactTrackerViewModel.doneNavigating()
             }
         })
 

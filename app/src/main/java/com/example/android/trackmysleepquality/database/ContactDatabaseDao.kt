@@ -45,7 +45,7 @@ interface ContactDatabaseDao {
      *
      * @param key startTimeMilli to match
      */
-    @Query("SELECT * from contact_table WHERE nightId = :key")
+    @Query("SELECT * from contact_table WHERE personId = :key")
     suspend fun get(key: Long): ContactPerson?
 
     /**
@@ -61,19 +61,19 @@ interface ContactDatabaseDao {
      *
      * sorted by start time in descending order.
      */
-    @Query("SELECT * FROM contact_table ORDER BY nightId DESC")
+    @Query("SELECT * FROM contact_table ORDER BY personId DESC")
     fun getAllPersons(): LiveData<List<ContactPerson>>
 
     /**
      * Selects and returns the latest night.
      */
-    @Query("SELECT * FROM contact_table ORDER BY nightId DESC LIMIT 1")
+    @Query("SELECT * FROM contact_table ORDER BY personId DESC LIMIT 1")
     suspend fun getPerson(): ContactPerson?
 
     /**
      * Selects and returns the night with given nightId.
      */
-    @Query("SELECT * from contact_table WHERE nightId = :key")
+    @Query("SELECT * from contact_table WHERE personId = :key")
     fun getNightWithId(key: Long): LiveData<ContactPerson>
 }
 

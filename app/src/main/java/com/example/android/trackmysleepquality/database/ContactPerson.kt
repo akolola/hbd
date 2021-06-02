@@ -29,7 +29,7 @@ import java.util.*
 @Entity(tableName = "contact_table")
 data class ContactPerson(
         @PrimaryKey(autoGenerate = true)
-        var nightId: Long = 0L,
+        var personId: Long = 0L,
 
         //------------------------------------->
         @ColumnInfo(name = "start_time_milli")

@@ -45,7 +45,7 @@
         android:label="@string/sleep_quality_fragment"
         tools:layout="@layout/fragment_contact_creator">
         <argument
-            android:name="sleepNightKey"
+            android:name="contactPersonKey"
             app:argType="long" />
         <action
             android:id="@+id/action_sleepQualityFragment_to_sleepTrackerFragment"
@@ -60,7 +60,7 @@
         android:label="fragment_sleep_detail"
         tools:layout="@layout/fragment_sleep_detail" >
         <argument
-            android:name="sleepNightKey"
+            android:name="contactPersonKey"
             app:argType="long" />
         <action
             android:id="@+id/action_sleepDetailFragment_to_sleep_tracker_fragment"

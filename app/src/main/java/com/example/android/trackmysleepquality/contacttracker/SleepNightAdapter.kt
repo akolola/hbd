@@ -121,12 +121,12 @@ class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
 }
 
 class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
-    fun onClick(night: ContactPerson) = clickListener(night.nightId)
+    fun onClick(night: ContactPerson) = clickListener(night.personId)
 }
 
 sealed class DataItem {
     data class SleepNightItem(val contactPerson: ContactPerson): DataItem() {
-        override val id = contactPerson.nightId
+        override val id = contactPerson.personId
     }
 
     object Header: DataItem() {

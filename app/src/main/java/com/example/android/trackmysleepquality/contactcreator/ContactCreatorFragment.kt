@@ -32,7 +32,7 @@ import com.example.android.trackmysleepquality.databinding.FragmentContactCreato
 /**
  * Fragment that displays a list of clickable icons,
  * each representing a sleep quality rating.
- * Once the user taps an icon, the quality is set in the current sleepNight
+ * Once the user taps an icon, the quality is set in the current ContactCreator
  * and the database is updated.
  */
 class ContactCreatorFragment : Fragment() {
@@ -40,11 +40,13 @@ class ContactCreatorFragment : Fragment() {
     /**
      * Called when the Fragment is ready to display content to the screen.
      *
-     * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
+     * This function uses DataBindingUtil to inflate R.layout.fragment_contact_creator.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        //--------------------------- Preparation --------------------------------------------------
+        //---------- ContactCreatorActivity
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_creator, container, false)
@@ -53,18 +55,27 @@ class ContactCreatorFragment : Fragment() {
 
         val arguments = ContactCreatorFragmentArgs.fromBundle(arguments!!)
 
-        // Create an instance of the ViewModel Factory.
+        //---------- ContactDao
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
-        val viewModelFactory = ContactCreatorViewModelFactory(arguments.sleepNightKey, dataSource)
+
+        //---------- ContactCreatorViewModel
+        val viewModelFactory = ContactCreatorViewModelFactory(arguments.contactPersonKey, dataSource)
 
         // Get a reference to the ViewModel associated with this fragment.
         val contactCreatorViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
-        // To use the View Model with data binding, you have to explicitly
-        // give the binding object a reference to it.
+
+
+        //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
+
+
+
+
+
+        //---------- Observer; 'Quality' icon
 
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
@@ -80,3 +91,25 @@ class ContactCreatorFragment : Fragment() {
         return binding.root
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
