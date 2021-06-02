@@ -88,7 +88,7 @@ class ContactTrackerFragment : Fragment() {
                 // Also: https://stackoverflow.com/questions/28929637/difference-and-uses-of-oncreate-oncreateview-and-onactivitycreated-in-fra
                 this.findNavController().navigate(
                     ContactTrackerFragmentDirections
-                        .actionSleepTrackerFragmentToSleepQualityFragment(person.personId))
+                        .actionContactTrackerFragmentToContactCreatorFragment(person.personId))
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 contactTrackerViewModel.doneNavigating()

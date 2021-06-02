@@ -29,7 +29,7 @@
         android:label="@string/sleep_tracker_fragment"
         tools:layout="@layout/fragment_contact_tracker">
         <action
-            android:id="@+id/action_sleepTrackerFragment_to_sleepQualityFragment"
+            android:id="@+id/action_contactTrackerFragment_to_contactCreatorFragment"
             app:destination="@id/sleep_quality_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
