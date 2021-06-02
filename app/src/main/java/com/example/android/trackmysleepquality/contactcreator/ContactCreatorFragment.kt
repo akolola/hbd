@@ -75,7 +75,7 @@ class ContactCreatorFragment : Fragment() {
 
 
 
-        //---------- Observer; 'Quality' icon
+        //---------- Observer; 'Quality' icon.
 
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {

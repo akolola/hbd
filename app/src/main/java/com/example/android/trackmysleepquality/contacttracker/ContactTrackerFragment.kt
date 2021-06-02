@@ -75,7 +75,7 @@ class ContactTrackerFragment : Fragment() {
         //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
 
-        //---------- Observer, 'Stop' button
+        //---------- Observer, 'Stop' button.
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer { person ->
             person?.let {
@@ -95,7 +95,7 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //---------- Observer; 'Clear' button
+        //---------- Observer; 'Clear' button.
         // Add an Observer on the state variable for showing a Snackbar message
         // when the 'Clear' button is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
@@ -111,6 +111,7 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
+        //---------- Observer; 'Sleep' icon.
         contactTrackerViewModel.navigateToContactCreatorData.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
 
@@ -121,9 +122,7 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-
-
-
+        //---------- Grid of 'Sleep' icons.
         val manager = GridLayoutManager(activity, 3)
         binding.sleepList.layoutManager = manager
 
@@ -134,10 +133,7 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-
-
-
-
+        //---------- Observer; Grid of 'Sleep' icons.
         val adapter = SleepNightAdapter(SleepNightListener { nightId ->
             contactTrackerViewModel.onContactClicked(nightId)
         })
@@ -151,9 +147,7 @@ class ContactTrackerFragment : Fragment() {
         })
 
 
-
-
-
+        //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 }
