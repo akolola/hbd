@@ -39,13 +39,15 @@
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
-            android:layout_marginBottom="@dimen/triple_margin"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="128dp"
             android:fontFamily="@font/roboto"
             android:text="@string/how_was_hour_sleep"
             android:textSize="@dimen/title_text_size"
             app:layout_constraintBottom_toTopOf="@+id/quality_zero_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +56,7 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/margin"
+            android:layout_marginTop="256dp"
             android:contentDescription="@string/quality_0"
             android:onClick="@{() -> contactCreatorViewModel.onSetSleepQuality(0)}"
             app:layout_constraintEnd_toStartOf="@+id/quality_one_image"
@@ -125,6 +127,19 @@
             app:layout_constraintStart_toEndOf="@+id/quality_four_image"
             app:layout_constraintTop_toTopOf="@+id/quality_four_image"
             app:srcCompat="@drawable/ic_sleep_5" />
+
+        <TextView
+            android:id="@+id/name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/input_name_text"
+            android:textSize="@dimen/input_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title_text"
+            app:layout_constraintVertical_bias="0.071" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
