@@ -48,7 +48,7 @@
             android:name="contactPersonKey"
             app:argType="long" />
         <action
-            android:id="@+id/action_sleepQualityFragment_to_sleepTrackerFragment"
+            android:id="@+id/action_contactCreatorFragment_to_contactTrackerFragment"
             app:destination="@id/sleep_tracker_fragment"
             app:launchSingleTop="false"
             app:popUpTo="@+id/sleep_tracker_fragment"

@@ -32,45 +32,9 @@ class ContactCreatorViewModel(
     private val contactPersonKey: Long = 0L,
     val database: ContactDatabaseDao) : ViewModel() {
 
-    /*
-    /** Coroutine setup variables */
 
-    /**
-     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
-     */
-    private val viewModelJob = Job()
-
-    /**
-     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
-     *
-     * Because we pass it [viewModelJob], any coroutine started in this scope can be cancelled
-     * by calling `viewModelJob.cancel()`
-     *
-     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
-     * the main thread on Android. This is a sensible default because most coroutines started by
-     * a [ViewModel] update the UI after performing some processing.
-     */
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    */
-
-    /**
-     * Variable that tells the fragment whether it should navigate to [ContactTrackerFragment].
-     *
-     * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
-     * the [Fragment]
-     */
-    private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-
-    /**  When true immediately navigate back to the [ContactTrackerFragment]     */
-    val navigateToContactTracker: LiveData<Boolean?>
-        get() = _navigateToContactTracker
-
-
-    /**  Call this immediately after navigating to [ContactTrackerFragment]     */
-    fun doneNavigating() {
-        _navigateToContactTracker.value = null
-    }
-
+    //--------------------------- Buttons ----------------------------------------------------------
+    //-------------------- Execution
     /** Sets the name and updates th DB. Then navigates back to the ContactTrackerFragment.*/
     fun onSetName(name: String) {
         viewModelScope.launch {
@@ -96,11 +60,24 @@ class ContactCreatorViewModel(
         }
     }
 
+    //-------------------- Navigation
+    /**
+     * Variable that tells the fragment whether it should navigate to [ContactTrackerFragment].
+     *
+     * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
+     * the [Fragment]
+     */
+    private val _navigateToContactTracker = MutableLiveData<Boolean?>()
+
+    /**  When true immediately navigate back to the [ContactTrackerFragment]     */
+    val navigateToContactTracker: LiveData<Boolean?>
+        get() = _navigateToContactTracker
 
 
-
-
-
+    /**  Call this immediately after navigating to [ContactTrackerFragment]     */
+    fun doneNavigating() {
+        _navigateToContactTracker.value = null
+    }
 
 }
 

@@ -34,7 +34,7 @@ class ContactTrackerViewModel(
     application: Application) : AndroidViewModel(application) {
 
 
-    //--------------------------- LiveData: <-(o) Person - DB --------------------------------------
+    //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation
     //---------- <list> persons
     val persons = database.getAllPersons()
@@ -191,6 +191,5 @@ class ContactTrackerViewModel(
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
     }
-
 
 }

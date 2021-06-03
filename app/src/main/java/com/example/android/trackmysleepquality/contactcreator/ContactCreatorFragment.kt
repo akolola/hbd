@@ -71,17 +71,12 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-
-
-
-
         //---------- Observer; 'Quality' icon.
-
         // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
-                    ContactCreatorFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
+                    ContactCreatorFragmentDirections.actionContactCreatorFragmentToContactTrackerFragment())
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 contactCreatorViewModel.doneNavigating()
