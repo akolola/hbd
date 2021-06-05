@@ -44,9 +44,6 @@
         android:name="com.example.android.trackmysleepquality.contactcreator.ContactCreatorFragment"
         android:label="@string/sleep_quality_fragment"
         tools:layout="@layout/fragment_contact_creator">
-        <argument
-            android:name="contactPersonKey"
-            app:argType="long" />
         <action
             android:id="@+id/action_contactCreatorFragment_to_contactTrackerFragment"
             app:destination="@id/sleep_tracker_fragment"

@@ -41,14 +41,6 @@ class ContactTrackerViewModel(
 
     //---------- (v) person
     private var person = MutableLiveData<ContactPerson?>()
-    init {
-        initializePerson()
-    }
-    private fun initializePerson() {
-        viewModelScope.launch {
-            person.value = getPersonFromDatabase()
-        }
-    }
 
     //-------------------- Query (m)s
     //---------- (m) Get
@@ -82,11 +74,6 @@ class ContactTrackerViewModel(
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Visibility
-    /** If person has not been set, then the START button should be visible. */
-    val createButtonVisible = Transformations.map(person) {
-        null == it
-    }
-
     /** If person has been set, then the STOP button should be visible. */
     val stopButtonVisible = Transformations.map(person) {
         null != it
@@ -102,22 +89,7 @@ class ContactTrackerViewModel(
     fun onCreateTracking() {
         viewModelScope.launch {
 
-            //--- 1
-            val newPerson = ContactPerson()
-            insert(newPerson)
-
-
-            //--- 2
-            person.value = getPersonFromDatabase()
-            val liveDataPerson = person.value ?: return@launch
-
-
-            //--- 3
-            liveDataPerson.endTimeMilli = System.currentTimeMillis()
-            update(liveDataPerson)
-
-            //--- 4
-            _navigateToContactCreator.value = liveDataPerson
+            _navigateToContactCreator.value = true
 
         }
     }
@@ -139,9 +111,9 @@ class ContactTrackerViewModel(
     //-------------------- Navigation
     //---------- => ContactCreator
     /** Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]  */
-    private val _navigateToContactCreator = MutableLiveData<ContactPerson>()
+    private val _navigateToContactCreator = MutableLiveData<Boolean?>()
     /**  If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating] */
-    val navigateToContactCreator: LiveData<ContactPerson>
+    val navigateToContactCreator: LiveData<Boolean?>
         get() = _navigateToContactCreator
 
     /**

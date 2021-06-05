@@ -16,47 +16,88 @@
 
 package com.example.android.trackmysleepquality.contactcreator
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import androidx.lifecycle.viewModelScope
+import com.example.android.trackmysleepquality.database.ContactDatabaseDao
+import com.example.android.trackmysleepquality.database.ContactPerson
 import kotlinx.coroutines.*
+
 
 /**
  * ViewModel for SleepQualityFragment.
  *
  * @param contactPersonKey The key of the current night we are working on.
  */
-class ContactCreatorViewModel(
-    private val contactPersonKey: Long = 0L,
-    val database: ContactDatabaseDao) : ViewModel() {
+class ContactCreatorViewModel(val database: ContactDatabaseDao, application: Application) : ViewModel() {
 
 
-    //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution
-    /** Sets the name and updates th DB. Then navigates back to the ContactTrackerFragment.*/
-    fun onSetName(name: String) {
+    //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
+    //-------------------- LiveData preparation
+    //---------- <list> persons
+    val persons = database.getAllPersons()
+
+    //---------- (v) person
+    private var person = MutableLiveData<ContactPerson?>()
+    init {
+        initializePerson()
+    }
+    private fun initializePerson() {
         viewModelScope.launch {
-            // IO is a thread pool for running operations that access the disk, such as
-            // our Room database.
-            val person = database.get(contactPersonKey) ?: return@launch
-            person.name = name
+            person.value = getPersonFromDatabase()
+        }
+    }
 
+    //-------------------- Query (m)s
+    //---------- (m) Get
+    private suspend fun getPersonFromDatabase(): ContactPerson? {
+        var person = database.getPerson()
+        if (person?.endTimeMilli != person?.startTimeMilli) {
+            person = null
+        }
+        return person
+    }
+
+    //---------- (m)s remaining
+    private suspend fun insert(person: ContactPerson) {
+        withContext(Dispatchers.IO) {
+            database.insert(person)
+        }
+    }
+
+    private suspend fun update(person: ContactPerson) {
+        withContext(Dispatchers.IO) {
             database.update(person)
         }
     }
 
-    /** Sets the sleep quality and updates th DB. Then navigates back to the ContactTrackerFragment.*/
-    fun onSetSleepQuality(quality: Int) {
+
+
+    //--------------------------- Buttons ----------------------------------------------------------
+    //-------------------- Execution
+    /** Executes when the 'Create' button is clicked. */
+    fun onCreateContact(name: String) {
         viewModelScope.launch {
-            val person = database.get(contactPersonKey) ?: return@launch
-            person.sleepQuality = quality
 
-            database.update(person)
+            //--- 1
+            val newPerson = ContactPerson()
+            insert(newPerson)
 
+            //--- 2
+            person.value = getPersonFromDatabase()
+            val liveDataPerson = person.value ?: return@launch
+
+            //--- 3
+            liveDataPerson.endTimeMilli = System.currentTimeMillis()
+            liveDataPerson.name = name
+            update(liveDataPerson)
+
+            //--- 4
             // Setting this state variable to true will alert the observer and trigger navigation.
             _navigateToContactTracker.value = true
+
         }
     }
 

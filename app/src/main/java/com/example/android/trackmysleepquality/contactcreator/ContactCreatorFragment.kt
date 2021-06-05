@@ -29,6 +29,7 @@ import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
 
+
 /**
  * Fragment that displays a list of clickable icons,
  * each representing a sleep quality rating.
@@ -53,13 +54,12 @@ class ContactCreatorFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
-        val arguments = ContactCreatorFragmentArgs.fromBundle(arguments!!)
 
         //---------- ContactDao
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- ContactCreatorViewModel
-        val viewModelFactory = ContactCreatorViewModelFactory(arguments.contactPersonKey, dataSource)
+        val viewModelFactory = ContactCreatorViewModelFactory(dataSource, application)
 
         // Get a reference to the ViewModel associated with this fragment.
         val contactCreatorViewModel =
@@ -71,8 +71,16 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-        //---------- Observer; 'Quality' icon.
-        // Add an Observer to the state variable for Navigating when a Quality icon is tapped.
+        //---------- EditText field & 'Submit' button.
+        // Click listener for the 'Submit' button.
+        binding.submitButton.setOnClickListener {
+            binding.apply {
+                contactCreatorViewModel.onCreateContact(binding.nameEdit.text.toString())
+            }
+        }
+
+        //---------- Observer; 'Submit' button
+        // Add an Observer to the state variable for Navigating when the 'Submit' button is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
@@ -83,6 +91,7 @@ class ContactCreatorFragment : Fragment() {
             }
         })
 
+        //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 }
