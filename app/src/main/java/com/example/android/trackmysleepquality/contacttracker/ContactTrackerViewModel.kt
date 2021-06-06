@@ -71,14 +71,9 @@ class ContactTrackerViewModel(
     //---------- 'Create' button is clicked.
     fun onCreateTracking() {
         viewModelScope.launch {
-
             _navigateToContactCreator.value = true
-
         }
     }
-
-    //---------- 'Stop' button.
-    fun onStopTracking() {}
 
     //---------- 'Sleep' icon is clicked.
     fun onContactClicked(contactId: Long) {

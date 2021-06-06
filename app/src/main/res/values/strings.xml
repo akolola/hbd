@@ -22,8 +22,7 @@
     <string name="sleep_quality_fragment">SleepQualityFragment</string>
 
     <!-- Button labels -->
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="create">Create</string>
     <string name="clear">Clear</string>
 
     <!-- contentDescription strings for quality icons -->
