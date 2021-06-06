@@ -109,7 +109,7 @@ class ContactTrackerViewModel(
     fun onStopTracking() {}
 
     //-------------------- Navigation
-    //---------- => ContactCreator
+    //---------- ContactTracker => ContactCreator
     /** Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]  */
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
     /**  If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating] */
@@ -125,18 +125,18 @@ class ContactTrackerViewModel(
         _navigateToContactCreator.value = null
     }
 
-    //---------- => ContactCreatorData
-    private val _navigateToContactCreatorData = MutableLiveData<Long>()
-    val navigateToContactCreatorData
-        get() = _navigateToContactCreatorData
+    //---------- ContactTracker => ContactDetails
+    private val _navigateToContactDetails = MutableLiveData<Long>()
+    val navigateToContactDetails
+        get() = _navigateToContactDetails
 
 
     fun onContactClicked(id: Long) {
-        _navigateToContactCreatorData.value = id
+        _navigateToContactDetails.value = id
     }
 
     fun onContactCreatorDataNavigated() {
-        _navigateToContactCreatorData.value = null
+        _navigateToContactDetails.value = null
     }
 
 
