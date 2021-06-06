@@ -33,16 +33,13 @@ import com.google.android.material.snackbar.Snackbar
 
 
 /**
- * A fragment with buttons to record start and end times for sleep, which are saved in
- * a database. Cumulative data is displayed in a simple scrollable TextView.
- * (Because we have not learned about RecyclerView yet.)
+ * A fragment with buttons for contacts, which are saved in DB. Cumulative data are
+ * displayed in RecyclerView
  */
 class ContactTrackerFragment : Fragment() {
 
     /**
      * Called when the Fragment is ready to display content to the screen.
-     *
-     * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -67,12 +64,11 @@ class ContactTrackerFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
-        //-------------------- Start
         binding.contactTrackerViewModel = contactTrackerViewModel
         binding.lifecycleOwner = this
 
-        //---------- Observer; 'Start' button; Navigating.
-        // Add an Observer on the state variable for Navigating when 'Start' button is pressed.
+        //-------------------- Create
+        //---------- Observer; <Button> 'Create'; Navigating.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
 
@@ -124,7 +120,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Clear
-        //---------- Observer; 'Clear' button; Snackbar.
+        //---------- Observer; <Button> 'Clear'; Snackbar.
         // Add an Observer on the state var showing a Snackbar msg when 'Clear' is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.

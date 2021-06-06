@@ -27,9 +27,7 @@ import kotlinx.coroutines.*
 
 
 /**
- * ViewModel for SleepQualityFragment.
- *
- * @param contactPersonKey The key of the current night we are working on.
+ *  ContactCreatorFragment's ViewModel.
  */
 class ContactCreatorViewModel(val database: ContactDatabaseDao, application: Application) : ViewModel() {
 
@@ -77,7 +75,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
-    /** Executes when the 'Create' button is clicked. */
+    //----------  <Button> 'Create' button is clicked.
     fun onCreateContact(name: String) {
         viewModelScope.launch {
 

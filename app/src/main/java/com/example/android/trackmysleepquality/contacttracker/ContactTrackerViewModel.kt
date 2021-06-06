@@ -27,7 +27,7 @@ import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 
 /**
- * ViewModel for ContactTrackerViewModel.
+ * ContactTrackerFragment's ViewModel.
  */
 class ContactTrackerViewModel(
     val database: ContactDatabaseDao,
@@ -62,7 +62,7 @@ class ContactTrackerViewModel(
     }
 
     //-------------------- Execution
-    //---------- 'Create' button is clicked.
+    //----------  <Button> 'Create' is clicked.
     fun onCreateTracking() {
         viewModelScope.launch {
             _navigateToContactCreator.value = true
@@ -74,7 +74,7 @@ class ContactTrackerViewModel(
         _navigateToContactDetails.value = contactId
     }
 
-    //---------- 'Clear' button is clicked.
+    //----------  <Button> 'Clear' is clicked.
     fun onClear() {
         viewModelScope.launch {
             // Clear the database table.

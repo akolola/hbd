@@ -30,38 +30,28 @@ import com.example.android.trackmysleepquality.database.ContactDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
 
 
-/**
- * Fragment that displays a list of clickable icons,
- * each representing a sleep quality rating.
- * Once the user taps an icon, the quality is set in the current ContactCreator
- * and the database is updated.
- */
 class ContactCreatorFragment : Fragment() {
 
     /**
      * Called when the Fragment is ready to display content to the screen.
-     *
-     * This function uses DataBindingUtil to inflate R.layout.fragment_contact_creator.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- ContactCreatorActivity
-        // Get a reference to the binding object and inflate the fragment views.
+        //---------- <xml> |fragment| fragment_contact_creator
         val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_creator, container, false)
 
+        //---------- Technical (v) application
         val application = requireNotNull(this.activity).application
 
 
-        //---------- ContactDao
+        //----------  |DB| Contact
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- ContactCreatorViewModel
+        //---------- (c) ContactCreatorViewModel
         val viewModelFactory = ContactCreatorViewModelFactory(dataSource, application)
-
-        // Get a reference to the ViewModel associated with this fragment.
         val contactCreatorViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactCreatorViewModel::class.java)
@@ -71,14 +61,14 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-        //---------- Click listener; <tag> EditText & <button> Submit.
+        //---------- Click listener; <tag> EditText & <Button> 'Submit'.
         binding.submitButton.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(binding.nameEdit.text.toString())
             }
         }
 
-        //---------- Observer; <button> Submit.
+        //---------- Observer; <Button> 'Submit'; Navigating.
         // Add an Observer to the state variable for Navigating when the 'Submit' button is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
@@ -89,6 +79,8 @@ class ContactCreatorFragment : Fragment() {
                 contactCreatorViewModel.doneNavigating()
             }
         })
+
+
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
