@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/sleep_detail_fragment"
-        android:name="com.example.android.trackmysleepquality.sleepdetail.SleepDetailFragment"
+        android:name="com.example.android.trackmysleepquality.contactdetails.SleepDetailFragment"
         android:label="fragment_sleep_detail"
         tools:layout="@layout/fragment_sleep_detail" >
         <argument

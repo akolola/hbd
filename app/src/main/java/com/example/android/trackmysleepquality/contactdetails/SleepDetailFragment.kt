@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleepdetail
+package com.example.android.trackmysleepquality.contactdetails
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.sleepdetail
+package com.example.android.trackmysleepquality.contactdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

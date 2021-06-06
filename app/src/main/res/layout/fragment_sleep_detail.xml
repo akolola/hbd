@@ -8,13 +8,13 @@
     <data>
         <variable
             name="sleepDetailViewModel"
-            type="com.example.android.trackmysleepquality.sleepdetail.SleepDetailViewModel" />
+            type="com.example.android.trackmysleepquality.contactdetails.SleepDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".sleepdetail.SleepDetailFragment">
+        tools:context=".contactdetails.SleepDetailFragment">
 
         <ImageView
             android:id="@+id/quality_image"
