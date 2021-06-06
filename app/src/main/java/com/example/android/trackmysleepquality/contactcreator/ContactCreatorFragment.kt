@@ -71,15 +71,14 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-        //---------- EditText field & 'Submit' button.
-        // Click listener for the 'Submit' button.
+        //---------- Click listener; <tag> EditText & <button> Submit.
         binding.submitButton.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(binding.nameEdit.text.toString())
             }
         }
 
-        //---------- Observer; 'Submit' button
+        //---------- Observer; <button> Submit.
         // Add an Observer to the state variable for Navigating when the 'Submit' button is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.

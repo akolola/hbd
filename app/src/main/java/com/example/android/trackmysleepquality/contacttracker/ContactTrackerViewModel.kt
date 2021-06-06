@@ -56,16 +56,10 @@ class ContactTrackerViewModel(
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Visibility
-    /** If person has been set, then the STOP button should be visible. */
-    val stopButtonVisible = Transformations.map(person) {
-        null != it
-    }
-
     /** If there are any persons in the database, show the CLEAR button. */
     val clearButtonVisible = Transformations.map(persons) {
         it?.isNotEmpty()
     }
-
 
     //-------------------- Execution
     //---------- 'Create' button is clicked.
@@ -75,7 +69,7 @@ class ContactTrackerViewModel(
         }
     }
 
-    //---------- 'Sleep' icon is clicked.
+    //---------- 'Contact' icon is clicked.
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }

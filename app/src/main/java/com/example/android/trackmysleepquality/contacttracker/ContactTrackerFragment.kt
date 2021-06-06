@@ -48,20 +48,18 @@ class ContactTrackerFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- ContactTrackerActivity
-        // Get a reference to the binding object and inflate the fragment views.
+        //---------- <xml> |fragment| fragment_contact_tracker
         val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_tracker, container, false)
 
+        //---------- Technical (v) application
         val application = requireNotNull(this.activity).application
 
-        //---------- ContactDao
+        //---------- |DB| Contact
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- ContactTrackerViewModel
+        //---------- (c) ContactTrackerViewModel
         val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
-
-        // Get a reference to the ViewModel associated with this fragment.
         val contactTrackerViewModel =
                 ViewModelProvider(
                         this, viewModelFactory).get(ContactTrackerViewModel::class.java)
@@ -69,17 +67,15 @@ class ContactTrackerFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
+        //-------------------- Start
         binding.contactTrackerViewModel = contactTrackerViewModel
-
-        //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
 
-
-        //-------------------- Start
         //---------- Observer; 'Start' button; Navigating.
         // Add an Observer on the state variable for Navigating when 'Start' button is pressed.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
+
                 this.findNavController().navigate(
                     ContactTrackerFragmentDirections
                         .actionContactTrackerFragmentToContactCreatorFragment())
@@ -87,16 +83,15 @@ class ContactTrackerFragment : Fragment() {
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
+
             }
         })
 
 
         //-------------------- Sleep
-        //---------- Observer; 'Sleep' recyclerView ('Sleep' icons grid).
+        //---------- Grid Layout Manager; <tag> RecyclerView 'sleepList' ('Sleep' icons grid).
         val manager = GridLayoutManager(activity, 3)
-
         binding.sleepList.layoutManager = manager
-
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -104,19 +99,20 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
+        //---------- Click listener; <tag> RecyclerView 'sleepList' ('Sleep' icon).
         val adapter = SleepNightAdapter(SleepNightListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
-
         binding.sleepList.adapter = adapter
 
+        //---------- Observer; <tag> RecyclerView 'sleepList' ('Sleep' icons grid).
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }
         })
 
-        //---------- Observer; 'Sleep' icon; Navigating.
+        //---------- Observer; <tag> RecyclerView 'sleepList' ('Sleep' icon); Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
             contactId?.let {
                 this.findNavController().navigate(
