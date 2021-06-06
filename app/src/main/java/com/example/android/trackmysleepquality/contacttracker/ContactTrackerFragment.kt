@@ -55,8 +55,6 @@ class ContactTrackerFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
-
-
         //---------- ContactDao
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
@@ -95,6 +93,17 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- Sleep
         //---------- Observer; 'Sleep' recyclerView ('Sleep' icons grid).
+        val manager = GridLayoutManager(activity, 3)
+
+        binding.sleepList.layoutManager = manager
+
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) =  when (position) {
+                0 -> 3
+                else -> 1
+            }
+        }
+
         val adapter = SleepNightAdapter(SleepNightListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
@@ -116,17 +125,6 @@ class ContactTrackerFragment : Fragment() {
                 contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
-
-        //---------- Grid of 'Sleep' icons.
-        val manager = GridLayoutManager(activity, 3)
-        binding.sleepList.layoutManager = manager
-
-        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int) =  when (position) {
-                0 -> 3
-                else -> 1
-            }
-        }
 
 
         //-------------------- Clear
