@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 
 
 /**
@@ -75,6 +76,8 @@ class ContactTrackerFragment : Fragment() {
         //binding.setLifecycleOwner(this)
         binding.lifecycleOwner = this
 
+
+        //-------------------- Start
         //---------- Observer, 'Start' button.
         // Add an Observer on the state variable for Navigating when 'Start' button is pressed.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
@@ -90,27 +93,10 @@ class ContactTrackerFragment : Fragment() {
         })
 
 
-
-//        //---------- Observer; 'Clear' button.
-//        // Add an Observer on the state variable for showing a Snackbar message
-//        // when the 'Clear' button is pressed.
-//        contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
-//            if (it == true) { // Observed state is true.
-//                Snackbar.make(
-//                        requireActivity().findViewById(android.R.id.content),
-//                        getString(R.string.cleared_message),
-//                        Snackbar.LENGTH_SHORT // How long to display the message.
-//                ).show()
-//                // Reset state to make sure the snackbar is only shown once, even if the device
-//                // has a configuration change.
-//                contactTrackerViewModel.doneShowingSnackbar()
-//            }
-//        })
-
+        //-------------------- Sleep
         //---------- Observer; 'Sleep' icon.
         contactTrackerViewModel.navigateToContactCreatorData.observe(viewLifecycleOwner, Observer { night ->
             night?.let {
-
                 this.findNavController().navigate(
                     ContactTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepDetailFragment(night))
@@ -142,6 +128,23 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
+
+        //-------------------- Clear
+        //---------- Observer; 'Clear' button.
+        // Add an Observer on the state variable for showing a Snackbar message
+        // when the 'Clear' button is pressed.
+        contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
+            if (it == true) { // Observed state is true.
+                Snackbar.make(
+                    requireActivity().findViewById(android.R.id.content),
+                    getString(R.string.cleared_message),
+                    Snackbar.LENGTH_SHORT // How long to display the message.
+                ).show()
+                // Reset state to make sure the snackbar is only shown once, even if the device
+                // has a configuration change.
+                contactTrackerViewModel.doneShowingSnackbar()
+            }
+        })
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
