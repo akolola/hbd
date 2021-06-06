@@ -94,12 +94,25 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Sleep
+        //---------- Observer; 'Sleep' recyclerView ('Sleep' icons grid).
+        val adapter = SleepNightAdapter(SleepNightListener { contactId ->
+            contactTrackerViewModel.onContactClicked(contactId)
+        })
+
+        binding.sleepList.adapter = adapter
+
+        contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.addHeaderAndSubmitList(it)
+            }
+        })
+
         //---------- Observer; 'Sleep' icon; Navigating.
-        contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { person ->
-            person?.let {
+        contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
+            contactId?.let {
                 this.findNavController().navigate(
                     ContactTrackerFragmentDirections
-                                .actionSleepTrackerFragmentToSleepDetailFragment(person))
+                                .actionSleepTrackerFragmentToSleepDetailFragment(contactId))
                 contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
@@ -114,19 +127,6 @@ class ContactTrackerFragment : Fragment() {
                 else -> 1
             }
         }
-
-        //---------- Observer; Grid of 'Sleep' icons.
-        val adapter = SleepNightAdapter(SleepNightListener { contactId ->
-            contactTrackerViewModel.onContactClicked(contactId)
-        })
-
-        binding.sleepList.adapter = adapter
-
-        contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.addHeaderAndSubmitList(it)
-            }
-        })
 
 
         //-------------------- Clear
