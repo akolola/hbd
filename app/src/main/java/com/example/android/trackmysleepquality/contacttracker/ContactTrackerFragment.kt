@@ -88,7 +88,7 @@ class ContactTrackerFragment : Fragment() {
 
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
-                contactTrackerViewModel.doneNavigating()
+                contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
             }
         })
 
@@ -100,7 +100,7 @@ class ContactTrackerFragment : Fragment() {
                 this.findNavController().navigate(
                     ContactTrackerFragmentDirections
                                 .actionSleepTrackerFragmentToSleepDetailFragment(person))
-                contactTrackerViewModel.onContactCreatorDataNavigated()
+                contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
 
@@ -116,8 +116,8 @@ class ContactTrackerFragment : Fragment() {
         }
 
         //---------- Observer; Grid of 'Sleep' icons.
-        val adapter = SleepNightAdapter(SleepNightListener { nightId ->
-            contactTrackerViewModel.onContactClicked(nightId)
+        val adapter = SleepNightAdapter(SleepNightListener { contactId ->
+            contactTrackerViewModel.onContactClicked(contactId)
         })
 
         binding.sleepList.adapter = adapter

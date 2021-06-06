@@ -68,7 +68,7 @@ class ContactTrackerViewModel(
 
 
     //-------------------- Execution
-    //---------- 'Create' button is clicked
+    //---------- 'Create' button is clicked.
     fun onCreateTracking() {
         viewModelScope.launch {
 
@@ -77,7 +77,15 @@ class ContactTrackerViewModel(
         }
     }
 
-    //---------- 'Clear' button is clicked
+    //---------- 'Stop' button.
+    fun onStopTracking() {}
+
+    //---------- 'Sleep' icon is clicked.
+    fun onContactClicked(id: Long) {
+        _navigateToContactDetails.value = id
+    }
+
+    //---------- 'Clear' button is clicked.
     fun onClear() {
         viewModelScope.launch {
             // Clear the database table.
@@ -89,8 +97,6 @@ class ContactTrackerViewModel(
         _showSnackbarEvent.value = true
     }
 
-    fun onStopTracking() {}
-
 
     //-------------------- Navigation
     //---------- ContactTrackerFragment => ContactCreatorFragment
@@ -99,7 +105,7 @@ class ContactTrackerViewModel(
     val navigateToContactCreator: LiveData<Boolean?>
         get() = _navigateToContactCreator
 
-    fun doneNavigating() {
+    fun doneNavigatingToContactCreatorFragment() {
         _navigateToContactCreator.value = null
     }
 
@@ -108,12 +114,7 @@ class ContactTrackerViewModel(
     val navigateToContactDetails
         get() = _navigateToContactDetails
 
-
-    fun onContactClicked(id: Long) {
-        _navigateToContactDetails.value = id
-    }
-
-    fun onContactCreatorDataNavigated() {
+    fun doneNavigatingToContactDetailsFragment() {
         _navigateToContactDetails.value = null
     }
 
