@@ -34,6 +34,7 @@ class ContactTrackerViewModel(
     application: Application) : AndroidViewModel(application) {
 
 
+
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation
     //---------- <list> persons
@@ -42,34 +43,15 @@ class ContactTrackerViewModel(
     //---------- (v) person
     private var person = MutableLiveData<ContactPerson?>()
 
+
     //-------------------- Query (m)s
-    //---------- (m) Get
-    private suspend fun getPersonFromDatabase(): ContactPerson? {
-        var person = database.getPerson()
-        if (person?.endTimeMilli != person?.startTimeMilli) {
-            person = null
-        }
-        return person
-    }
-
-    //---------- (m)s remaining
-    private suspend fun insert(person: ContactPerson) {
-        withContext(Dispatchers.IO) {
-            database.insert(person)
-        }
-    }
-
-    private suspend fun update(person: ContactPerson) {
-        withContext(Dispatchers.IO) {
-            database.update(person)
-        }
-    }
-
+    //---------- (m) clear
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
             database.clear()
         }
     }
+
 
 
     //--------------------------- Buttons ----------------------------------------------------------
@@ -84,8 +66,9 @@ class ContactTrackerViewModel(
         it?.isNotEmpty()
     }
 
+
     //-------------------- Execution
-    /** Executes when the CREATE button is clicked. */
+    //---------- 'Create' button is clicked
     fun onCreateTracking() {
         viewModelScope.launch {
 
@@ -94,38 +77,33 @@ class ContactTrackerViewModel(
         }
     }
 
-    /**  Executes when the CLEAR button is clicked. */
+    //---------- 'Clear' button is clicked
     fun onClear() {
         viewModelScope.launch {
             // Clear the database table.
             clear()
-            // And clear person since it's no longer in the database
+            // And clear (o) Person since it's no longer in the DB
             person.value = null
         }
-        // Show a snackbar message, because it's friendly.
+        // Show a snackbar msg, because it's friendly.
         _showSnackbarEvent.value = true
     }
 
     fun onStopTracking() {}
 
+
     //-------------------- Navigation
-    //---------- ContactTracker => ContactCreator
-    /** Variable that tells the Fragment to navigate to a specific [ContactCreatorFragment]  */
+    //---------- ContactTrackerFragment => ContactCreatorFragment
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
-    /**  If this is non-null, immediately navigate to [ContactCreatorFragment] and call [doneNavigating] */
+
     val navigateToContactCreator: LiveData<Boolean?>
         get() = _navigateToContactCreator
 
-    /**
-     * Call this immediately after navigating to [ContactCreatorFragment]
-     *
-     * It will clear the navigation request, so if the user rotates their phone it won't navigate twice.
-     */
     fun doneNavigating() {
         _navigateToContactCreator.value = null
     }
 
-    //---------- ContactTracker => ContactDetails
+    //---------- ContactTrackerFragment => ContactDetailsFragment
     private val _navigateToContactDetails = MutableLiveData<Long>()
     val navigateToContactDetails
         get() = _navigateToContactDetails
@@ -141,16 +119,11 @@ class ContactTrackerViewModel(
 
 
 
-
     //--------------------------- Snackbar ---------------------------------------------------------
-    /**
-     * Request a toast by setting this value to true.
-     */
+    /** Request a toast by setting this value to true.     */
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
 
-    /**
-     * If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.
-     */
+    /** If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.  */
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
 

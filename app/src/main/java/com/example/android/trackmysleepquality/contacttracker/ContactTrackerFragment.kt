@@ -78,7 +78,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Start
-        //---------- Observer, 'Start' button.
+        //---------- Observer; 'Start' button; Navigating.
         // Add an Observer on the state variable for Navigating when 'Start' button is pressed.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
@@ -94,7 +94,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Sleep
-        //---------- Observer; 'Sleep' icon.
+        //---------- Observer; 'Sleep' icon; Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { person ->
             person?.let {
                 this.findNavController().navigate(
@@ -130,7 +130,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Clear
-        //---------- Observer; 'Clear' button.
+        //---------- Observer; 'Clear' button; Snackbar.
         // Add an Observer on the state var showing a Snackbar msg when 'Clear' is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.

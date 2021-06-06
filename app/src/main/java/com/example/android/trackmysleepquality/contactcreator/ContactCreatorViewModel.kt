@@ -101,21 +101,14 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
         }
     }
 
+
     //-------------------- Navigation
-    /**
-     * Variable that tells the fragment whether it should navigate to [ContactTrackerFragment].
-     *
-     * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
-     * the [Fragment]
-     */
+    //---------- ContactCreatorFragment => ContactTrackerFragment
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
 
-    /**  When true immediately navigate back to the [ContactTrackerFragment]     */
     val navigateToContactTracker: LiveData<Boolean?>
         get() = _navigateToContactTracker
 
-
-    /**  Call this immediately after navigating to [ContactTrackerFragment]     */
     fun doneNavigating() {
         _navigateToContactTracker.value = null
     }
