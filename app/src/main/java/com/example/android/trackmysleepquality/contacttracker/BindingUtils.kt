@@ -52,3 +52,11 @@ fun TextView.setSleepQualityString(item: ContactPerson?) {
         text = convertNumericQualityToString(item.sleepQuality, context.resources)
     }
 }
+
+@BindingAdapter("nameString")
+fun TextView.setNameString(item: ContactPerson?) {
+    item?.let {
+        text = item.name
+    }
+}
+
