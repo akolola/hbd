@@ -48,10 +48,11 @@ class ContactDetailsViewModel(
 
 
     //--------------------------- Buttons ----------------------------------------------------------
-    //----------  <Button> 'Close' is clicked.
     //-------------------- Execution
+    //----------  <Button> 'Close' is clicked.
     fun onClose() {
-        _navigateToContactTracker.value = true    }
+        _navigateToContactTracker.value = true
+    }
 
 
     //-------------------- Navigation
@@ -64,7 +65,6 @@ class ContactDetailsViewModel(
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
     }
-
 
 }
 

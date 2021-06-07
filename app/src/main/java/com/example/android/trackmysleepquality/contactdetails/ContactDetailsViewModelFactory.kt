@@ -21,11 +21,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 
 /**
- * The boiler plate code for a ViewModel Factory.
- *
- * Provides the key for the contact and the ContactDatabaseDao to the ViewModel.
+ * The ViewModelFactory. Provides the key for the contact and
+ * the ContactDatabaseDao to the ViewModel.
  */
-class SleepDetailViewModelFactory(
+class ContactDetailsViewModelFactory(
     private val contactKey: Long,
     private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")

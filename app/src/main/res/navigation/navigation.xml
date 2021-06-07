@@ -21,49 +21,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/sleep_tracker_fragment">
+    app:startDestination="@id/contact_tracker_fragment">
 
     <fragment
-        android:id="@+id/sleep_tracker_fragment"
+        android:id="@+id/contact_tracker_fragment"
         android:name="com.example.android.trackmysleepquality.contacttracker.ContactTrackerFragment"
-        android:label="@string/sleep_tracker_fragment"
+        android:label="@string/fragment_contact_tracker"
         tools:layout="@layout/fragment_contact_tracker">
         <action
-            android:id="@+id/action_contactTrackerFragment_to_contactCreatorFragment"
-            app:destination="@id/sleep_quality_fragment"
+            android:id="@+id/action_contact_tracker_fragment_to_contact_creator_fragment"
+            app:destination="@id/contact_creator_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
             android:id="@+id/action_sleep_tracker_fragment_to_sleepDetailFragment"
-            app:destination="@id/sleep_detail_fragment"
+            app:destination="@id/contact_details_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
     <fragment
-        android:id="@+id/sleep_quality_fragment"
+        android:id="@+id/contact_creator_fragment"
         android:name="com.example.android.trackmysleepquality.contactcreator.ContactCreatorFragment"
-        android:label="@string/sleep_quality_fragment"
+        android:label="@string/fragment_contact_creator"
         tools:layout="@layout/fragment_contact_creator">
         <action
-            android:id="@+id/action_contactCreatorFragment_to_contactTrackerFragment"
-            app:destination="@id/sleep_tracker_fragment"
+            android:id="@+id/action_contact_creator_fragment_to_contact_tracker_fragment"
+            app:destination="@id/contact_tracker_fragment"
             app:launchSingleTop="false"
-            app:popUpTo="@+id/sleep_tracker_fragment"
+            app:popUpTo="@+id/contact_tracker_fragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/sleep_detail_fragment"
-        android:name="com.example.android.trackmysleepquality.contactdetails.SleepDetailFragment"
-        android:label="fragment_sleep_detail"
-        tools:layout="@layout/fragment_sleep_detail" >
+        android:id="@+id/contact_details_fragment"
+        android:name="com.example.android.trackmysleepquality.contactdetails.ContactDetailsFragment"
+        android:label="fragment_contact_details"
+        tools:layout="@layout/fragment_contact_details" >
         <argument
             android:name="contactPersonKey"
             app:argType="long" />
         <action
-            android:id="@+id/action_sleepDetailFragment_to_sleep_tracker_fragment"
-            app:destination="@id/sleep_tracker_fragment"
+            android:id="@+id/action_contact_details_fragment_to_contact_tracker_fragment"
+            app:destination="@id/contact_tracker_fragment"
             app:launchSingleTop="false"
-            app:popUpTo="@+id/sleep_tracker_fragment"
+            app:popUpTo="@+id/contact_tracker_fragment"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

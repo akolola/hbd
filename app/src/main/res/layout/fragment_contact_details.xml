@@ -7,14 +7,14 @@
          click handlers, and state variables. -->
     <data>
         <variable
-            name="sleepDetailViewModel"
+            name="contactDetailsViewModel"
             type="com.example.android.trackmysleepquality.contactdetails.ContactDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".contactdetails.SleepDetailFragment">
+        tools:context=".contactdetails.ContactDetailsFragment">
 
         <ImageView
             android:id="@+id/quality_image"
@@ -23,7 +23,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
-            app:sleepImage="@{sleepDetailViewModel.person}"
+            app:sleepImage="@{contactDetailsViewModel.person}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/quality_image"
-            app:sleepQualityString="@{sleepDetailViewModel.person}" />
+            app:sleepQualityString="@{contactDetailsViewModel.person}" />
 
         <TextView
             android:id="@+id/sleep_length"
@@ -50,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/quality_string"
-            app:sleepDurationFormatted="@{sleepDetailViewModel.person}" />
+            app:sleepDurationFormatted="@{contactDetailsViewModel.person}" />
 
         <Button
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="32dp"
-            android:onClick="@{() -> sleepDetailViewModel.onClose()}"
+            android:onClick="@{() -> contactDetailsViewModel.onClose()}"
             android:text="@string/close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
