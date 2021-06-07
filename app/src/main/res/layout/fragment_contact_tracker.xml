@@ -36,7 +36,7 @@
 
         <Button
             android:id="@+id/create_button"
-            style="@style/SleepButtons"
+            style="@style/ContactButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -59,7 +59,7 @@
 
         <Button
             android:id="@+id/clear_button"
-            style="@style/SleepButtons"
+            style="@style/ContactButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin"

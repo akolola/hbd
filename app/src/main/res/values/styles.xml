@@ -24,10 +24,10 @@
     </style>
 
     <!-- Basic styling for the buttons. -->
-    <style name="SleepButtons" parent="Widget.AppCompat.Button.Colored">
+    <style name="ContactButtons" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/white_text_color</item>
-        <item name="colorAccent">@color/green_color</item>
-        <item name="colorControlHighlight">@color/green_color</item>
+        <item name="colorAccent">@color/blue_color</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
 
