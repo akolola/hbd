@@ -17,9 +17,9 @@
 <resources>
 
     <!-- App title and fragment titles -->
-    <string name="app_name">Track My Sleep Quality</string>
-    <string name="fragment_contact_tracker">SleepTrackerFragment</string>
-    <string name="fragment_contact_creator">SleepQualityFragment</string>
+    <string name="app_name">Happy Birthdates</string>
+    <string name="fragment_contact_tracker">ContactTrackerFragment</string>
+    <string name="fragment_contact_creator">ContactCreatorFragment</string>
 
     <!-- Button labels -->
     <string name="create">Create</string>
@@ -51,7 +51,7 @@
 
     <!-- Toast to play after Clear close_button has been pressed -->
     <string name="cleared_message">All your data is gone forever.</string>
-    <string name="header_text">Sleep Results</string>
+    <string name="header_text">Your Contacts</string>
     <string name="close">Close</string>
     <string name="minutes_length">%d minutes on %s</string>
     <string name="hours_length">%d hours on %s</string>
