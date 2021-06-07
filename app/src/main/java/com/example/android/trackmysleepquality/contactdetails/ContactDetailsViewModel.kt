@@ -51,18 +51,18 @@ class ContactDetailsViewModel(
     //----------  <Button> 'Close' is clicked.
     //-------------------- Execution
     fun onClose() {
-        _navigateToSleepTracker.value = true    }
+        _navigateToContactTracker.value = true    }
 
 
     //-------------------- Navigation
     //---------- ContactDetailsFragment => ContactTrackerFragment.
-    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    private val _navigateToContactTracker = MutableLiveData<Boolean?>()
 
-    val navigateToSleepTracker: LiveData<Boolean?>
-        get() = _navigateToSleepTracker
+    val navigateToContactTracker: LiveData<Boolean?>
+        get() = _navigateToContactTracker
 
     fun doneNavigatingToContactTrackerFragment() {
-        _navigateToSleepTracker.value = null
+        _navigateToContactTracker.value = null
     }
 
 
