@@ -75,7 +75,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
-    //----------  <Button> 'Create' button is clicked.
+    //----------  <Button> 'Create' close_button is clicked.
     fun onCreateContact(name: String) {
         viewModelScope.launch {
 

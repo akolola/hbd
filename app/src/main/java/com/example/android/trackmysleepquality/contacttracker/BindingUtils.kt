@@ -39,12 +39,19 @@ fun ImageView.setSleepImage(item: ContactPerson?) {
     }
 }
 
-@BindingAdapter("sleepDurationFormatted")
-fun TextView.setSleepDurationFormatted(item: ContactPerson?) {
+@BindingAdapter("nameString")
+fun TextView.setNameString(item: ContactPerson?) {
     item?.let {
-        text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, context.resources)
+        text = item.name
     }
 }
+
+//@BindingAdapter("sleepDurationFormatted")
+//fun TextView.setSleepDurationFormatted(item: ContactPerson?) {
+//    item?.let {
+//        text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, context.resources)
+//    }
+//}
 
 @BindingAdapter("sleepQualityString")
 fun TextView.setSleepQualityString(item: ContactPerson?) {
@@ -53,10 +60,4 @@ fun TextView.setSleepQualityString(item: ContactPerson?) {
     }
 }
 
-@BindingAdapter("nameString")
-fun TextView.setNameString(item: ContactPerson?) {
-    item?.let {
-        text = item.name
-    }
-}
 
