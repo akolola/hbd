@@ -58,7 +58,7 @@ class SleepDetailFragment : Fragment() {
         // Get a reference to the ViewModel associated with this fragment.
         val sleepDetailViewModel =
                 ViewModelProvider(
-                        this, viewModelFactory).get(SleepDetailViewModel::class.java)
+                        this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
         // To use the View Model with data binding, you have to explicitly
         // give the binding object a reference to it.
@@ -74,7 +74,7 @@ class SleepDetailFragment : Fragment() {
                         SleepDetailFragmentDirections.actionSleepDetailFragmentToSleepTrackerFragment())
                 // Reset state to make sure we only navigate once, even if the device
                 // has a configuration change.
-                sleepDetailViewModel.doneNavigating()
+                sleepDetailViewModel.doneNavigatingToContactTrackerFragment()
             }
         })
 

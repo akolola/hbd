@@ -74,6 +74,6 @@ interface ContactDatabaseDao {
      * Selects and returns the night with given nightId.
      */
     @Query("SELECT * from contact_table WHERE personId = :key")
-    fun getNightWithId(key: Long): LiveData<ContactPerson>
+    fun getContactWithId(key: Long): LiveData<ContactPerson>
 }
 
