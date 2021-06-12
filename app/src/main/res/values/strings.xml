@@ -58,4 +58,5 @@
     <string name="seconds_length">%d seconds on %s</string>
     <string name="input_name_text">Input name</string>
     <string name="submit">Submit</string>
+    <string name="show_date_picker">15-May-2021</string>
 </resources>

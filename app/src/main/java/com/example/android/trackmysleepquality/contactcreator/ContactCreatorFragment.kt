@@ -16,11 +16,17 @@
 
 package com.example.android.trackmysleepquality.contactcreator
 
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +34,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
+import java.util.*
 
 
 class ContactCreatorFragment : Fragment() {
@@ -61,6 +68,14 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
+        //---------- Click listener; <Button> 'datePickerButton'.
+        binding.datePickerButton.setOnClickListener {
+            val datePickerFragment = DatePickerFragment()
+            datePickerFragment.show(fragmentManager!!, "datePicker")
+        }
+
+
+
         //---------- Click listener; <tag> EditText & <Button> 'Submit'.
         binding.submitButton.setOnClickListener {
             binding.apply {
@@ -85,6 +100,22 @@ class ContactCreatorFragment : Fragment() {
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
+
+    //----------------------------------
+    class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month  = calendar.get(Calendar.MONTH)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            return DatePickerDialog(context!!, this, year,month,dayOfMonth)
+        }
+
+        override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+            Log.d(ContentValues.TAG, "Got the date")
+        }
+    }
+
 }
 
 
