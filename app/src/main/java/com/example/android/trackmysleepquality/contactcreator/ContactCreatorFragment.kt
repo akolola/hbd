@@ -75,8 +75,7 @@ class ContactCreatorFragment : Fragment() {
         }
 
 
-
-        //---------- Click listener; <tag> EditText & <Button> 'Submit'.
+        //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
         binding.submitButton.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(binding.nameEdit.text.toString())
@@ -101,8 +100,12 @@ class ContactCreatorFragment : Fragment() {
         return binding.root
     }
 
-    //----------------------------------
+
+
+
+    //--------------------------- (c) inner DatePickerFragment -------------------------------------
     class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
+
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -114,7 +117,11 @@ class ContactCreatorFragment : Fragment() {
         override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
             Log.d(ContentValues.TAG, "Got the date")
         }
+
     }
+
+
+
 
 }
 

@@ -85,7 +85,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- Sleep
-        //---------- Grid Layout Manager; <tag> RecyclerView 'sleepList' ('Sleep' icons grid).
+        //---------- Grid Layout Manager; <RecyclerView> 'sleepList' ('Sleep' icons grid).
         val manager = GridLayoutManager(activity, 3)
         binding.sleepList.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -95,20 +95,20 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-        //---------- Click listener; <tag> RecyclerView 'sleepList' ('Sleep' icon).
+        //---------- Click listener; <RecyclerView> 'sleepList' ('Sleep' icon).
         val adapter = SleepNightAdapter(SleepNightListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
         binding.sleepList.adapter = adapter
 
-        //---------- Observer; <tag> RecyclerView 'sleepList' ('Sleep' icons grid).
+        //---------- Observer; <RecyclerView> 'sleepList' ('Sleep' icons grid).
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }
         })
 
-        //---------- Observer; <tag> RecyclerView 'sleepList' ('Sleep' icon); Navigating.
+        //---------- Observer; <RecyclerView> 'sleepList' ('Sleep' icon); Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
             contactId?.let {
                 this.findNavController().navigate(
