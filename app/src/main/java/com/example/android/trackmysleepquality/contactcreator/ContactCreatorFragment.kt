@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -58,7 +57,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- Technical (v) application
         val application = requireNotNull(this.activity).application
 
-
         //----------  |DB| Contact
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
@@ -73,19 +71,18 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //--------------------------- Processing ---------------------------------------------------
         binding.contactCreatorViewModel = contactCreatorViewModel
 
+        //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
+        binding.buttonSubmit.setOnClickListener {
+            binding.apply {
+                contactCreatorViewModel.onCreateContact(binding.editTextName.text.toString())
+            }
+        }
+
         //---------- Click listener; <Button> 'datePickerButton'.
-        binding.datePickerButton.setOnClickListener {
+        binding.buttonDatePicker.setOnClickListener {
             //---------- Show Date Picker
             val datePickerFragment = DatePickerFragment(this)
             datePickerFragment.show(fragmentManager!!, "datePicker")
-        }
-
-
-        //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
-        binding.submitButton.setOnClickListener {
-            binding.apply {
-                contactCreatorViewModel.onCreateContact(binding.nameEdit.text.toString())
-            }
         }
 
         //---------- Observer; <Button> 'Submit'; Navigating.
@@ -143,7 +140,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         val viewFormatter = SimpleDateFormat("dd-MMM-yyyy")
         var viewFormattedDate = viewFormatter.format(calendar.getTime())
-        date_picker_button.text = viewFormattedDate
+        buttonDatePicker.text = viewFormattedDate
     }
 
 

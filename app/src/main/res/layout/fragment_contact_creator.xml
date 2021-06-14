@@ -37,7 +37,7 @@
 
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/textViewContactCreatorTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -52,7 +52,7 @@
             app:layout_constraintVertical_bias="0.149" />
 
         <EditText
-            android:id="@+id/name_edit"
+            android:id="@+id/editTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -64,22 +64,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title_text" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewContactCreatorTitle" />
 
         <Button
-            android:id="@+id/date_picker_button"
+            android:id="@+id/buttonDatePicker"
             android:layout_width="345dp"
             android:layout_height="46dp"
             android:layout_marginBottom="172dp"
             android:text="@string/show_date_picker"
             android:inputType="date"
-            app:layout_constraintBottom_toTopOf="@+id/submit_button"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSubmit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/name_edit" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
         <Button
-            android:id="@+id/submit_button"
+            android:id="@+id/buttonSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="148dp"
