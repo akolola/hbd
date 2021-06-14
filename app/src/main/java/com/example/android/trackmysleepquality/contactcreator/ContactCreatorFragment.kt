@@ -104,10 +104,11 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
 
+    //--------------------------- DatePicker -------------------------------------------------------
     /**
-     * the DatePicker Fragment displaying the calendar
+     * (c) DatePicker Fragment displaying the calendar
      */
-    //--------------------------- (c) inner DatePickerFragment -------------------------------------
+    //---------- (c) inner DatePickerFragment
     class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -125,13 +126,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     }
 
-
-
-
-
     /**
      * The method is triggered by a user after date picking
      */
+    //---------- (m) inner DatePickerFragment
     override fun receiveDate(year: Int, month: Int, dayOfMonth: Int) {
         val calendar = GregorianCalendar()
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -151,7 +149,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
 
-
+//--------------------------- (i)  DateSelected ----------------------------------------------------
+/**
+ * (i) DateSelected to be implemented to display date
+ */
 interface DateSelected{
      fun  receiveDate(year: Int, month: Int, dayOfMonth: Int)
 }
