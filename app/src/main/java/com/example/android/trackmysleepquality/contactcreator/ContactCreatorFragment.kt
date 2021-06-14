@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.ImageButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -34,10 +35,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
+import kotlinx.android.synthetic.main.fragment_contact_creator.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ContactCreatorFragment : Fragment() {
+class ContactCreatorFragment : Fragment(), DateSelected {
+
+
 
     /**
      * Called when the Fragment is ready to display content to the screen.
@@ -47,7 +52,7 @@ class ContactCreatorFragment : Fragment() {
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- <xml> |fragment| fragment_contact_creator
-        val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
+        var binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_creator, container, false)
 
         //---------- Technical (v) application
@@ -70,7 +75,8 @@ class ContactCreatorFragment : Fragment() {
 
         //---------- Click listener; <Button> 'datePickerButton'.
         binding.datePickerButton.setOnClickListener {
-            val datePickerFragment = DatePickerFragment()
+            //---------- Show Date Picker
+            val datePickerFragment = DatePickerFragment(this)
             datePickerFragment.show(fragmentManager!!, "datePicker")
         }
 
@@ -101,10 +107,11 @@ class ContactCreatorFragment : Fragment() {
     }
 
 
-
-
+    /**
+     * the DatePicker Fragment displaying the calendar
+     */
     //--------------------------- (c) inner DatePickerFragment -------------------------------------
-    class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
+    class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val calendar = Calendar.getInstance()
@@ -114,10 +121,29 @@ class ContactCreatorFragment : Fragment() {
             return DatePickerDialog(context!!, this, year,month,dayOfMonth)
         }
 
-        override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            dateSelected.receiveDate(year, month, dayOfMonth)
             Log.d(ContentValues.TAG, "Got the date")
         }
 
+    }
+
+
+
+
+
+    /**
+     * The method is triggered by a user after date picking
+     */
+    override fun receiveDate(year: Int, month: Int, dayOfMonth: Int) {
+        val calendar = GregorianCalendar()
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.YEAR, year)
+
+        val viewFormatter = SimpleDateFormat("dd-MMM-yyyy")
+        var viewFormattedDate = viewFormatter.format(calendar.getTime())
+        date_picker_button.text = viewFormattedDate
     }
 
 
@@ -129,20 +155,6 @@ class ContactCreatorFragment : Fragment() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+interface DateSelected{
+     fun  receiveDate(year: Int, month: Int, dayOfMonth: Int)
+}
