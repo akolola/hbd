@@ -52,9 +52,6 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
     //---------- (m) Get
     private suspend fun getPersonFromDatabase(): ContactPerson? {
         var person = database.getPerson()
-        if (person?.endTimeMilli != person?.startTimeMilli) {
-            person = null
-        }
         return person
     }
 
@@ -88,7 +85,6 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
             val liveDataPerson = person.value ?: return@launch
 
             //--- 3
-            liveDataPerson.endTimeMilli = System.currentTimeMillis()
             liveDataPerson.name = name
             update(liveDataPerson)
 
