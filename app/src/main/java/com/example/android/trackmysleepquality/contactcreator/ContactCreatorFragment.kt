@@ -138,7 +138,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         val viewFormatter = SimpleDateFormat("dd-MMM-yyyy")
         var viewFormattedDate = viewFormatter.format(calendar.getTime())
-        buttonDatePicker.text = viewFormattedDate
+        textViewBirthdate.text = viewFormattedDate
     }
 
 
