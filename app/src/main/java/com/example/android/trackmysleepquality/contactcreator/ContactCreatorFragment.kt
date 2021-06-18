@@ -86,7 +86,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         }
 
         //---------- Observer; <Button> 'Submit'; Navigating.
-        // Add an Observer to the state variable for Navigating when the 'Submit' close_button is tapped.
+        // Add an Observer to the state variable for Navigating when the 'Submit' buttonClose is tapped.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
