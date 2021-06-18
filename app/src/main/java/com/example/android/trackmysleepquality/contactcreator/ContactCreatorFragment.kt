@@ -18,9 +18,7 @@ package com.example.android.trackmysleepquality.contactcreator
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.content.ContentValues
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +72,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
-                contactCreatorViewModel.onCreateContact(binding.editTextName.text.toString())
+                contactCreatorViewModel.onCreateContact(
+                    binding.editTextName.text.toString(),
+                    binding.textViewBirthdate.text.toString())
             }
         }
 
@@ -121,7 +121,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
             dateSelected.receiveDate(year, month, dayOfMonth)
-            Log.d(ContentValues.TAG, "Got the date")
         }
 
     }
@@ -136,7 +135,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.YEAR, year)
 
-        val viewFormatter = SimpleDateFormat("dd-MMM-yyyy")
+        val viewFormatter = SimpleDateFormat("dd.MM.yyyy")
         var viewFormattedDate = viewFormatter.format(calendar.getTime())
         textViewBirthdate.text = viewFormattedDate
     }

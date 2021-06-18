@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.trackmysleepquality.database.ContactDatabaseDao
 import com.example.android.trackmysleepquality.database.ContactPerson
 import kotlinx.coroutines.*
+import java.util.*
 
 
 /**
@@ -73,7 +74,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
     //----------  <Button> 'Create' close_button is clicked.
-    fun onCreateContact(name: String) {
+    fun onCreateContact(name: String, birthDate: String) {
         viewModelScope.launch {
 
             //--- 1
@@ -86,6 +87,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
 
             //--- 3
             liveDataPerson.name = name
+            liveDataPerson.birthDate = birthDate
             update(liveDataPerson)
 
             //--- 4
