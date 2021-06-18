@@ -20,10 +20,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.convertDurationToFormatted
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.ContactPerson
 
+
+@BindingAdapter("nameString")
+fun TextView.setNameString(item: ContactPerson?) {
+    item?.let {
+        text = item.name
+    }
+}
+
+@BindingAdapter("birthDateString")
+fun TextView.setBirthDateString(item: ContactPerson?) {
+    item?.let {
+        text = item.birthDate
+    }
+}
+
+
+//----- Old ------------------------------------------------------>
 @BindingAdapter("sleepImage")
 fun ImageView.setSleepImage(item: ContactPerson?) {
     item?.let {
@@ -36,13 +52,6 @@ fun ImageView.setSleepImage(item: ContactPerson?) {
             5 -> R.drawable.ic_sleep_5
             else -> R.drawable.ic_sleep_active
         })
-    }
-}
-
-@BindingAdapter("nameString")
-fun TextView.setNameString(item: ContactPerson?) {
-    item?.let {
-        text = item.name
     }
 }
 
@@ -60,4 +69,4 @@ fun TextView.setSleepQualityString(item: ContactPerson?) {
     }
 }
 
-
+//----- Old ------------------------------------------------------<

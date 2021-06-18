@@ -49,13 +49,15 @@
     <string name="four_pretty_good">Pretty good</string>
     <string name="five_excellent">Excellent!</string>
 
-    <!-- Toast to play after Clear close_button has been pressed -->
+    <!-- Toast to play after Clear buttonClose has been pressed -->
     <string name="cleared_message">All your data is gone forever.</string>
     <string name="header_text">Your Contacts</string>
     <string name="close">Close</string>
     <string name="minutes_length">%d minutes on %s</string>
     <string name="hours_length">%d hours on %s</string>
     <string name="seconds_length">%d seconds on %s</string>
-    <string name="input_name_text">Input name</string>
+    <string name="input_name_text">Set name</string>
     <string name="submit">Submit</string>
+    <string name="show_date_picker">Set</string>
+    <string name="birthdate">&#160;Birthdate</string>
 </resources>

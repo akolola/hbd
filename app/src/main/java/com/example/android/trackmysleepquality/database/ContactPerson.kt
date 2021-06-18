@@ -19,19 +19,21 @@ package com.example.android.trackmysleepquality.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import java.sql.Date
-import java.time.Instant
-import java.time.Instant.now
-import java.time.ZoneId
 import java.util.*
+
 
 @Entity(tableName = "contact_table")
 data class ContactPerson(
         @PrimaryKey(autoGenerate = true)
         var personId: Long = 0L,
 
-        //------------------------------------->
+        @ColumnInfo(name = "name")
+        var name: String = "Unnamed",
+
+        @ColumnInfo(name = "birthdate")
+        var birthDate: String = "01-01-0001",
+
+        //---- Old parameters ----------------->
         @ColumnInfo(name = "start_time_milli")
         val startTimeMilli: Long = System.currentTimeMillis(),
 
@@ -39,14 +41,7 @@ data class ContactPerson(
         var endTimeMilli: Long = startTimeMilli,
 
         @ColumnInfo(name = "quality_rating")
-        var sleepQuality: Int = -1,
+        var sleepQuality: Int = -1
         //-------------------------------------<
-
-        @ColumnInfo(name = "name")
-        var name: String = "Unnamed",
-
-        @ColumnInfo(name = "birthdate")
-        var birthdate: String = ""
-
 
 )

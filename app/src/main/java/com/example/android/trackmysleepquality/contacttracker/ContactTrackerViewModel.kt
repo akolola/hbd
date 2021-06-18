@@ -56,10 +56,11 @@ class ContactTrackerViewModel(
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Visibility
-    /** If there are any persons in the database, show the CLEAR close_button. */
+    //----------  <Button> 'Create' is visible if there are any persons in the database.
     val clearButtonVisible = Transformations.map(persons) {
         it?.isNotEmpty()
     }
+
 
     //-------------------- Execution
     //----------  <Button> 'Create' is clicked.

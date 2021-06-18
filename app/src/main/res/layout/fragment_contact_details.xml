@@ -18,7 +18,7 @@
         tools:context=".contactdetails.ContactDetailsFragment">
 
         <ImageView
-            android:id="@+id/quality_image"
+            android:id="@+id/imageViewQuality"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="8dp"
@@ -30,21 +30,36 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/name_string"
+            android:id="@+id/textViewNameString"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="32sp"
-            app:layout_constraintBottom_toTopOf="@+id/close_button"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/quality_image"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality"
             app:nameString="@{contactDetailsViewModel.person}" />
 
+        <TextView
+            android:id="@+id/textViewBirthDateString"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClose"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality"
+            app:layout_constraintVertical_bias="0.65"
+            app:birthDateString="@{contactDetailsViewModel.person}" />
+
         <Button
-            android:id="@+id/close_button"
+            android:id="@+id/buttonClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
