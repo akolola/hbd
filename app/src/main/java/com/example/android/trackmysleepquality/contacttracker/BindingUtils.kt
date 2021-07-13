@@ -41,7 +41,7 @@ fun TextView.setBirthDateString(item: ContactPerson?) {
 
 //----- Old ------------------------------------------------------>
 @BindingAdapter("sleepImage")
-fun ImageView.setSleepImage(item: ContactPerson?) {
+fun ImageView.setAvatarImage(item: ContactPerson?) {
     item?.let {
         setImageResource(when (item.sleepQuality) {
             0 -> R.drawable.ic_sleep_0
@@ -50,7 +50,7 @@ fun ImageView.setSleepImage(item: ContactPerson?) {
             3 -> R.drawable.ic_sleep_3
             4 -> R.drawable.ic_sleep_4
             5 -> R.drawable.ic_sleep_5
-            else -> R.drawable.ic_sleep_active
+            else -> R.drawable.ic_default_person
         })
     }
 }
