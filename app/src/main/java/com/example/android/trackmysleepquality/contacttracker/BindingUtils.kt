@@ -24,13 +24,13 @@ import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.ContactPerson
 
 
-//----- 1
 @BindingAdapter("nameString")
 fun TextView.setNameString(item: ContactPerson?) {
     item?.let {
         text = item.name
     }
 }
+
 
 @BindingAdapter("birthDateString")
 fun TextView.setBirthDateString(item: ContactPerson?) {
@@ -40,31 +40,14 @@ fun TextView.setBirthDateString(item: ContactPerson?) {
 }
 
 
-//----- 2
 @BindingAdapter("sleepImage")
 fun ImageView.setAvatarImage(item: ContactPerson?) {
     item?.let {
-        setImageResource(when (item.sleepQuality) {
-            0 -> R.drawable.ic_sleep_0
-            1 -> R.drawable.ic_sleep_1
-            2 -> R.drawable.ic_sleep_2
-            3 -> R.drawable.ic_sleep_3
-            4 -> R.drawable.ic_sleep_4
-            5 -> R.drawable.ic_sleep_5
-            else -> R.drawable.ic_default_person
-        })
+        setImageResource(R.drawable.ic_default_person)
     }
 }
 
-//----- 3
-//@BindingAdapter("sleepDurationFormatted")
-//fun TextView.setSleepDurationFormatted(item: ContactPerson?) {
-//    item?.let {
-//        text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, context.resources)
-//    }
-//}
 
-//----- 4
 @BindingAdapter("sleepQualityString")
 fun TextView.setSleepQualityString(item: ContactPerson?) {
     item?.let {
