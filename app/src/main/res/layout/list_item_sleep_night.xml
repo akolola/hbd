@@ -41,8 +41,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/imageViewQuality"
             app:layout_constraintStart_toStartOf="@+id/imageViewQuality"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality"
-            app:sleepQualityString="@{sleep}" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
