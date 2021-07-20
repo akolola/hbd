@@ -26,7 +26,7 @@
             android:layout_marginBottom="300dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:sleepImage="@{contactDetailsViewModel.person}"
+            app:srcCompat="@drawable/ic_default_person"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewQuality"
             app:layout_constraintVertical_bias="0.649"
-            app:nameString="@{contactDetailsViewModel.person}" />
+            app:text="@{contactDetailsViewModel.person.name}" />
 
         <TextView
             android:id="@+id/textViewBirthDateString"
@@ -53,7 +53,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="32sp"
-            app:birthDateString="@{contactDetailsViewModel.person}"
+            app:text ="@{contactDetailsViewModel.person.birthDate}"
             app:layout_constraintBottom_toTopOf="@+id/buttonClose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

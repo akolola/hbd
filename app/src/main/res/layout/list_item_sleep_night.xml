@@ -31,8 +31,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:sleepImage="@{sleep}"
-            tools:srcCompat="@drawable/ic_sleep_5" />
+            app:srcCompat="@drawable/ic_default_person"
+/>
 
         <TextView
             android:id="@+id/quality_string"
@@ -41,8 +41,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/imageViewQuality"
             app:layout_constraintStart_toStartOf="@+id/imageViewQuality"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality"
-            app:sleepQualityString="@{sleep}" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
