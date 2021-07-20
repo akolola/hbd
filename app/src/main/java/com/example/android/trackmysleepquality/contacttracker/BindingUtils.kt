@@ -16,20 +16,10 @@
 
 package com.example.android.trackmysleepquality.contacttracker
 
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.ContactPerson
-
-
-@BindingAdapter("sleepImage")
-fun ImageView.setAvatarImage(item: ContactPerson?) {
-    item?.let {
-        setImageResource(R.drawable.ic_default_person)
-    }
-}
 
 
 @BindingAdapter("sleepQualityString")
