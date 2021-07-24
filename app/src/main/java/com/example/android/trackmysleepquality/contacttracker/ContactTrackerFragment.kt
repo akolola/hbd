@@ -85,7 +85,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //-------------------- All Contacts Displaying
-        //---------- Grid Layout Manager; <RecyclerView> 'sleepList' ('Contact' icons grid).
+        //---------- Grid Layout Manager; <RecyclerView> 'contactList' ('Contact' icons grid).
         val manager = GridLayoutManager(activity, 3)
         binding.contactList.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
