@@ -95,20 +95,20 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-        //---------- Click listener; <RecyclerView> 'sleepList' ('Contact' icon).
+        //---------- Click listener; <RecyclerView> 'contactList' ('Contact' icon).
         val adapter = SleepNightAdapter(SleepNightListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
         binding.contactList.adapter = adapter
 
-        //---------- Observer; <RecyclerView> 'sleepList' ('Contact' icons grid).
+        //---------- Observer; <RecyclerView> 'contactList' ('Contact' icons grid).
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }
         })
 
-        //---------- Observer; <RecyclerView> 'sleepList' ('Contact' icon); Navigating.
+        //---------- Observer; <RecyclerView> 'contactList' ('Contact' icon); Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
             contactId?.let {
                 this.findNavController().navigate(
