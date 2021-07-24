@@ -87,7 +87,7 @@ class ContactTrackerFragment : Fragment() {
         //-------------------- All Contacts Displaying
         //---------- Grid Layout Manager; <RecyclerView> 'sleepList' ('Contact' icons grid).
         val manager = GridLayoutManager(activity, 3)
-        binding.sleepList.layoutManager = manager
+        binding.contactList.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -99,7 +99,7 @@ class ContactTrackerFragment : Fragment() {
         val adapter = SleepNightAdapter(SleepNightListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
-        binding.sleepList.adapter = adapter
+        binding.contactList.adapter = adapter
 
         //---------- Observer; <RecyclerView> 'sleepList' ('Contact' icons grid).
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
