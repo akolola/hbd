@@ -96,7 +96,7 @@ class ContactTrackerFragment : Fragment() {
         }
 
         //---------- Contact List Adapter -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
-        val adapter = ContactListAdapter(SleepNightListener { contactId ->
+        val adapter = ContactListAdapter(ContactListListener { contactId ->
             contactTrackerViewModel.onContactClicked(contactId)
         })
         binding.contactList.adapter = adapter

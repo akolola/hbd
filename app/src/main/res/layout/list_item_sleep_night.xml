@@ -12,7 +12,7 @@
 
         <variable
             name="clickListener"
-            type="com.example.android.trackmysleepquality.contacttracker.SleepNightListener" />
+            type="com.example.android.trackmysleepquality.contacttracker.ContactListListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

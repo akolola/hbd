@@ -33,8 +33,8 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_HEADER = 0
 private val ITEM_VIEW_TYPE_ITEM = 1
 
-class ContactListAdapter(val clickListener: SleepNightListener) : ListAdapter<DataItem,
-        RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
+class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem,
+        RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
@@ -87,7 +87,7 @@ class ContactListAdapter(val clickListener: SleepNightListener) : ListAdapter<Da
     class ViewHolder private constructor(val binding: ListItemSleepNightBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(clickListener: SleepNightListener, item: ContactPerson) {
+        fun bind(clickListener: ContactListListener, item: ContactPerson) {
             binding.sleep = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -110,7 +110,7 @@ class ContactListAdapter(val clickListener: SleepNightListener) : ListAdapter<Da
  * Used by ListAdapter to calculate the minumum number of changes between and old list and a new
  * list that's been passed to `submitList`.
  */
-class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
+class ContactListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         return oldItem.id == newItem.id
     }
@@ -120,7 +120,7 @@ class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     }
 }
 
-class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
+class ContactListListener(val clickListener: (sleepId: Long) -> Unit) {
     fun onClick(night: ContactPerson) = clickListener(night.personId)
 }
 
