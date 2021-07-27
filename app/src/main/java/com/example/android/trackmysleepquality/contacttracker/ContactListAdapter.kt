@@ -42,19 +42,10 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         adapterScope.launch {
             val items = when (list) {
                 null -> listOf(DataItem.Header)
-                else -> listOf(DataItem.Header) + list.map { DataItem.SleepNightItem(it) }
+                else -> listOf(DataItem.Header) + list.map { DataItem.ContactItem(it) }
             }
             withContext(Dispatchers.Main) {
                 submitList(items)
-            }
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ViewHolder -> {
-                val nightItem = getItem(position) as DataItem.SleepNightItem
-                holder.bind(clickListener, nightItem.contactPerson)
             }
         }
     }
@@ -64,6 +55,15 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
             ITEM_VIEW_TYPE_ITEM -> ViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType ${viewType}")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ViewHolder -> {
+                val nightItem = getItem(position) as DataItem.ContactItem
+                holder.bind(clickListener, nightItem.contactPerson)
+            }
         }
     }
 
@@ -80,7 +80,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
-            is DataItem.SleepNightItem -> ITEM_VIEW_TYPE_ITEM
+            is DataItem.ContactItem -> ITEM_VIEW_TYPE_ITEM
         }
     }
 
@@ -125,7 +125,7 @@ class ContactListListener(val clickListener: (sleepId: Long) -> Unit) {
 }
 
 sealed class DataItem {
-    data class SleepNightItem(val contactPerson: ContactPerson): DataItem() {
+    data class ContactItem(val contactPerson: ContactPerson): DataItem() {
         override val id = contactPerson.personId
     }
 
