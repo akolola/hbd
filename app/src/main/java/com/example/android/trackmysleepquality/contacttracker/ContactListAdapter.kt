@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
+    //---------- (m) Non std
     fun addHeaderAndSubmitList(list: List<ContactPerson>?) {
         adapterScope.launch {
             val items = when (list) {
@@ -50,6 +51,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
+    //---------- (m) Std
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
@@ -58,6 +60,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
+    //---------- (m) Std
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolder -> {
