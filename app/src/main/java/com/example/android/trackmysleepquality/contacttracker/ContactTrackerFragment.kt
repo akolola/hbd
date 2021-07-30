@@ -96,9 +96,7 @@ class ContactTrackerFragment : Fragment() {
         }
 
         //---------- Contact List Adapter -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
-        val adapter = ContactListAdapter(ContactListListener { contactId ->
-            contactTrackerViewModel.onContactClicked(contactId)
-        })
+        val adapter = ContactListAdapter(ContactListListener { contactId ->  contactTrackerViewModel.onContactClicked(contactId)  })
         binding.contactList.adapter = adapter
 
         //---------- Observer; <RecyclerView> 'contactList' ('Contact' icons grid).

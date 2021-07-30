@@ -5,11 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="sleep"
+            name="contactPerson"
             type="com.example.android.trackmysleepquality.database.ContactPerson" />
-
         <variable
             name="clickListener"
             type="com.example.android.trackmysleepquality.contacttracker.ContactListListener" />
@@ -19,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:onClick="@{() -> clickListener.onClick(sleep)}">
+        android:onClick="@{() -> clickListener.onClick(contactPerson)}">
 
         <ImageView
             android:id="@+id/imageViewQuality"

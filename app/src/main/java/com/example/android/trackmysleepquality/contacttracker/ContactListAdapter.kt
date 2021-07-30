@@ -33,9 +33,11 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_HEADER = 0
 private val ITEM_VIEW_TYPE_ITEM = 1
 
+//---------- (cr) Std
 class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem,
         RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
+    //--------------------------- 1 Section --------------------------------------------------------
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     //---------- (m) Non std
@@ -60,16 +62,6 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
-    //---------- (m) Std
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ViewHolder -> {
-                val nightItem = getItem(position) as DataItem.ContactItem
-                holder.bind(clickListener, nightItem.contactPerson)
-            }
-        }
-    }
-
     class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
         companion object {
             fun from(parent: ViewGroup): TextViewHolder {
@@ -80,6 +72,17 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
+    //---------- (m) Std
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ViewHolder -> {
+                val nightItem = getItem(position) as DataItem.ContactItem
+                holder.bind(clickListener, nightItem.contactPerson)
+            }
+        }
+    }
+
+    //---------- (m) Std
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
@@ -87,11 +90,14 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
+
+
+    //--------------------------- 2 Section --------------------------------------------------------
     class ViewHolder private constructor(val binding: ListItemSleepNightBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
-            binding.sleep = item
+            binding.contactPerson = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
         }
@@ -107,6 +113,8 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
     }
 }
 
+
+//--------------------------- 1's functional (c)'s -------------------------------------------------
 /**
  * Callback for calculating the diff between two non-null items in a list.
  *
