@@ -84,6 +84,10 @@ class ContactTrackerFragment : Fragment() {
         })
 
 
+
+
+
+
         //-------------------- All Contacts Displaying
         //---------- Grid Layout Manager -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
         val manager = GridLayoutManager(activity, 3)
@@ -115,6 +119,10 @@ class ContactTrackerFragment : Fragment() {
                 contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
+
+
+
+
 
 
         //-------------------- Clear

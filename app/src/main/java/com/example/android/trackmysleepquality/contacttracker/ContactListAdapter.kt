@@ -33,6 +33,8 @@ import kotlinx.coroutines.withContext
 private val ITEM_VIEW_TYPE_HEADER = 0
 private val ITEM_VIEW_TYPE_ITEM = 1
 
+
+//--------------------------- (c) Adapter ----------------------------------------------------------
 //---------- (cr) Std
 class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem,
         RecyclerView.ViewHolder>(ContactListDiffCallback()) {
@@ -92,7 +94,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
 
 
-    //--------------------------- 2 Section --------------------------------------------------------
+    //--------------------------- (c) ViewHolder ---------------------------------------------------
     class ViewHolder private constructor(val binding: ListItemSleepNightBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
@@ -113,8 +115,20 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
     }
 }
 
+//--------------------------- (c) Data -------------------------------------------------------------
+sealed class DataItem {
+    data class ContactItem(val contactPerson: ContactPerson): DataItem() {
+        override val id = contactPerson.personId
+    }
 
-//--------------------------- 1's functional (c)'s -------------------------------------------------
+    object Header: DataItem() {
+        override val id = Long.MIN_VALUE
+    }
+
+    abstract val id: Long
+}
+
+//--------------------------- (c) Callback ---------------------------------------------------------
 /**
  * Callback for calculating the diff between two non-null items in a list.
  *
@@ -131,18 +145,9 @@ class ContactListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     }
 }
 
-class ContactListListener(val clickListener: (sleepId: Long) -> Unit) {
-    fun onClick(night: ContactPerson) = clickListener(night.personId)
+
+//--------------------------- (c) Listener ---------------------------------------------------------
+class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
+    fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
 }
 
-sealed class DataItem {
-    data class ContactItem(val contactPerson: ContactPerson): DataItem() {
-        override val id = contactPerson.personId
-    }
-
-    object Header: DataItem() {
-        override val id = Long.MIN_VALUE
-    }
-
-    abstract val id: Long
-}

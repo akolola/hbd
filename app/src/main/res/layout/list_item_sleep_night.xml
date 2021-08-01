@@ -34,8 +34,8 @@
 
         <TextView
             android:id="@+id/quality_string"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="63dp"
+            android:layout_height="23dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/imageViewQuality"
             app:layout_constraintStart_toStartOf="@+id/imageViewQuality"
