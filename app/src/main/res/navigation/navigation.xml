@@ -34,7 +34,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_sleep_tracker_fragment_to_sleepDetailFragment"
+            android:id="@+id/action_contact_tracker_fragment_to_contact_details_fragment"
             app:destination="@id/contact_details_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />

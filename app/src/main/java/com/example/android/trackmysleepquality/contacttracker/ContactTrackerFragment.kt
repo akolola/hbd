@@ -45,7 +45,7 @@ class ContactTrackerFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- <xml> |fragment| fragment_contact_tracker
+        //---------- |fragment activity| fragment_contact_tracker
         val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
         //---------- Technical (v) application
@@ -65,7 +65,7 @@ class ContactTrackerFragment : Fragment() {
         binding.lifecycleOwner = this
 
         //-------------------- Create
-        //---------- Observer; <Button> 'Create'; Navigating.
+        //---------- Observer; <Button> Create; Navigating.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
 
@@ -78,7 +78,7 @@ class ContactTrackerFragment : Fragment() {
         })
 
         //-------------------- Contacts List Displaying
-        //----------  (c) GridLayoutManager -> (c) ContactListAdapter; |fragment layout| fragment_contact_tracker <RecyclerView> 'contactListGrid'.
+        //----------  (c) GridLayoutManager -> (c) ContactListAdapter; <RecyclerView> ViewContactListGrid.
         val manager = GridLayoutManager(activity, 3)
         binding.contactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -88,30 +88,28 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-        //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment; |fragment layout| fragment_contact_tracker <RecyclerView> 'contactListGrid'.
+        //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment; <RecyclerView> ViewContactListGrid.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
         binding.contactListGrid.adapter = adapter
 
-        //---------- Observer; <RecyclerView> 'contactListGrid' ('Contact' icons grid).
+        //---------- Observer; <RecyclerView> ViewContactListGrid.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }
         })
 
-        //---------- Observer; <RecyclerView> 'contactListGrid' ('Contact' icon); Navigating.
-        contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
-            contactId?.let {
-                this.findNavController().navigate(
-                    ContactTrackerFragmentDirections
-                                .actionSleepTrackerFragmentToSleepDetailFragment(contactId))
+        //---------- Observer; <RecyclerView> ViewContactListGrid; Navigating.
+        contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer {
+            contactId -> contactId?.let {
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactDetailsFragment(contactId))
                 contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
 
         //-------------------- Clear
-        //---------- Observer; <Button> 'Clear'; Snackbar.
-        // Add an Observer on the state var showing a Snackbar msg when 'Clear' is pressed.
+        //---------- Observer; <Button> Clear; Snackbar.
+        // Add an Observer on the state var showing a Snackbar msg when <Button> Clear is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 Snackbar.make(
