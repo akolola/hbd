@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.databinding.ListItemContactSelectedBinding
+import com.example.android.trackmysleepquality.databinding.ListItemContactBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,7 +94,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
 
     //--------------------------- (c) ViewHolder ---------------------------------------------------
-    class ViewHolder private constructor(val binding: ListItemContactSelectedBinding)
+    class ViewHolder private constructor(val binding: ListItemContactBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
@@ -106,7 +106,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemContactSelectedBinding.inflate(layoutInflater, parent, false)
+                val binding = ListItemContactBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
