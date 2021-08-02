@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.databinding.ListItemContactBinding
+import com.example.android.trackmysleepquality.databinding.ViewContactListGridItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,7 +94,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
 
     //--------------------------- (c) ViewHolder ---------------------------------------------------
-    class ViewHolder private constructor(val binding: ListItemContactBinding)
+    class ViewHolder private constructor(val binding: ViewContactListGridItemBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
@@ -106,7 +106,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemContactBinding.inflate(layoutInflater, parent, false)
+                val binding = ViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -128,6 +128,9 @@ sealed class DataItem {
 }
 
 //--------------------------- (c) Listener ---------------------------------------------------------
+/**
+ * (c) Listener for (c)  ContactTrackerFragment => (c) ContactDetailsFragment
+ */
 class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
     fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
 }

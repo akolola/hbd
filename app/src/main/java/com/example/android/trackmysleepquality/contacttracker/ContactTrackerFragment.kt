@@ -77,15 +77,10 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-
-
-
-
-
-        //-------------------- All Contacts Displaying
-        //---------- Grid Layout Manager -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
+        //-------------------- Contacts List Displaying
+        //----------  (c) GridLayoutManager -> (c) ContactListAdapter; |fragment layout| fragment_contact_tracker <RecyclerView> 'contactListGrid'.
         val manager = GridLayoutManager(activity, 3)
-        binding.contactList.layoutManager = manager
+        binding.contactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -93,18 +88,18 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-        //---------- Contact List Adapter -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
+        //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment; |fragment layout| fragment_contact_tracker <RecyclerView> 'contactListGrid'.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
-        binding.contactList.adapter = adapter
+        binding.contactListGrid.adapter = adapter
 
-        //---------- Observer; <RecyclerView> 'contactList' ('Contact' icons grid).
+        //---------- Observer; <RecyclerView> 'contactListGrid' ('Contact' icons grid).
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)
             }
         })
 
-        //---------- Observer; <RecyclerView> 'contactList' ('Contact' icon); Navigating.
+        //---------- Observer; <RecyclerView> 'contactListGrid' ('Contact' icon); Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer { contactId ->
             contactId?.let {
                 this.findNavController().navigate(
@@ -113,11 +108,6 @@ class ContactTrackerFragment : Fragment() {
                 contactTrackerViewModel.doneNavigatingToContactDetailsFragment()
             }
         })
-
-
-
-
-
 
         //-------------------- Clear
         //---------- Observer; <Button> 'Clear'; Snackbar.
