@@ -46,8 +46,7 @@ class ContactTrackerFragment : Fragment() {
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- <xml> |fragment| fragment_contact_tracker
-        val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_contact_tracker, container, false)
+        val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
         //---------- Technical (v) application
         val application = requireNotNull(this.activity).application
@@ -57,9 +56,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactTrackerViewModel
         val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
-        val contactTrackerViewModel =
-                ViewModelProvider(
-                        this, viewModelFactory).get(ContactTrackerViewModel::class.java)
+        val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
 
 
@@ -72,12 +69,9 @@ class ContactTrackerFragment : Fragment() {
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
 
-                this.findNavController().navigate(
-                    ContactTrackerFragmentDirections
-                        .actionContactTrackerFragmentToContactCreatorFragment())
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment())
 
-                // Reset state to make sure we only navigate once, even if the device
-                // has a configuration change.
+                // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
 
             }
@@ -100,7 +94,7 @@ class ContactTrackerFragment : Fragment() {
         }
 
         //---------- Contact List Adapter -> |activity|; <RecyclerView> 'contactList' ('Contact' icons grid).
-        val adapter = ContactListAdapter(ContactListListener { contactId ->  contactTrackerViewModel.onContactClicked(contactId)  })
+        val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
         binding.contactList.adapter = adapter
 
         //---------- Observer; <RecyclerView> 'contactList' ('Contact' icons grid).

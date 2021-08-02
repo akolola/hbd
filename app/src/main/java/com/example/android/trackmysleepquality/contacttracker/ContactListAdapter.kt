@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
+import com.example.android.trackmysleepquality.databinding.ListItemContactSelectedBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,8 +36,7 @@ private val ITEM_VIEW_TYPE_ITEM = 1
 
 //--------------------------- (c) Adapter ----------------------------------------------------------
 //---------- (cr) Std
-class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem,
-        RecyclerView.ViewHolder>(ContactListDiffCallback()) {
+class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
     //--------------------------- 1 Section --------------------------------------------------------
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -95,7 +94,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
 
     //--------------------------- (c) ViewHolder ---------------------------------------------------
-    class ViewHolder private constructor(val binding: ListItemSleepNightBinding)
+    class ViewHolder private constructor(val binding: ListItemContactSelectedBinding)
         : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
@@ -107,7 +106,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
+                val binding = ListItemContactSelectedBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -128,6 +127,11 @@ sealed class DataItem {
     abstract val id: Long
 }
 
+//--------------------------- (c) Listener ---------------------------------------------------------
+class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
+    fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
+}
+
 //--------------------------- (c) Callback ---------------------------------------------------------
 /**
  * Callback for calculating the diff between two non-null items in a list.
@@ -146,8 +150,4 @@ class ContactListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
 }
 
 
-//--------------------------- (c) Listener ---------------------------------------------------------
-class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
-    fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
-}
 
