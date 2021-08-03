@@ -18,7 +18,7 @@
         tools:context=".contactdetails.ContactDetailsFragment">
 
         <ImageView
-            android:id="@+id/imageViewPicture"
+            android:id="@+id/imageViewContactPicture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -42,7 +42,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPicture"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
             app:layout_constraintVertical_bias="0.649"
             app:text="@{contactDetailsViewModel.person.name}" />
 
@@ -58,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPicture"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
             app:layout_constraintVertical_bias="0.259" />
 
         <Button

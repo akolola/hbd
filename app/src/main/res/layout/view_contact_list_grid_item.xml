@@ -19,7 +19,7 @@
         android:onClick="@{() -> clickListener.onClick(contactPerson)}">
 
         <ImageView
-            android:id="@+id/imageViewPicture"
+            android:id="@+id/imageViewContactPicture"
             android:layout_width="@dimen/icon_size"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
@@ -35,9 +35,9 @@
             android:layout_width="63dp"
             android:layout_height="23dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/imageViewPicture"
-            app:layout_constraintStart_toStartOf="@+id/imageViewPicture"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPicture" />
+            app:layout_constraintEnd_toEndOf="@+id/imageViewContactPicture"
+            app:layout_constraintStart_toStartOf="@+id/imageViewContactPicture"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
