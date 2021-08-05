@@ -53,13 +53,13 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     /**
-     *  This (c) extending (c) ViewHolder for <TextView>'s header
+     *  This (c) extending (c) ViewHolder for <TextView>'s fragment_contact_tracker_header
      */
     class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
         companion object {
             fun from(parent: ViewGroup): TextViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.header, parent, false)
+                val view = layoutInflater.inflate(R.layout.fragment_contact_tracker_header, parent, false)
                 return TextViewHolder(view)
             }
         }
