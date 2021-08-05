@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.databinding.ViewContactListGridItemBinding
+import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerViewContactListGridItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,9 +53,9 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     /**
-     *  This (c) extending (c) ViewHolder for <TextView>'s fragment_contact_tracker_header
+     *  This (c) extending (c) ViewHolder for |fragment layout| fragment_contact_tracker_header
      */
-    class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class TextViewHolder constructor(view: View): RecyclerView.ViewHolder(view) {
         companion object {
             fun from(parent: ViewGroup): TextViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -87,8 +87,6 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
         }
     }
 
-
-
     //---------- (m) Std
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -116,7 +114,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
      *
      * @constructor Creates a (c) derived from (c) ViewDataBinding
      */
-    class ViewHolder private constructor(val binding: ViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
             binding.contactPerson = item
@@ -127,17 +125,20 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
+                val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
         }
     }
+
+
+
 }
 
 //--------------------------- (c) Data -------------------------------------------------------------
 sealed class DataItem {
-    data class ContactItem(val contactPerson: ContactPerson): DataItem() {
+    data class ContactItem constructor(val contactPerson: ContactPerson): DataItem() {
         override val id = contactPerson.personId
     }
 
@@ -152,7 +153,7 @@ sealed class DataItem {
 /**
  * (c) Listener for (c) ContactTrackerFragment => (c) ContactDetailsFragment.
  */
-class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
+class ContactListListener constructor(val clickListener: (contactId: Long) -> Unit) {
     fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
 }
 
