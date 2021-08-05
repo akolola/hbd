@@ -36,10 +36,34 @@ private val ITEM_VIEW_TYPE_ITEM = 1
 
 //--------------------------- (c) Adapter ----------------------------------------------------------
 //---------- (cr) Std
-class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
+/**
+ * This (c) contains components necessary for (c) RecyclerView.
+ *
+ * @constructor Creates (c) <Entity>ListListener, in order to make every View item clickable.
+ *
+ * This (c) extending (c) ListAdapter, which needs:
+ * 1. (c) <Entity>Data. Here it is 'wrapped' (c) ContactPerson;
+ * 2. (c) ViewHolder with 3. as param;
+ * 3. (c) <Entity>ListDiffCallback.
+ */
+class ContactListAdapter constructor(val clickListener: ContactListListener) :
+    ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
     //--------------------------- 1 Section --------------------------------------------------------
     private val adapterScope = CoroutineScope(Dispatchers.Default)
+
+    /**
+     *  This (c) extending (c) ViewHolder for <TextView>'s header
+     */
+    class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        companion object {
+            fun from(parent: ViewGroup): TextViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.header, parent, false)
+                return TextViewHolder(view)
+            }
+        }
+    }
 
     //---------- (m) Non std
     fun addHeaderAndSubmitList(list: List<ContactPerson>?) {
@@ -63,15 +87,7 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
         }
     }
 
-    class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        companion object {
-            fun from(parent: ViewGroup): TextViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.header, parent, false)
-                return TextViewHolder(view)
-            }
-        }
-    }
+
 
     //---------- (m) Std
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -94,8 +110,13 @@ class ContactListAdapter(val clickListener: ContactListListener) : ListAdapter<D
 
 
     //--------------------------- (c) ViewHolder ---------------------------------------------------
-    class ViewHolder private constructor(val binding: ViewContactListGridItemBinding)
-        : RecyclerView.ViewHolder(binding.root) {
+    /**
+     * This (c) saves item in (c) RecyclerView. (c) RecyclerView creates needed amount of
+     * (c) ViewHolders.
+     *
+     * @constructor Creates a (c) derived from (c) ViewDataBinding
+     */
+    class ViewHolder private constructor(val binding: ViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
             binding.contactPerson = item
@@ -129,7 +150,7 @@ sealed class DataItem {
 
 //--------------------------- (c) Listener ---------------------------------------------------------
 /**
- * (c) Listener for (c)  ContactTrackerFragment => (c) ContactDetailsFragment
+ * (c) Listener for (c) ContactTrackerFragment => (c) ContactDetailsFragment.
  */
 class ContactListListener(val clickListener: (contactId: Long) -> Unit) {
     fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
