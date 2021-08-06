@@ -39,18 +39,43 @@ private val ITEM_VIEW_TYPE_ITEM = 1
 /**
  * This (c) contains components necessary for (c) RecyclerView.
  *
- * @constructor Creates (c) <Entity>ListListener, in order to make every View item clickable.
+ * @constructor Creates (c) <Entity>ListListener, in order to make every View item clickable.   (1)
  *
  * This (c) extending (c) ListAdapter, which needs:
- * 1. (c) <Entity>Data. Here it is 'wrapped' (c) ContactPerson;
- * 2. (c) ViewHolder with 3. as param;
- * 3. (c) <Entity>ListDiffCallback.
+ * (c) <Entity>Data. Here it is 'wrapped' (c) ContactPerson;                                    (2)
+ * (c) ViewHolder with (4) as param;                                                            (3)
+ * (c) <Entity>ListDiffCallback.                                                                (4)
  */
 class ContactListAdapter constructor(val clickListener: ContactListListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
-    //--------------------------- 1 Section --------------------------------------------------------
     private val adapterScope = CoroutineScope(Dispatchers.Default)
+
+    //--------------------------- (c) ViewHolder (3)------------------------------------------------
+    /**
+     * This (c) saves (v) item & (v) clickListener in (c) RecyclerView.
+     * (c) RecyclerView creates needed amount of (c) ViewHolders.
+     *
+     * @constructor Creates (o) of (c) extending (c) ViewDataBinding.
+     * |fragment layout| fragment_contact_tracker_view_contact_list_grid_item
+     */
+    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(clickListener: ContactListListener, item: ContactPerson) {
+            binding.contactPerson = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
+
+                return ViewHolder(binding)
+            }
+        }
+    }
 
     /**
      *  This (c) extending (c) ViewHolder for |fragment layout| fragment_contact_tracker_header
@@ -106,50 +131,9 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
     }
 
 
-
-    //--------------------------- (c) ViewHolder ---------------------------------------------------
-    /**
-     * This (c) saves item in (c) RecyclerView. (c) RecyclerView creates needed amount of
-     * (c) ViewHolders.
-     *
-     * @constructor Creates a (c) derived from (c) ViewDataBinding
-     */
-    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(clickListener: ContactListListener, item: ContactPerson) {
-            binding.contactPerson = item
-            binding.clickListener = clickListener
-            binding.executePendingBindings()
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
-
-                return ViewHolder(binding)
-            }
-        }
-    }
-
-
-
 }
 
-//--------------------------- (c) Data -------------------------------------------------------------
-sealed class DataItem {
-    data class ContactItem constructor(val contactPerson: ContactPerson): DataItem() {
-        override val id = contactPerson.personId
-    }
-
-    object Header: DataItem() {
-        override val id = Long.MIN_VALUE
-    }
-
-    abstract val id: Long
-}
-
-//--------------------------- (c) Listener ---------------------------------------------------------
+//--------------------------- (c) Listener (1) -----------------------------------------------------
 /**
  * (c) Listener for (c) ContactTrackerFragment => (c) ContactDetailsFragment.
  */
@@ -157,9 +141,38 @@ class ContactListListener constructor(val clickListener: (contactId: Long) -> Un
     fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
 }
 
-//--------------------------- (c) Callback ---------------------------------------------------------
+//--------------------------- (c) Data (2) ---------------------------------------------------------
 /**
- * Callback for calculating the diff between two non-null items in a list.
+ * This (c) contains entity data, i.e. Contact.
+ */
+sealed class DataItem {
+
+
+
+    //---------- Data (c) Std
+    data class ContactItem constructor(val contactPerson: ContactPerson): DataItem() {
+        override val id = contactPerson.personId
+    }
+
+
+
+    //---------- (o) Non std
+    object Header: DataItem() {
+        override val id = Long.MIN_VALUE
+    }
+
+    abstract val id: Long
+
+
+}
+
+//--------------------------- (c) ViewHolder (3)----------------------------------------------------
+// (c) ViewHolder is inner one of (c) ContactListAdapter
+
+
+//--------------------------- (c) Callback (4) -----------------------------------------------------
+/**
+ * (c) <Entity>ListDiffCallback for calculating the diff between two non-null items in a list.
  *
  * Used by ListAdapter to calculate the minumum number of changes between and old list and a new
  * list that's been passed to `submitList`.
