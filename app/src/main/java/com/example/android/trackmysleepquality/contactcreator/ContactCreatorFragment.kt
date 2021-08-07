@@ -63,9 +63,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
         //--------------------------- Processing ---------------------------------------------------
+        //---------- (c) ContactCreatorViewModel -> (c) ContactTrackerFragment.
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-        //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
+        //---------- Click listener; <EditText> 'editTextName' & <Button> 'buttonSubmit'.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(
@@ -81,8 +82,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             datePickerFragment.show(fragmentManager!!, "datePicker")
         }
 
-        //---------- Observer; <Button> 'Submit'; Navigating.
-        // Add an Observer to the state variable for Navigating when the 'Submit' buttonClose is tapped.
+        //---------- Observer; <Button> 'buttonSubmit'; Navigating.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
@@ -102,7 +102,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     //--------------------------- DatePicker -------------------------------------------------------
     /**
-     * (c) DatePicker Fragment displaying the calendar
+     * (c) DatePickerFragment displaying calendar.
      */
     //---------- (c) inner DatePickerFragment
     class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
@@ -122,9 +122,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     /**
-     * The method is triggered by a user after date picking
+     * The (m) is triggered by a user after date picking.
      */
-    //---------- (m) inner DatePickerFragment
+    //---------- (m) inner DatePickerFragment.
     override fun receiveDate(year: Int, month: Int, dayOfMonth: Int) {
         val calendar = GregorianCalendar()
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -146,7 +146,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 //--------------------------- (i)  DateSelected ----------------------------------------------------
 /**
- * (i) DateSelected to be implemented to display date
+ * (i) DateSelected to be implemented to display date.
  */
 interface DateSelected{
      fun  receiveDate(year: Int, month: Int, dayOfMonth: Int)

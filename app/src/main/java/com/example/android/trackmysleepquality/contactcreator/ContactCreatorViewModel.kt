@@ -34,8 +34,8 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-    //-------------------- LiveData preparation
-    //---------- (v) person
+    //-------------------- LiveData preparation.
+    //---------- (v) person.
     private var person = MutableLiveData<ContactPerson?>()
     init {
         initializePerson()
@@ -46,13 +46,11 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
         }
     }
 
-    //-------------------- Query (m)s
-    //---------- (m) Get
+    //-------------------- DB query (m)s.
     private suspend fun getPersonFromDatabase(): ContactPerson? {
         return database.getPerson()
     }
 
-    //---------- (m)s remaining
     private suspend fun insert(person: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.insert(person)
@@ -68,7 +66,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution
+    //-------------------- Execution.
     //----------  <Button> 'Create' buttonClose is clicked.
     fun onCreateContact(name: String, birthDate: String) {
         viewModelScope.launch {
@@ -87,7 +85,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
             update(liveDataPerson)
 
             //--- 4
-            // Setting this state variable to true will alert the observer and trigger navigation.
+            // Setting this state var to true will alert Observer and trigger Navigation.
             _navigateToContactTracker.value = true
 
         }

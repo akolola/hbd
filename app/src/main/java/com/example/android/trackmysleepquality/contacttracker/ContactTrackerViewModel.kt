@@ -70,7 +70,7 @@ class ContactTrackerViewModel(
         }
     }
 
-    //---------- 'Contact' icon is clicked.
+    //---------- <ImageView> 'imageViewContactPicture' is clicked.
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }
@@ -89,7 +89,7 @@ class ContactTrackerViewModel(
 
 
     //-------------------- Navigation
-    //---------- ContactTrackerFragment => ContactCreatorFragment.
+    //---------- (c) ContactTrackerFragment => (c) ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
 
     val navigateToContactCreator: LiveData<Boolean?>
