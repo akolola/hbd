@@ -28,16 +28,13 @@ import java.util.*
 
 
 /**
- *  ContactCreatorFragment's ViewModel.
+ *  (c) ContactCreatorFragment's ViewModel.
  */
-class ContactCreatorViewModel(val database: ContactDatabaseDao, application: Application) : ViewModel() {
+class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation
-    //---------- <list> persons
-    val persons = database.getAllPersons()
-
     //---------- (v) person
     private var person = MutableLiveData<ContactPerson?>()
     init {
@@ -52,8 +49,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
     //-------------------- Query (m)s
     //---------- (m) Get
     private suspend fun getPersonFromDatabase(): ContactPerson? {
-        var person = database.getPerson()
-        return person
+        return database.getPerson()
     }
 
     //---------- (m)s remaining

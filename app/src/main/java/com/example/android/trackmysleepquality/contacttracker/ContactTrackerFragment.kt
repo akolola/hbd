@@ -128,4 +128,5 @@ class ContactTrackerFragment : Fragment() {
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
+
 }

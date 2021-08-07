@@ -27,12 +27,11 @@ import com.example.android.trackmysleepquality.database.ContactDatabaseDao
  * Provides the key for the night and the SleepDatabaseDao to the ViewModel.
  */
 class ContactCreatorViewModelFactory(
-        private val dataSource: ContactDatabaseDao,
-        private val application: Application) : ViewModelProvider.Factory {
+        private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactCreatorViewModel::class.java)) {
-            return ContactCreatorViewModel(dataSource, application) as T
+            return ContactCreatorViewModel(dataSource) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
