@@ -92,11 +92,11 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
     }
 
     //---------- (m) Non std
-    fun addHeaderAndSubmitList(list: List<ContactPerson>?) {
+    fun addHeaderAndSubmitList(contactPersonList: List<ContactPerson>?) {
         adapterScope.launch {
-            val items = when (list) {
+            val items = when (contactPersonList) {
                 null -> listOf(DataItem.Header)
-                else -> listOf(DataItem.Header) + list.map { DataItem.ContactItem(it) }
+                else -> listOf(DataItem.Header) + contactPersonList.map { DataItem.ContactItem(it) }
             }
             withContext(Dispatchers.Main) {
                 submitList(items)

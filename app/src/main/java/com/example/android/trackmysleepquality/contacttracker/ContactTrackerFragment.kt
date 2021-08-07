@@ -45,16 +45,16 @@ class ContactTrackerFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- |fragment activity| fragment_contact_tracker
+        //---------- |fragment activity| fragment_contact_tracker.
         val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
-        //---------- Technical (v) application
+        //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //---------- |DB| Contact
+        //---------- |DB| Contact.
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactTrackerViewModel
+        //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.
         val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
@@ -64,23 +64,20 @@ class ContactTrackerFragment : Fragment() {
         binding.contactTrackerViewModel = contactTrackerViewModel
         binding.lifecycleOwner = this
 
-        //-------------------- <Button> Create.
+        //-------------------- <Button> 'buttonCreate'.
         //---------- Observer; Navigating.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-
                 this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment())
-
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
-
             }
         })
 
-        //-------------------- <RecyclerView> ViewContactListGrid.
+        //-------------------- <RecyclerView> 'recyclerContactListGrid'.
         //----------  (c) GridLayoutManager -> (c) ContactListAdapter.
         val manager = GridLayoutManager(activity, 3)
-        binding.contactListGrid.layoutManager = manager
+        binding.recyclerContactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -90,7 +87,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
-        binding.contactListGrid.adapter = adapter
+        binding.recyclerContactListGrid.adapter = adapter
 
         //---------- Observer; ? purpose.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {

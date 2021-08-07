@@ -63,7 +63,7 @@ class ContactTrackerViewModel(
 
 
     //-------------------- Execution
-    //----------  <Button> 'Create' is clicked.
+    //----------  <Button> 'buttonCreate' is clicked.
     fun onCreateTracking() {
         viewModelScope.launch {
             _navigateToContactCreator.value = true
@@ -99,7 +99,7 @@ class ContactTrackerViewModel(
         _navigateToContactCreator.value = null
     }
 
-    //---------- ContactTrackerFragment => ContactDetailsFragment.
+    //---------- (c) ContactTrackerFragment => (c) ContactDetailsFragment.
     private val _navigateToContactDetails = MutableLiveData<Long>()
 
     val navigateToContactDetails

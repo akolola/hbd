@@ -75,7 +75,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             }
         }
 
-        //---------- Click listener; <Button> 'datePickerButton'.
+        //---------- Click listener; <Button> 'datePickerButton'. Create & display (c)DatePickerFragment.
         binding.buttonDatePicker.setOnClickListener {
             //---------- Show Date Picker
             val datePickerFragment = DatePickerFragment(this)
@@ -104,7 +104,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     /**
      * (c) DatePickerFragment displaying calendar.
      */
-    //---------- (c) inner DatePickerFragment
+    //---------- (c) inner DatePickerFragment.
     class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
