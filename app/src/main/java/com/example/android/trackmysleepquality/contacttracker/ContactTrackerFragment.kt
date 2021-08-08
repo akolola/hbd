@@ -41,8 +41,7 @@ class ContactTrackerFragment : Fragment() {
     /**
      * Called when the Fragment is ready to display content to the screen.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- |fragment activity| fragment_contact_tracker.

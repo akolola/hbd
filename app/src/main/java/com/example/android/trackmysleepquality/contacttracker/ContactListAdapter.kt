@@ -46,50 +46,9 @@ private val ITEM_VIEW_TYPE_ITEM = 1
  * (c) ViewHolder with (4) as param;                                                            (3)
  * (c) <Entity>ListDiffCallback.                                                                (4)
  */
-class ContactListAdapter constructor(val clickListener: ContactListListener) :
-    ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
+class ContactListAdapter constructor(val clickListener: ContactListListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
-    //--------------------------- (c) ViewHolder (3)------------------------------------------------
-    /**
-     * This (c) extending (c) ViewHolder for |fragment layout|
-     * fragment_contact_tracker_view_contact_list_grid_item. It saves (v) item & (v) clickListener
-     * in (c) RecyclerView. (c) RecyclerView creates needed amount of (c) ViewHolders.
-     *
-     * @constructor Creates (o) of (c) extending (c) ViewDataBinding.
-     */
-    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(clickListener: ContactListListener, item: ContactPerson) {
-            binding.contactPerson = item
-            binding.clickListener = clickListener
-            binding.executePendingBindings()
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
-                return ViewHolder(binding)
-            }
-        }
-    }
-
-    /**
-     *  This (c) extending (c) ViewHolder for |fragment layout| fragment_contact_tracker_header
-     *
-     *  @constructor Creates (o) of (c) extending (c) View.
-     */
-    class TextViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
-        companion object {
-            fun from(parent: ViewGroup): TextViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.fragment_contact_tracker_header, parent, false)
-                return TextViewHolder(view)
-            }
-        }
-    }
 
     //---------- (m) Non std
     fun addHeaderAndSubmitList(contactPersonList: List<ContactPerson>?) {
@@ -106,19 +65,66 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) :
 
     //---------- (m) Std
     /**
-     *  This (m) creates and inflates view and return (c) TextViewHolder or (c) ViewHolder.
+     *  This (m) creates, inflates view & returns (c) TextViewHolder or (c) ViewHolder.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
+            // (c) ViewHolder's content may be alternatively defined directly in this (m)
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
             ITEM_VIEW_TYPE_ITEM -> ViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType ${viewType}")
         }
     }
 
+    //--- 3A
+    /**
+     * This (c) holds |fragment layout| fragment_contact_tracker_view_contact_list_grid_item's Views:
+     * <ImageView> & <TextView>, i.e. one item.
+     *
+     * @constructor Creates (o) of (c) extending (c) ViewDataBinding.
+     */
+    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        /**
+        * THis (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
+         */
+        fun bind(clickListener: ContactListListener, item: ContactPerson) {
+            binding.contactPerson = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
+                return ViewHolder(binding)
+            }
+        }
+    }
+
+    //--- 3B
+    /**
+     *   This (c) holds |fragment layout| fragment_contact_tracker_header's Views:
+     *   <TextView>, i.e. one item.
+     *
+     *  @constructor Creates (o) of (c) extending (c) View.
+     */
+    class TextViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
+        companion object {
+            fun from(parent: ViewGroup): TextViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val view = layoutInflater.inflate(R.layout.fragment_contact_tracker_header, parent, false)
+                return TextViewHolder(view)
+            }
+        }
+    }
+
+
+
     //---------- (m) Std
     /**
-     *  Gets current Contact item and -> View.
+     *  The (m) gets one current chosen item, extracts item data, & data -> View.
      */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -174,7 +180,7 @@ sealed class DataItem {
 }
 
 //--------------------------- (c) ViewHolder (3)----------------------------------------------------
-// (c) ViewHolder is inner one of (c) ContactListAdapter
+// (c) ViewHolder (3A) & (c) TextViewHolder (3B) is inner one of (c) ContactListAdapter
 
 
 //--------------------------- (c) Callback (4) -----------------------------------------------------
