@@ -50,7 +50,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    //---------- (m) Non std
+    //---------- Non std (m)
     fun addHeaderAndSubmitList(contactPersonList: List<ContactPerson>?) {
         adapterScope.launch {
             val items = when (contactPersonList) {
@@ -63,7 +63,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         }
     }
 
-    //---------- (m) Std
+    //---------- (c) RecyclerView's std (m)
     /**
      *  This (m) creates, inflates view & returns (c) TextViewHolder or (c) ViewHolder.
      */
@@ -76,7 +76,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         }
     }
 
-    //--- 3A
+    //--- ViewHolder (3A)
     /**
      * This (c) holds |fragment layout| fragment_contact_tracker_view_contact_list_grid_item's Views:
      * <ImageView> & <TextView>, i.e. one item.
@@ -103,7 +103,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         }
     }
 
-    //--- 3B
+    //--- ViewHolder (3B)
     /**
      *   This (c) holds |fragment layout| fragment_contact_tracker_header's Views:
      *   <TextView>, i.e. one item.
@@ -122,7 +122,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
 
 
 
-    //---------- (m) Std
+    //---------- (c) RecyclerView's std (m)
     /**
      *  The (m) gets one current chosen item, extracts item data, & data -> View.
      */
@@ -135,7 +135,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         }
     }
 
-    //---------- (m) Std
+    //---------- (c) RecyclerView's std (m)
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER

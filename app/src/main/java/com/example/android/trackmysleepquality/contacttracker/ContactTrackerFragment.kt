@@ -88,7 +88,7 @@ class ContactTrackerFragment : Fragment() {
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
         binding.recyclerContactListGrid.adapter = adapter
 
-        //---------- Observer; ? purpose.
+        //---------- Observer; Watch (v) persons & non empty (v) persons --> (c) ContactListAdapter.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.addHeaderAndSubmitList(it)

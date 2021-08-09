@@ -85,7 +85,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
             update(liveDataPerson)
 
             //--- 4
-            // Setting this state var to true will alert Observer and trigger Navigation.
+            // Set '(v) = true' --> Observer &  -> Navigation.
             _navigateToContactTracker.value = true
 
         }
