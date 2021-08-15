@@ -37,7 +37,8 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/imageViewContactPicture"
             app:layout_constraintStart_toStartOf="@+id/imageViewContactPicture"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
+            app:text="@{contactPerson.name}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
