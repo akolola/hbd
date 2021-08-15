@@ -44,13 +44,13 @@ class ContactTrackerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- |fragment activity| fragment_contact_tracker.
+        //---------- |fragment layout| fragment_contact_tracker -> (c) ContactTrackerFragment.
         val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //---------- |DB| Contact.
+        //---------- |DB| ContactDatabase -> (c) ContactTrackerFragment.
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.

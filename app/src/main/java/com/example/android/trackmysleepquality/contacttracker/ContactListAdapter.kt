@@ -58,6 +58,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
                 else -> listOf(DataItem.Header) + contactPersonList.map { DataItem.ContactItem(it) }
             }
             withContext(Dispatchers.Main) {
+                //---------- (c) RecyclerView's std (m)
                 submitList(items)
             }
         }
