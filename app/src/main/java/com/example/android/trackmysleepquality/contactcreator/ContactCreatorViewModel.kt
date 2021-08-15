@@ -28,17 +28,14 @@ import java.util.*
 
 
 /**
- *  ContactCreatorFragment's ViewModel.
+ *  (c) ContactCreatorFragment's ViewModel.
  */
-class ContactCreatorViewModel(val database: ContactDatabaseDao, application: Application) : ViewModel() {
+class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-    //-------------------- LiveData preparation
-    //---------- <list> persons
-    val persons = database.getAllPersons()
-
-    //---------- (v) person
+    //-------------------- LiveData preparation.
+    //---------- (v) person.
     private var person = MutableLiveData<ContactPerson?>()
     init {
         initializePerson()
@@ -49,14 +46,11 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
         }
     }
 
-    //-------------------- Query (m)s
-    //---------- (m) Get
+    //-------------------- DB query (m)s.
     private suspend fun getPersonFromDatabase(): ContactPerson? {
-        var person = database.getPerson()
-        return person
+        return database.getPerson()
     }
 
-    //---------- (m)s remaining
     private suspend fun insert(person: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.insert(person)
@@ -72,7 +66,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
 
 
     //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution
+    //-------------------- Execution.
     //----------  <Button> 'Create' buttonClose is clicked.
     fun onCreateContact(name: String, birthDate: String) {
         viewModelScope.launch {
@@ -91,7 +85,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao, application: App
             update(liveDataPerson)
 
             //--- 4
-            // Setting this state variable to true will alert the observer and trigger navigation.
+            // Set '(v) = true' --> Observer &  -> Navigation.
             _navigateToContactTracker.value = true
 
         }

@@ -63,14 +63,14 @@ class ContactTrackerViewModel(
 
 
     //-------------------- Execution
-    //----------  <Button> 'Create' is clicked.
+    //----------  <Button> 'buttonCreate' is clicked.
     fun onCreateTracking() {
         viewModelScope.launch {
             _navigateToContactCreator.value = true
         }
     }
 
-    //---------- 'Contact' icon is clicked.
+    //---------- <ImageView> 'imageViewContactPicture' is clicked.
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }
@@ -89,7 +89,7 @@ class ContactTrackerViewModel(
 
 
     //-------------------- Navigation
-    //---------- ContactTrackerFragment => ContactCreatorFragment.
+    //---------- (c) ContactTrackerFragment => (c) ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
 
     val navigateToContactCreator: LiveData<Boolean?>
@@ -99,7 +99,7 @@ class ContactTrackerViewModel(
         _navigateToContactCreator.value = null
     }
 
-    //---------- ContactTrackerFragment => ContactDetailsFragment.
+    //---------- (c) ContactTrackerFragment => (c) ContactDetailsFragment.
     private val _navigateToContactDetails = MutableLiveData<Long>()
 
     val navigateToContactDetails

@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="sleep"
+            name="contactPerson"
             type="com.example.android.trackmysleepquality.database.ContactPerson" />
-
         <variable
             name="clickListener"
-            type="com.example.android.trackmysleepquality.contacttracker.SleepNightListener" />
+            type="com.example.android.trackmysleepquality.contacttracker.ContactListListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:onClick="@{() -> clickListener.onClick(sleep)}">
+        android:onClick="@{() -> clickListener.onClick(contactPerson)}">
 
         <ImageView
-            android:id="@+id/imageViewQuality"
+            android:id="@+id/imageViewContactPicture"
             android:layout_width="@dimen/icon_size"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
@@ -31,17 +28,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_default_person"
-/>
+            app:srcCompat="@drawable/ic_default_person" />
 
         <TextView
-            android:id="@+id/quality_string"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/textViewContactName"
+            android:layout_width="63dp"
+            android:layout_height="23dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/imageViewQuality"
-            app:layout_constraintStart_toStartOf="@+id/imageViewQuality"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewQuality" />
+            app:layout_constraintEnd_toEndOf="@+id/imageViewContactPicture"
+            app:layout_constraintStart_toStartOf="@+id/imageViewContactPicture"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
+            app:text="@{contactPerson.name}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

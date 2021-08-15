@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,15 +42,13 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     /**
-     * Called when the Fragment is ready to display content to the screen.
+     * The (m) is called when (c) ContactCreatorFragment is ready to display content to the screen.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- <xml> |fragment| fragment_contact_creator
-        var binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_contact_creator, container, false)
+        //---------- |fragment layout| fragment_contact_creator
+        var binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
 
         //---------- Technical (v) application
         val application = requireNotNull(this.activity).application
@@ -59,17 +57,16 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- (c) ContactCreatorViewModel
-        val viewModelFactory = ContactCreatorViewModelFactory(dataSource, application)
-        val contactCreatorViewModel =
-                ViewModelProvider(
-                        this, viewModelFactory).get(ContactCreatorViewModel::class.java)
+        val viewModelFactory = ContactCreatorViewModelFactory(dataSource)
+        val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
 
 
         //--------------------------- Processing ---------------------------------------------------
+        //---------- (c) ContactCreatorViewModel -> (c) ContactTrackerFragment.
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-        //---------- Click listener; <EditText> 'Name Edit' & <Button> 'Submit'.
+        //---------- Click listener; <EditText> 'editTextName' & <Button> 'buttonSubmit'.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(
@@ -78,15 +75,14 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             }
         }
 
-        //---------- Click listener; <Button> 'datePickerButton'.
+        //---------- Click listener; <Button> 'datePickerButton'. Create & display (c)DatePickerFragment.
         binding.buttonDatePicker.setOnClickListener {
             //---------- Show Date Picker
             val datePickerFragment = DatePickerFragment(this)
             datePickerFragment.show(fragmentManager!!, "datePicker")
         }
 
-        //---------- Observer; <Button> 'Submit'; Navigating.
-        // Add an Observer to the state variable for Navigating when the 'Submit' buttonClose is tapped.
+        //---------- Observer; <Button> 'buttonSubmit'; Navigating.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
@@ -106,9 +102,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     //--------------------------- DatePicker -------------------------------------------------------
     /**
-     * (c) DatePicker Fragment displaying the calendar
+     * (c) DatePickerFragment displaying calendar.
      */
-    //---------- (c) inner DatePickerFragment
+    //---------- (c) inner DatePickerFragment.
     class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -126,9 +122,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     /**
-     * The method is triggered by a user after date picking
+     * The (m) is triggered by a user after date picking.
      */
-    //---------- (m) inner DatePickerFragment
+    //---------- (m) inner DatePickerFragment.
     override fun receiveDate(year: Int, month: Int, dayOfMonth: Int) {
         val calendar = GregorianCalendar()
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -150,7 +146,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 //--------------------------- (i)  DateSelected ----------------------------------------------------
 /**
- * (i) DateSelected to be implemented to display date
+ * (i) DateSelected to be implemented to display date.
  */
 interface DateSelected{
      fun  receiveDate(year: Int, month: Int, dayOfMonth: Int)
