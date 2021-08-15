@@ -65,6 +65,16 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
     }
 
     //---------- (c) RecyclerView's std (m)
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
+            is DataItem.ContactItem -> ITEM_VIEW_TYPE_ITEM
+        }
+    }
+
+
+
+    //---------- (c) RecyclerView's std (m)
     /**
      *  This (m) creates, inflates view & returns (c) TextViewHolder or (c) ViewHolder.
      */
@@ -133,14 +143,6 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
                 val item = getItem(position) as DataItem.ContactItem
                 holder.bind(clickListener, item.contactPerson)
             }
-        }
-    }
-
-    //---------- (c) RecyclerView's std (m)
-    override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
-            is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
-            is DataItem.ContactItem -> ITEM_VIEW_TYPE_ITEM
         }
     }
 
