@@ -82,7 +82,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         return when (viewType) {
             // (c) ViewHolder's content may be alternatively defined directly in this (m)
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> ViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ITEM -> ContactViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType ${viewType}")
         }
     }
@@ -94,10 +94,10 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
      *
      * @constructor Creates (o) of (c) extending (c) ViewDataBinding.
      */
-    class ViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ContactViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         /**
-        * THis (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
+        * This (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
          */
         fun bind(clickListener: ContactListListener, item: ContactPerson) {
             binding.contactPerson = item
@@ -106,10 +106,10 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): ContactViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = FragmentContactTrackerViewContactListGridItemBinding.inflate(layoutInflater, parent, false)
-                return ViewHolder(binding)
+                return ContactViewHolder(binding)
             }
         }
     }
@@ -139,7 +139,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
      */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ViewHolder -> {
+            is ContactViewHolder -> {
                 val item = getItem(position) as DataItem.ContactItem
                 holder.bind(clickListener, item.contactPerson)
             }
