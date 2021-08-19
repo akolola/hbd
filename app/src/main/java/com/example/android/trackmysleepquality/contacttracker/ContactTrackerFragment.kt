@@ -76,7 +76,7 @@ class ContactTrackerFragment : Fragment() {
         //-------------------- <RecyclerView> 'recyclerContactListGrid'.
         //----------  (c) GridLayoutManager -> (c) ContactListAdapter.
         val manager = GridLayoutManager(activity, 3)
-        binding.recyclerContactListGrid.layoutManager = manager
+        binding.recyclerViewContactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -86,7 +86,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
-        binding.recyclerContactListGrid.adapter = adapter
+        binding.recyclerViewContactListGrid.adapter = adapter
 
         //---------- Observer; Watch (v) persons & non empty (v) persons --> (c) ContactListAdapter.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
