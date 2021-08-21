@@ -9,7 +9,7 @@
     <data>
         <variable
             name="contactDetailsViewModel"
-            type="com.example.android.trackmysleepquality.contactdetails.ContactDetailsViewModel" />
+            type="com.example.android.happybirthdates.contactdetails.ContactDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

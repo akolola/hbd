@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contacttracker
+package com.example.android.happybirthdates.contactdetails
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.trackmysleepquality.database.ContactDatabaseDao
+import com.example.android.happybirthdates.database.ContactDatabaseDao
 
 /**
- * This is pretty much boiler plate code for a ViewModel Factory.
- *
- * Provides the SleepDatabaseDao and context to the ViewModel.
+ * The ViewModelFactory. Provides the key for the contact and
+ * the ContactDatabaseDao to the ViewModel.
  */
-class ContactTrackerViewModelFactory(
-    private val dataSource: ContactDatabaseDao,
-    private val application: Application) : ViewModelProvider.Factory {
+class ContactDetailsViewModelFactory(
+    private val contactKey: Long,
+    private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ContactTrackerViewModel::class.java)) {
-            return ContactTrackerViewModel(dataSource, application) as T
+        if (modelClass.isAssignableFrom(ContactDetailsViewModel::class.java)) {
+            return ContactDetailsViewModel(contactKey, dataSource) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 
+ 

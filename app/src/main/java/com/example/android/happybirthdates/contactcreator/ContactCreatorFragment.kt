@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contactcreator
+package com.example.android.happybirthdates.contactcreator
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -29,9 +29,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentContactCreatorBinding
+import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
 import java.text.SimpleDateFormat
 import java.util.*

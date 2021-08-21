@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contacttracker
+package com.example.android.happybirthdates.contacttracker
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.example.android.trackmysleepquality.database.ContactDatabaseDao
-import com.example.android.trackmysleepquality.database.ContactPerson
+import com.example.android.happybirthdates.database.ContactDatabaseDao
+import com.example.android.happybirthdates.database.ContactPerson
 import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 

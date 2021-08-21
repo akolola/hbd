@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contacttracker
+package com.example.android.happybirthdates.contacttracker
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,9 +26,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerBinding
+import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 
 

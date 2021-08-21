@@ -25,7 +25,7 @@
     <data>
         <variable
             name="contactTrackerViewModel"
-            type="com.example.android.trackmysleepquality.contacttracker.ContactTrackerViewModel" />
+            type="com.example.android.happybirthdates.contacttracker.ContactTrackerViewModel" />
     </data>
 
     <!-- Start of the visible fragment layout using ConstraintLayout -->

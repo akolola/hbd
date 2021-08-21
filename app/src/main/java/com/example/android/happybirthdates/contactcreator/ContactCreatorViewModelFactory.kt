@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contactcreator
+package com.example.android.happybirthdates.contactcreator
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.trackmysleepquality.database.ContactDatabaseDao
+import com.example.android.happybirthdates.database.ContactDatabaseDao
 
 /**
  * This is pretty much boiler plate code for a ViewModel Factory.

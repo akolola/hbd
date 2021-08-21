@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contacttracker
+package com.example.android.happybirthdates.contacttracker
 
 import android.view.LayoutInflater
 import android.view.View
@@ -22,9 +22,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.ContactPerson
-import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerViewContactListGridItemBinding
+import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.databinding.FragmentContactTrackerViewContactListGridItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
