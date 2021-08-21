@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/contact_tracker_fragment"
-        android:name="com.example.android.trackmysleepquality.contacttracker.ContactTrackerFragment"
+        android:name="com.example.android.happybirthdates.contacttracker.ContactTrackerFragment"
         android:label="@string/fragment_contact_tracker"
         tools:layout="@layout/fragment_contact_tracker">
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/contact_creator_fragment"
-        android:name="com.example.android.trackmysleepquality.contactcreator.ContactCreatorFragment"
+        android:name="com.example.android.happybirthdates.contactcreator.ContactCreatorFragment"
         android:label="@string/fragment_contact_creator"
         tools:layout="@layout/fragment_contact_creator">
         <action
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/contact_details_fragment"
-        android:name="com.example.android.trackmysleepquality.contactdetails.ContactDetailsFragment"
+        android:name="com.example.android.happybirthdates.contactdetails.ContactDetailsFragment"
         android:label="fragment_contact_details"
         tools:layout="@layout/fragment_contact_details" >
         <argument

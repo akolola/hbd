@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.database
+package com.example.android.happybirthdates.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

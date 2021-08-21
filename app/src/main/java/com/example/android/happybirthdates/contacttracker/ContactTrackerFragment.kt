@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.contacttracker
+package com.example.android.happybirthdates.contacttracker
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,9 +26,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.android.trackmysleepquality.R
-import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.databinding.FragmentContactTrackerBinding
+import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -76,7 +76,7 @@ class ContactTrackerFragment : Fragment() {
         //-------------------- <RecyclerView> 'recyclerContactListGrid'.
         //----------  (c) GridLayoutManager -> (c) ContactListAdapter.
         val manager = GridLayoutManager(activity, 3)
-        binding.recyclerContactListGrid.layoutManager = manager
+        binding.recyclerViewContactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -86,7 +86,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
-        binding.recyclerContactListGrid.adapter = adapter
+        binding.recyclerViewContactListGrid.adapter = adapter
 
         //---------- Observer; Watch (v) persons & non empty (v) persons --> (c) ContactListAdapter.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality.database
+package com.example.android.happybirthdates.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 
 @Entity(tableName = "contact_table")

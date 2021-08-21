@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.happybirthdates
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
-import android.os.Build
-import android.text.Html
-import android.text.Spanned
-import android.widget.TextView
-import androidx.core.text.HtmlCompat
-import androidx.recyclerview.widget.RecyclerView
-import com.example.android.trackmysleepquality.database.ContactPerson
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

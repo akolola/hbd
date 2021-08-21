@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.android.trackmysleepquality
+package com.example.android.happybirthdates
 
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.android.trackmysleepquality.database.ContactDatabase
-import com.example.android.trackmysleepquality.database.ContactDatabaseDao
-import com.example.android.trackmysleepquality.database.ContactPerson
+import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.database.ContactDatabaseDao
+import com.example.android.happybirthdates.database.ContactPerson
 import org.junit.Assert.assertEquals
 import org.junit.After
 import org.junit.Before

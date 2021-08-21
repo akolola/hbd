@@ -6,10 +6,10 @@
     <data>
         <variable
             name="contactPerson"
-            type="com.example.android.trackmysleepquality.database.ContactPerson" />
+            type="com.example.android.happybirthdates.database.ContactPerson" />
         <variable
             name="clickListener"
-            type="com.example.android.trackmysleepquality.contacttracker.ContactListListener" />
+            type="com.example.android.happybirthdates.contacttracker.ContactListListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
