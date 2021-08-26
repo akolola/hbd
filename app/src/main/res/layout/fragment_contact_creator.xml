@@ -34,6 +34,18 @@
         android:layout_height="match_parent"
         tools:context=".contactcreator.ContactCreatorFragment">
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorButtonNormal"
+            android:tint="@color/blue_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.169"
+            app:srcCompat="@drawable/ic_add_photo_foreground" />
 
         <TextView
             android:id="@+id/textViewContactCreatorTitle"
