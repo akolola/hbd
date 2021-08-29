@@ -16,13 +16,20 @@
 
 package com.example.android.happybirthdates.contactcreator
 
+import android.Manifest
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -66,6 +73,21 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- (c) ContactCreatorViewModel -> (c) ContactTrackerFragment.
         binding.contactCreatorViewModel = contactCreatorViewModel
 
+
+        //---------- Click listener;
+        binding.imageButtonAddPicture.setOnClickListener {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                   if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        requestPermissions(permissions, PERMISSION_CODE)
+                   } else{
+                       chooseImageGallery();
+                   }
+              }else{
+                    chooseImageGallery();
+              }
+        }
+
         //---------- Click listener; <EditText> 'editTextName' & <Button> 'buttonSubmit'.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
@@ -97,6 +119,38 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
+    }
+
+    //--------------------------- Image Picker -------------------------------------------------------
+    companion object {
+        private val IMAGE_PICK_CODE = 1000;
+        private val PERMISSION_CODE = 1001;
+    }
+
+    private fun chooseImageGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode) {
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    chooseImageGallery()
+                } else {
+                    Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+               imageButtonAddPicture.setImageURI(data?.data) //<------------------------
+               //imageButtonAddImage.setImageResource(data?.data.)
+
+            }
     }
 
 
@@ -135,8 +189,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         var viewFormattedDate = viewFormatter.format(calendar.getTime())
         textViewBirthdate.text = viewFormattedDate
     }
-
-
 
 
 }
