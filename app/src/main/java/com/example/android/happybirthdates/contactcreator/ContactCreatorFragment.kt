@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,16 @@ import com.example.android.happybirthdates.databinding.FragmentContactCreatorBin
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
 import java.text.SimpleDateFormat
 import java.util.*
+import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.content.Context
+import android.net.Uri
+import java.io.*
+import java.lang.Exception
+
+
+private const val TAG = "ContactCreatorFragment"
+
 
 
 class ContactCreatorFragment : Fragment(), DateSelected {
@@ -81,10 +92,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                         val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                         requestPermissions(permissions, PERMISSION_CODE)
                    } else{
-                       chooseImageGallery();
+                       chooseImageGallery()
                    }
               }else{
-                    chooseImageGallery();
+                    chooseImageGallery()
               }
         }
 
@@ -109,8 +120,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
                     ContactCreatorFragmentDirections.actionContactCreatorFragmentToContactTrackerFragment())
-                // Reset state to make sure we only navigate once, even if the device
-                // has a configuration change.
+                // Reset state to make sure we only navigate once, even if the device has a config change.
                 contactCreatorViewModel.doneNavigating()
             }
         })
@@ -123,8 +133,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     //--------------------------- Image Picker -------------------------------------------------------
     companion object {
-        private val IMAGE_PICK_CODE = 1000;
-        private val PERMISSION_CODE = 1001;
+        private const val IMAGE_PICK_CODE = 1000
+        private const val PERMISSION_CODE = 1001
     }
 
     private fun chooseImageGallery() {
@@ -147,11 +157,42 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-               imageButtonAddPicture.setImageURI(data?.data) //<------------------------
-               //imageButtonAddImage.setImageResource(data?.data.)
+                ///imageButtonAddPicture.setImageURI(data?.data)
+                //-- Save & Load
+                val imageUri: Uri? = data?.data
+                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
+                val fileName = "${UUID.randomUUID()}.png"
+                saveImageToInternalStorage(bitmap, fileName)
+                loadImageFromInternalStorage(fileName)
 
             }
     }
+
+    //--------------------------- File -------------------------------------------------------
+    private fun saveImageToInternalStorage(image : Bitmap, fileName: String) {
+        try {
+            // Use compress (m) on (o) Bitmap for: image -> OutputStream
+            val fos = context!!.openFileOutput(fileName, Context.MODE_PRIVATE)
+            // bitmap -> OutputStream
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.close()
+        } catch (e : Exception ) {
+            Log.e(TAG, e.toString())
+        }
+    }
+
+    private fun loadImageFromInternalStorage(fileName: String) {
+        try {
+            val absolutePath = context!!.getFileStreamPath(fileName).absolutePath
+            val fin = FileInputStream(absolutePath)
+            ///val bitmap = BitmapFactory.decodeStream(fin)
+            imageButtonAddPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
+            fin.close()
+        } catch (e : Exception ) {
+            Log.e(TAG, e.toString())
+        }
+    }
+
 
 
     //--------------------------- DatePicker -------------------------------------------------------
