@@ -54,7 +54,6 @@ import java.lang.Exception
 private const val TAG = "ContactCreatorFragment"
 
 
-
 class ContactCreatorFragment : Fragment(), DateSelected {
 
 
@@ -105,7 +104,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                 contactCreatorViewModel.onCreateContact(
                     binding.editTextName.text.toString(),
                     binding.textViewBirthdate.text.toString(),
-                "test")
+                    binding.imageButtonAddPicture.tag.toString())
             }
         }
 
@@ -157,16 +156,17 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-                ///imageButtonAddPicture.setImageURI(data?.data)
-                //-- Save & Load
-                val imageUri: Uri? = data?.data
-                val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
-                val fileName = "${UUID.randomUUID()}.png"
-                saveImageToInternalStorage(bitmap, fileName)
-                loadImageFromInternalStorage(fileName)
+        if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            ///imageButtonAddPicture.setImageURI(data?.data)
+            //-- Save & Load
+            val imageUri: Uri? = data?.data
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
+            imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
+            val fileName = imageButtonAddPicture.tag.toString()
+            saveImageToInternalStorage(bitmap, fileName)
+            loadImageFromInternalStorage(fileName)
 
-            }
+        }
     }
 
     //--------------------------- File -------------------------------------------------------

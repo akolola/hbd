@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 /**
- * The HappyBirthday app derived from a demo app from a course
- * on Udacity(https://www.udacity.com/course/???).
+ * The HappyBirthday app derived from a demo app
  *
  * The HappyBirthday app is an app that helps you to not  forget about Birthdays of your
  * friends and acquaintances.
