@@ -32,6 +32,9 @@ data class ContactPerson(
         @ColumnInfo(name = "birthdate")
         var birthDate: String = "01-01-0001",
 
+        @ColumnInfo(name = "imageNameId")
+        var imageNameId: String = "Unnamed",
+
         //---- Old parameters ----------------->
         @ColumnInfo(name = "start_time_milli")
         val startTimeMilli: Long = System.currentTimeMillis(),

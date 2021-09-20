@@ -67,7 +67,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution.
     //----------  <Button> 'Create' buttonClose is clicked.
-    fun onCreateContact(name: String, birthDate: String) {
+    fun onCreateContact(name: String, birthDate: String, imageNameId: String) {
         viewModelScope.launch {
 
             //--- 1
@@ -81,6 +81,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
             //--- 3
             liveDataPerson.name = name
             liveDataPerson.birthDate = birthDate
+            liveDataPerson.imageNameId = imageNameId
             update(liveDataPerson)
 
             //--- 4

@@ -104,7 +104,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(
                     binding.editTextName.text.toString(),
-                    binding.textViewBirthdate.text.toString())
+                    binding.textViewBirthdate.text.toString(),
+                "test")
             }
         }
 
