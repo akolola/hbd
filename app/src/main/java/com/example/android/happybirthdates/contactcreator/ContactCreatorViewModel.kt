@@ -29,7 +29,7 @@ import java.util.*
 /**
  *  (c) ContactCreatorFragment's ViewModel.
  */
-class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
+class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------

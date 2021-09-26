@@ -26,11 +26,9 @@ import com.example.android.happybirthdates.database.ContactPerson
 /**
  * ContactDetailsFragment's ViewModel.
  *
- * @param contactKey The key of the current contact we are working on.
+ * @param contactKey The key of the current (o) Contact we are working on.
  */
-class ContactDetailsViewModel(
-    private val contactKey: Long = 0L,
-    dataSource: ContactDatabaseDao) : ViewModel() {
+class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dataSource: ContactDatabaseDao) : ViewModel() {
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation
@@ -43,9 +41,9 @@ class ContactDetailsViewModel(
     fun getPerson() = person
 
     init {
+        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
         person.addSource(database.getContactWithId(contactKey), person::setValue)
     }
-
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
