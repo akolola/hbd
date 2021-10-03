@@ -66,10 +66,23 @@ class ContactDetailsFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
+       // val ldPersonValue = contactDetailsViewModel.ldPerson.value
+       // ldPersonValue!!.imageNameId = "testpath"
+       // contactDetailsViewModel.ldPerson.postValue(ldPersonValue)
+
         binding.contactDetailsViewModel = contactDetailsViewModel
-        binding.lifecycleOwner = this       // binding.setLifecycleOwner(this)
-        //TODO: val filename = contactDetailsViewModel
+        binding.lifecycleOwner = this       // Kotlin syntax like binding.setLifecycleOwner(this)
+        //val person = contactDetailsViewModel.getPersonFromDatabase(arguments.contactPersonKey)
+        //val fileName : String = person?.imageNameId
         //TODO: loadImageFromInternalStorage(fileName)
+
+        //---------- Observer;  (v) ldPerson; Value emptiness.
+        contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
+            if(contactDetailsViewModel.ldPerson.value != null){
+                Log.i(TAG, "========================== The value is not null ==========================")
+            }
+        })
+
 
         //---------- Observer;  <Button> 'Clear'; Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {

@@ -31,18 +31,23 @@ import com.example.android.happybirthdates.database.ContactPerson
 class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dataSource: ContactDatabaseDao) : ViewModel() {
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-    //-------------------- LiveData preparation
-    //---------- |DB| Contact
-    val database = dataSource
+    //-------------------- MediatorLiveData preparation.
+    //---------- (v) person.
 
-    //---------- (v) person
-    private val person = MediatorLiveData<ContactPerson>()
 
-    fun getPerson() = person
+
+    val ldPerson = MediatorLiveData<ContactPerson>()
+
+    fun getPerson() = ldPerson
+
+    //---------- |DB| Contact.
+    val dbPerson = dataSource
+
 
     init {
         // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-        person.addSource(database.getContactWithId(contactKey), person::setValue)
+        ldPerson.addSource(dbPerson.getContactWithId(contactKey), ldPerson::setValue)
+
     }
 
     //--------------------------- Buttons ----------------------------------------------------------
