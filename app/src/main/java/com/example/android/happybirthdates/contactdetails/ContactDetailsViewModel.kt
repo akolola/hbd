@@ -32,10 +32,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- MediatorLiveData preparation.
-    //---------- (v) person.
-
-
-
+    //---------- (v) ldPerson.
     val ldPerson = MediatorLiveData<ContactPerson>()
 
     fun getPerson() = ldPerson

@@ -37,11 +37,13 @@ import java.io.FileInputStream
 private const val TAG = "ContactDetailsFragment"
 
 /**
- * A fragment with Contact details
- *
+ * (c) Fragment with Contact details
  */
 class ContactDetailsFragment : Fragment() {
 
+    /**
+     * The (m) is called when (c) ContactDetailsFragment is ready to display content to the screen.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -50,36 +52,29 @@ class ContactDetailsFragment : Fragment() {
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_details, container, false)
 
-        //---------- Technical (v) application
+        //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //---------- |navigation| navigation's (v) arguments
+        //---------- |navigation| navigation's (v) arguments.
         val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
 
-        //---------- |DB| Contact
-        val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
+        //---------- |DB| Contact.
+        val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- (v) arguments & (v) dataSource
-        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, dataSource)
+        //---------- (c) ContactDetailsViewModel <- (v) arguments & (v) dataSource.
+        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, dbPerson)
         val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
 
 
         //--------------------------- Processing ---------------------------------------------------
-       // val ldPersonValue = contactDetailsViewModel.ldPerson.value
-       // ldPersonValue!!.imageNameId = "testpath"
-       // contactDetailsViewModel.ldPerson.postValue(ldPersonValue)
-
         binding.contactDetailsViewModel = contactDetailsViewModel
-        binding.lifecycleOwner = this       // Kotlin syntax like binding.setLifecycleOwner(this)
-        //val person = contactDetailsViewModel.getPersonFromDatabase(arguments.contactPersonKey)
-        //val fileName : String = person?.imageNameId
-        //TODO: loadImageFromInternalStorage(fileName)
+        binding.lifecycleOwner = this       // Kotlin syntax like 'binding.setLifecycleOwner(this)'
 
         //---------- Observer;  (v) ldPerson; Value emptiness.
         contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
             if(contactDetailsViewModel.ldPerson.value != null){
-                Log.i(TAG, "========================== The value is not null ==========================")
+                loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
             }
         })
 
