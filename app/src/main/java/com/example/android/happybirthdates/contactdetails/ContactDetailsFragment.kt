@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 package com.example.android.happybirthdates.contactdetails
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,14 +30,20 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactDetailsBinding
+import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
+import java.io.File
+import java.io.FileInputStream
 
+private const val TAG = "ContactDetailsFragment"
 
 /**
- * A fragment with Contact details
- *
+ * (c) Fragment with Contact details
  */
 class ContactDetailsFragment : Fragment() {
 
+    /**
+     * The (m) is called when (c) ContactDetailsFragment is ready to display content to the screen.
+     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -44,24 +52,32 @@ class ContactDetailsFragment : Fragment() {
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_contact_details, container, false)
 
-        //---------- Technical (v) application & (v) arguments
+        //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
+
+        //---------- |navigation| navigation's (v) arguments.
         val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
 
-        //---------- |DB| Contact
-        val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
+        //---------- |DB| Contact.
+        val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel
-        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, dataSource)
-        val contactDetailsViewModel =
-                ViewModelProvider(
-                        this, viewModelFactory).get(ContactDetailsViewModel::class.java)
+        //---------- (c) ContactDetailsViewModel <- (v) arguments & (v) dataSource.
+        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, dbPerson)
+        val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
 
 
         //--------------------------- Processing ---------------------------------------------------
         binding.contactDetailsViewModel = contactDetailsViewModel
-        binding.lifecycleOwner = this       // binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this       // Kotlin syntax like 'binding.setLifecycleOwner(this)'
+
+        //---------- Observer;  (v) ldPerson; Value emptiness.
+        contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
+            if(contactDetailsViewModel.ldPerson.value != null){
+                loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
+            }
+        })
+
 
         //---------- Observer;  <Button> 'Clear'; Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
@@ -77,4 +93,17 @@ class ContactDetailsFragment : Fragment() {
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
+
+    private fun loadImageFromInternalStorage(fileName: String) {
+        try {
+            val absolutePath = context!!.getFileStreamPath(fileName).absolutePath
+            val fin = FileInputStream(absolutePath)
+            ///val bitmap = BitmapFactory.decodeStream(fin)
+            imageViewContactPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
+            fin.close()
+        } catch (e : Exception ) {
+            Log.e(TAG, e.toString())
+        }
+    }
+
 }

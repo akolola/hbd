@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.util.*
 /**
  *  (c) ContactCreatorFragment's ViewModel.
  */
-class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
+class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
@@ -67,7 +67,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution.
     //----------  <Button> 'Create' buttonClose is clicked.
-    fun onCreateContact(name: String, birthDate: String) {
+    fun onCreateContact(name: String, birthDate: String, imageNameId: String) {
         viewModelScope.launch {
 
             //--- 1
@@ -81,6 +81,7 @@ class ContactCreatorViewModel(val database: ContactDatabaseDao) : ViewModel() {
             //--- 3
             liveDataPerson.name = name
             liveDataPerson.birthDate = birthDate
+            liveDataPerson.imageNameId = imageNameId
             update(liveDataPerson)
 
             //--- 4

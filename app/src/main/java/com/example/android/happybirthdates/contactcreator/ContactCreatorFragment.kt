@@ -16,13 +16,21 @@
 
 package com.example.android.happybirthdates.contactcreator
 
+import android.Manifest
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -35,6 +43,15 @@ import com.example.android.happybirthdates.databinding.FragmentContactCreatorBin
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
 import java.text.SimpleDateFormat
 import java.util.*
+import android.provider.MediaStore
+import android.graphics.Bitmap
+import android.content.Context
+import android.net.Uri
+import java.io.*
+import java.lang.Exception
+
+
+private const val TAG = "ContactCreatorFragment"
 
 
 class ContactCreatorFragment : Fragment(), DateSelected {
@@ -66,12 +83,28 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- (c) ContactCreatorViewModel -> (c) ContactTrackerFragment.
         binding.contactCreatorViewModel = contactCreatorViewModel
 
+
+        //---------- Click listener;
+        binding.imageButtonAddPicture.setOnClickListener {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                   if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        requestPermissions(permissions, PERMISSION_CODE)
+                   } else{
+                       chooseImageGallery()
+                   }
+              }else{
+                    chooseImageGallery()
+              }
+        }
+
         //---------- Click listener; <EditText> 'editTextName' & <Button> 'buttonSubmit'.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(
                     binding.editTextName.text.toString(),
-                    binding.textViewBirthdate.text.toString())
+                    binding.textViewBirthdate.text.toString(),
+                    binding.imageButtonAddPicture.tag.toString())
             }
         }
 
@@ -87,8 +120,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
                     ContactCreatorFragmentDirections.actionContactCreatorFragmentToContactTrackerFragment())
-                // Reset state to make sure we only navigate once, even if the device
-                // has a configuration change.
+                // Reset state to make sure we only navigate once, even if the device has a config change.
                 contactCreatorViewModel.doneNavigating()
             }
         })
@@ -98,6 +130,70 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
+
+    //--------------------------- Image Picker -------------------------------------------------------
+    companion object {
+        private const val IMAGE_PICK_CODE = 1000
+        private const val PERMISSION_CODE = 1001
+    }
+
+    private fun chooseImageGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode) {
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    chooseImageGallery()
+                } else {
+                    Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            ///imageButtonAddPicture.setImageURI(data?.data)
+            //-- Save & Load
+            val imageUri: Uri? = data?.data
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
+            imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
+            val fileName = imageButtonAddPicture.tag.toString()
+            saveImageToInternalStorage(bitmap, fileName)
+            loadImageFromInternalStorage(fileName)
+
+        }
+    }
+
+    //--------------------------- File -------------------------------------------------------
+    private fun saveImageToInternalStorage(image : Bitmap, fileName: String) {
+        try {
+            // Use compress (m) on (o) Bitmap for: image -> OutputStream
+            val fos = context!!.openFileOutput(fileName, Context.MODE_PRIVATE)
+            // bitmap -> OutputStream
+            image.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.close()
+        } catch (e : Exception ) {
+            Log.e(TAG, e.toString())
+        }
+    }
+
+    private fun loadImageFromInternalStorage(fileName: String) {
+        try {
+            val absolutePath = context!!.getFileStreamPath(fileName).absolutePath
+            val fin = FileInputStream(absolutePath)
+            ///val bitmap = BitmapFactory.decodeStream(fin)
+            imageButtonAddPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
+            fin.close()
+        } catch (e : Exception ) {
+            Log.e(TAG, e.toString())
+        }
+    }
+
 
 
     //--------------------------- DatePicker -------------------------------------------------------
@@ -135,8 +231,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         var viewFormattedDate = viewFormatter.format(calendar.getTime())
         textViewBirthdate.text = viewFormattedDate
     }
-
-
 
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ import com.google.android.material.snackbar.Snackbar
 
 
 /**
- * A fragment with buttons for contacts, which are saved in DB. Cumulative data are
- * displayed in RecyclerView
+ * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
+ * displayed in RecyclerView.
  */
 class ContactTrackerFragment : Fragment() {
 
     /**
-     * Called when the Fragment is ready to display content to the screen.
+     * The (m) is called when (c) ContactTrackerFragment is ready to display content to the screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -51,10 +51,10 @@ class ContactTrackerFragment : Fragment() {
         val application = requireNotNull(this.activity).application
 
         //---------- |DB| ContactDatabase -> (c) ContactTrackerFragment.
-        val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
+        val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.
-        val viewModelFactory = ContactTrackerViewModelFactory(dataSource, application)
+        val viewModelFactory = ContactTrackerViewModelFactory(dbPerson, application)
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
 

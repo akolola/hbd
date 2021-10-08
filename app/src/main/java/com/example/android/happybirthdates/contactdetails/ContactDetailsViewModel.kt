@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,26 +26,26 @@ import com.example.android.happybirthdates.database.ContactPerson
 /**
  * ContactDetailsFragment's ViewModel.
  *
- * @param contactKey The key of the current contact we are working on.
+ * @param contactKey The key of the current (o) Contact we are working on.
  */
-class ContactDetailsViewModel(
-    private val contactKey: Long = 0L,
-    dataSource: ContactDatabaseDao) : ViewModel() {
+class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dataSource: ContactDatabaseDao) : ViewModel() {
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-    //-------------------- LiveData preparation
-    //---------- |DB| Contact
-    val database = dataSource
+    //-------------------- MediatorLiveData preparation.
+    //---------- (v) ldPerson.
+    val ldPerson = MediatorLiveData<ContactPerson>()
 
-    //---------- (v) person
-    private val person = MediatorLiveData<ContactPerson>()
+    fun getPerson() = ldPerson
 
-    fun getPerson() = person
+    //---------- |DB| Contact.
+    val dbPerson = dataSource
+
 
     init {
-        person.addSource(database.getContactWithId(contactKey), person::setValue)
-    }
+        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+        ldPerson.addSource(dbPerson.getContactWithId(contactKey), ldPerson::setValue)
 
+    }
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
