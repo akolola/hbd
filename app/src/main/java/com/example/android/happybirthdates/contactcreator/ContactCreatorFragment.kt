@@ -84,17 +84,17 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         binding.contactCreatorViewModel = contactCreatorViewModel
 
 
-        //---------- Click listener;
+        //---------- Click listener; <Image> 'imageButtonAddPicture'.
         binding.imageButtonAddPicture.setOnClickListener {
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                    if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
                         val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                         requestPermissions(permissions, PERMISSION_CODE)
                    } else{
-                       chooseImageGallery()
+                       chooseSavedImage()
                    }
               }else{
-                    chooseImageGallery()
+                    chooseSavedImage()
               }
         }
 
@@ -137,17 +137,18 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         private const val PERMISSION_CODE = 1001
     }
 
-    private fun chooseImageGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+    private fun chooseSavedImage() {
+        val galleryIntent = Intent()
+        galleryIntent.action = Intent.ACTION_GET_CONTENT
+        galleryIntent.type = "image/*"
+        startActivityForResult(galleryIntent, IMAGE_PICK_CODE)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PERMISSION_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    chooseImageGallery()
+                    chooseSavedImage()
                 } else {
                     Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
@@ -155,11 +156,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
         if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            ///imageButtonAddPicture.setImageURI(data?.data)
             //-- Save & Load
-            val imageUri: Uri? = data?.data
+            val imageUri: Uri? = imagePickResultIntent?.data
             val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
             imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
             val fileName = imageButtonAddPicture.tag.toString()
@@ -170,12 +170,12 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     //--------------------------- File -------------------------------------------------------
-    private fun saveImageToInternalStorage(image : Bitmap, fileName: String) {
+    private fun saveImageToInternalStorage(imageBitmap : Bitmap, fileName: String) {
         try {
             // Use compress (m) on (o) Bitmap for: image -> OutputStream
             val fos = context!!.openFileOutput(fileName, Context.MODE_PRIVATE)
             // bitmap -> OutputStream
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             fos.close()
         } catch (e : Exception ) {
             Log.e(TAG, e.toString())
