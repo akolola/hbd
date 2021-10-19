@@ -92,11 +92,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                         val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                         requestPermissions(permissions, PERMISSION_CODE)
                    } else{
-                       // start picker to get image for cropping and then use the image in cropping activity
-                       CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
+                       chooseImageGallery()
                    }
               }else{
-                  CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
+                  chooseImageGallery()
               }
         }
 
@@ -138,14 +137,21 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         private const val PERMISSION_CODE = 1001
     }
 
+    /**
+     * The (m) starts picker to get image for cropping and then use the image in cropping activity
+     */
+    private fun chooseImageGallery() {
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PERMISSION_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
+                    chooseImageGallery()
                 } else {
                     Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "Pick image permission required")
                 }
             }
         }
@@ -161,7 +167,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
                 if (resultCode == Activity.RESULT_OK){
                     val resultImageUri: Uri? = result.uri
-
                     val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, resultImageUri)
                     imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
                     val fileName = imageButtonAddPicture.tag.toString()
