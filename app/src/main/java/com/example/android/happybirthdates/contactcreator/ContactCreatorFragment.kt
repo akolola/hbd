@@ -20,10 +20,14 @@ import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,15 +44,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import android.provider.MediaStore
-import android.graphics.Bitmap
-import android.content.Context
-import android.net.Uri
-import java.io.*
-import java.lang.Exception
 
 
 private const val TAG = "ContactCreatorFragment"
@@ -84,7 +85,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         binding.contactCreatorViewModel = contactCreatorViewModel
 
 
-        //---------- Click listener;
+        //---------- Click listener; <Image> 'imageButtonAddPicture'.
         binding.imageButtonAddPicture.setOnClickListener {
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                    if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
@@ -94,7 +95,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                        chooseImageGallery()
                    }
               }else{
-                    chooseImageGallery()
+                  chooseImageGallery()
               }
         }
 
@@ -133,14 +134,14 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     //--------------------------- Image Picker -------------------------------------------------------
     companion object {
-        private const val IMAGE_PICK_CODE = 1000
         private const val PERMISSION_CODE = 1001
     }
 
+    /**
+     * The (m) starts picker to get image for cropping and then use the image in cropping activity
+     */
     private fun chooseImageGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_PICK_CODE)
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -150,32 +151,43 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                     chooseImageGallery()
                 } else {
                     Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "Pick image permission required")
                 }
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
-            ///imageButtonAddPicture.setImageURI(data?.data)
-            //-- Save & Load
-            val imageUri: Uri? = data?.data
-            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
-            imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
-            val fileName = imageButtonAddPicture.tag.toString()
-            saveImageToInternalStorage(bitmap, fileName)
-            loadImageFromInternalStorage(fileName)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
+        if(resultCode == Activity.RESULT_OK && imagePickResultIntent!=null){
 
+            // handle result of CropImageActivity
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+                val result = CropImage.getActivityResult(imagePickResultIntent)
+
+                if (resultCode == Activity.RESULT_OK){
+                    val resultImageUri: Uri? = result.uri
+                    val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, resultImageUri)
+                    imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
+                    val fileName = imageButtonAddPicture.tag.toString()
+                    saveImageToInternalStorage(bitmap, fileName)
+                    loadImageFromInternalStorage(fileName)
+
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Log.e(TAG, result.error.toString())
+                }
+
+            }
         }
     }
 
     //--------------------------- File -------------------------------------------------------
-    private fun saveImageToInternalStorage(image : Bitmap, fileName: String) {
+    private fun saveImageToInternalStorage(imageBitmap : Bitmap, fileName: String) {
         try {
             // Use compress (m) on (o) Bitmap for: image -> OutputStream
             val fos = context!!.openFileOutput(fileName, Context.MODE_PRIVATE)
             // bitmap -> OutputStream
-            image.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             fos.close()
         } catch (e : Exception ) {
             Log.e(TAG, e.toString())
