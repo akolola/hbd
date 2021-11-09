@@ -37,15 +37,27 @@
         <Button
             android:id="@+id/buttonCreate"
             style="@style/ContactButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
             android:layout_marginTop="24dp"
             android:onClick="@{() -> contactTrackerViewModel.onCreateTracking()}"
             android:text="@string/create"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/alarmToggle"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:textOff="@string/alarm_off"
+            android:textOn="@string/alarm_on"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toEndOf="@+id/buttonCreate"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
