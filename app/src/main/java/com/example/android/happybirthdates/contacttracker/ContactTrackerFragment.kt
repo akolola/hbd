@@ -57,10 +57,8 @@ import com.example.android.happybirthdates.contacttracker.AlarmReceiver
  */
 class ContactTrackerFragment : Fragment() {
 
-    // Notification ID.
+    //---------- Notification.
     private val NOTIFICATION_ID = 0
-
-    // Notification channel ID.
     private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     private var mNotificationManager: NotificationManager? = null
 
@@ -145,26 +143,22 @@ class ContactTrackerFragment : Fragment() {
                 Snackbar.make(
                     requireActivity().findViewById(android.R.id.content),
                     getString(R.string.cleared_message),
-                    Snackbar.LENGTH_SHORT // How long to display the message.
+                    Snackbar.LENGTH_SHORT // How long to display the msg.
                 ).show()
-                // Reset state to make sure the snackbar is only shown once, even if the device
-                // has a configuration change.
+                // Reset state to make sure Snackbar is only shown once, even if the device has a config change.
                 contactTrackerViewModel.doneShowingSnackbar()
             }
         })
 
-        //---------- Notification
-        // Set the click listener for the toggle button.
+        //---------- Notification.
+        //---------- Click listener; <ToggleButton> 'alarmToggle'.
         binding.alarmToggle.setOnCheckedChangeListener(
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 val toastMessage: String = if (isChecked) {
-
                     val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
-                    val triggerTime = (SystemClock.elapsedRealtime()) //+ repeatInterval)
-
+                    val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
                     // If the Toggle is turned on, set the repeating alarm with a 15 minute interval.
                     alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent)
-
                     // Set the toast message for the "on" case.
                     getString(R.string.alarm_on_toast)
                 } else {
@@ -189,16 +183,16 @@ class ContactTrackerFragment : Fragment() {
     }
 
 
-    //->//--------------------------- Notification -----------------------------------------------------
-    //Creates a Notification channel, for OREO and higher.
-    open fun createNotificationChannel() {
+    //--------------------------- Notification -----------------------------------------------------
+    //Create (c) NotificationChannel for >= Android ver OREO.
+    private fun createNotificationChannel() {
 
         // Create a notification manager object.
         mNotificationManager = getSystemService(context!!, NotificationManager::class.java)
 
-        // Notification channels are only available in OREO and higher. So, add a check on SDK version.
+        // (c) NotificationChannel is only available for >= Android ver OREO => Add SDK ver check.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel with all the parameters.
+            // Create (c) NotificationChannel. Add params.
             val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Stand up notification", NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
