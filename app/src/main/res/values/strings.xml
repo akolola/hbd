@@ -64,6 +64,5 @@
     <string name="alarm_on">Alarm on</string>
     <string name="alarm_on_toast">Alarms activated</string>
     <string name="alarm_off_toast">Alarms deactivated</string>
-    <string name="notification_text">Your friend has Birthday soon.</string>
     <string name="notification_title">Reminder</string>
 </resources>

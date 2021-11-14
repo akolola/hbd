@@ -1,7 +1,6 @@
 package com.example.android.happybirthdates.contacttracker
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,14 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 //import android.support.v4.app.NotificationCompat
 import androidx.core.app.NotificationCompat
-import com.example.android.happybirthdates.MainActivity
 import com.example.android.happybirthdates.R
 import android.graphics.drawable.BitmapDrawable
 
 import android.graphics.drawable.Drawable
-
-
-
+import java.util.ArrayList
 
 
 /**
@@ -28,14 +24,15 @@ class AlarmReceiver : BroadcastReceiver() {
     private var mNotificationManager: NotificationManager? = null
 
     /**
-     * Called when the BroadcastReceiver receives an Intent broadcast.
+     * Called when BroadcastReceiver receives Intent broadcast.
      *
-     * @param context The Context in which the receiver is running.
-     * @param intent The Intent being received.
+     * @param context Context in which the receiver is running.
+     * @param intent Intent being received.
      */
     override fun onReceive(context: Context, intent: Intent) {
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        deliverNotification(context)
+        val msgArrayList = intent.getStringArrayListExtra("MsgArrayList")
+        deliverNotification(context, msgArrayList)
     }
 
     /**
@@ -43,21 +40,24 @@ class AlarmReceiver : BroadcastReceiver() {
      *
      * @param context, activity context.
      */
-    private fun deliverNotification(context: Context) {
-        // Create the content intent for the notification, which launches this activity
-        val contentIntent = Intent(context, MainActivity::class.java)
-        val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    private fun deliverNotification(context: Context, msgArrayList: ArrayList<String>?) {        // Create the content intent for the notification, which launches this activity
+        //val contentIntent = Intent(context, MainActivity::class.java)
+        //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context!!.packageName)
         val drawable = context.resources.getDrawable(imageGiftBoxId);
         val bitmap =  drawableToBitmap(drawable)           //Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
+        var dynamicMsg = ""
+        if (!msgArrayList.isNullOrEmpty()){
+            dynamicMsg = "Your friend "+ msgArrayList[0] +" has Birthday today."
+        }
+
         // Build the notification
         var builder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_gift_box)
             .setContentTitle(context.getString(R.string.notification_title))
-            .setContentText(context.getString(R.string.notification_text))
-            .setContentIntent(contentPendingIntent)
+            .setContentText(dynamicMsg) //<---------------------------------- Make dynamic
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -76,7 +76,7 @@ class AlarmReceiver : BroadcastReceiver() {
         private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
 
 
-        //---------- (v)s for |resource| .
+        //---------- (v)s for |resource|.
         private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
         private const val RESOURCE_TYPE = "mipmap"
     }

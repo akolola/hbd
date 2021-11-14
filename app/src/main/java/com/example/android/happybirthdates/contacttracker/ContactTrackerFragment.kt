@@ -46,6 +46,7 @@ import android.os.SystemClock
 import androidx.core.content.ContextCompat.getSystemService
 
 import android.app.AlarmManager
+import android.content.BroadcastReceiver
 
 import android.widget.CompoundButton
 import android.widget.ToggleButton
@@ -86,6 +87,11 @@ class ContactTrackerFragment : Fragment() {
         var alarmManager = getSystemService(context!!, AlarmManager::class.java)
         // Set up the Notification Broadcast Intent.
         val notifyIntent = Intent(context, AlarmReceiver::class.java)
+
+        val msgList : ArrayList<String> = arrayListOf()
+        msgList.add("John Doe")
+        notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)  //<---------------------------------- Make dynamic
+
         val notifyPendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
