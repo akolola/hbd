@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 //import android.support.v4.app.NotificationCompat
 import androidx.core.app.NotificationCompat
@@ -46,11 +45,11 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     private fun deliverNotification(context: Context) {
         // Create the content intent for the notification, which launches this activity
-        ///val contentIntent = Intent(context, MainActivity::class.java)
-        ///val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val contentIntent = Intent(context, MainActivity::class.java)
+        val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val frame1Id: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context!!.packageName)
-        val drawable = context.resources.getDrawable(frame1Id);
+        val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context!!.packageName)
+        val drawable = context.resources.getDrawable(imageGiftBoxId);
         val bitmap =  drawableToBitmap(drawable)           //Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
         // Build the notification
@@ -58,7 +57,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setSmallIcon(R.mipmap.ic_gift_box)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(context.getString(R.string.notification_text))
-            //.setContentIntent(contentPendingIntent)
+            .setContentIntent(contentPendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)

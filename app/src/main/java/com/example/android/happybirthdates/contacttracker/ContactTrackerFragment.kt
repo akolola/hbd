@@ -83,7 +83,6 @@ class ContactTrackerFragment : Fragment() {
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
         //---------- (c) NotificationManager & (c) AlarmManager
-        mNotificationManager = getSystemService(context!!, NotificationManager::class.java)
         var alarmManager = getSystemService(context!!, AlarmManager::class.java)
         // Set up the Notification Broadcast Intent.
         val notifyIntent = Intent(context, AlarmReceiver::class.java)
@@ -157,12 +156,12 @@ class ContactTrackerFragment : Fragment() {
                 val toastMessage: String = if (isChecked) {
                     val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
                     val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
-                    // If the Toggle is turned on, set the repeating alarm with a 15 minute interval.
+                    // If <ToggleButton> 'alarmToggle' is turned on => repeating Alarm with 15 min interval.
                     alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent)
                     // Set the toast message for the "on" case.
                     getString(R.string.alarm_on_toast)
                 } else {
-                    // Cancel notification if the alarm is turned off.
+                    // If <ToggleButton> 'alarmToggle' is turned off => Turne off Alarm => Cancel notification.
                     mNotificationManager!!.cancelAll()
                     alarmManager?.cancel(notifyPendingIntent)
                     // Set the toast message for the "off" case.
@@ -173,8 +172,6 @@ class ContactTrackerFragment : Fragment() {
                 Toast.makeText(context!!, toastMessage, Toast.LENGTH_SHORT).show()
             }
         )
-
-
         createNotificationChannel()
 
 
@@ -195,7 +192,7 @@ class ContactTrackerFragment : Fragment() {
             // Create (c) NotificationChannel. Add params.
             val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Stand up notification", NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
+            notificationChannel.lightColor = Color.BLUE
             notificationChannel.enableVibration(true)
             notificationChannel.description = "Notifies every 15 minutes to stand up and walk"
             mNotificationManager!!.createNotificationChannel(notificationChannel)
