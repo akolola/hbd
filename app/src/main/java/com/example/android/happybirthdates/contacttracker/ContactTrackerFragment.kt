@@ -30,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -46,11 +45,8 @@ import android.os.SystemClock
 import androidx.core.content.ContextCompat.getSystemService
 
 import android.app.AlarmManager
-import android.content.BroadcastReceiver
 
 import android.widget.CompoundButton
-import android.widget.ToggleButton
-import com.example.android.happybirthdates.contacttracker.AlarmReceiver
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -58,7 +54,7 @@ import com.example.android.happybirthdates.contacttracker.AlarmReceiver
  */
 class ContactTrackerFragment : Fragment() {
 
-    //---------- Notification.
+    //---------- (v) for Push Notifications.
     private val NOTIFICATION_ID = 0
     private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     private var mNotificationManager: NotificationManager? = null
@@ -83,15 +79,14 @@ class ContactTrackerFragment : Fragment() {
         val viewModelFactory = ContactTrackerViewModelFactory(dbPerson, application)
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
-        //---------- (c) NotificationManager & (c) AlarmManager
+        //---------- (v)s for Push Notifications.
+        //--- (c) AlarmManager
         var alarmManager = getSystemService(context!!, AlarmManager::class.java)
-        // Set up the Notification Broadcast Intent.
-        val notifyIntent = Intent(context, AlarmReceiver::class.java)
-
+        //--- (v) notifyPendingIntent <-(v) notifyIntent <- (v) Birthday Contacts list.
         val msgList : ArrayList<String> = arrayListOf()
-        msgList.add("John Doe")
-        notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)  //<---------------------------------- Make dynamic
-
+        msgList.add("John Doe") //<---------------------------------- Make read out from DB
+        val notifyIntent = Intent(context, AlarmReceiver::class.java)
+        notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)
         val notifyPendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
@@ -155,27 +150,30 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //---------- Notification.
+        //-------------------- (v)s for Push Notifications.
         //---------- Click listener; <ToggleButton> 'alarmToggle'.
         binding.alarmToggle.setOnCheckedChangeListener(
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                val toastMessage: String = if (isChecked) {
+                //--- A. <ToggleButton> 'alarmToggle' is turned on.
+                val toastMsg: String = if (isChecked) {
+                    //- (c) AlarmManager
                     val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
                     val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
-                    // If <ToggleButton> 'alarmToggle' is turned on => repeating Alarm with 15 min interval.
-                    alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent)
-                    // Set the toast message for the "on" case.
+                    alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent) // Repeating Alarm with 15 min interval.
+                    //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
-                } else {
-                    // If <ToggleButton> 'alarmToggle' is turned off => Turne off Alarm => Cancel notification.
+                }
+                //--- B. <ToggleButton> 'alarmToggle' is turned off.
+                else {
+                    //- (c) NotificationManager.
                     mNotificationManager!!.cancelAll()
+                    //- (c) AlarmManager off.
                     alarmManager?.cancel(notifyPendingIntent)
-                    // Set the toast message for the "off" case.
+                    //- (v) toastMsg -"off->.
                     getString(R.string.alarm_off_toast)
                 }
-
-                // Show a toast to say the alarm is turned on or off.
-                Toast.makeText(context!!, toastMessage, Toast.LENGTH_SHORT).show()
+                // Show toast to say the alarm is turned on or off.
+                Toast.makeText(context!!, toastMsg, Toast.LENGTH_SHORT).show()
             }
         )
         createNotificationChannel()
@@ -187,13 +185,15 @@ class ContactTrackerFragment : Fragment() {
 
 
     //--------------------------- Notification -----------------------------------------------------
-    //Create (c) NotificationChannel for >= Android ver OREO.
+    /**
+     *   Create (c) NotificationChannel if >= Android ver OREO.
+     */
     private fun createNotificationChannel() {
 
-        // Create a notification manager object.
+        //- (c) NotificationManager.
         mNotificationManager = getSystemService(context!!, NotificationManager::class.java)
 
-        // (c) NotificationChannel is only available for >= Android ver OREO => Add SDK ver check.
+        // (c) NotificationManager -(c) NotificationChannel->.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create (c) NotificationChannel. Add params.
             val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Stand up notification", NotificationManager.IMPORTANCE_HIGH)

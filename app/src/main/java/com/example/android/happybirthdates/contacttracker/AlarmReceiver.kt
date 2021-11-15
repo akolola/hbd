@@ -20,7 +20,7 @@ import java.util.ArrayList
  */
 class AlarmReceiver : BroadcastReceiver() {
 
-    //---------- Notification.
+    //---------- (v) NotificationManager
     private var mNotificationManager: NotificationManager? = null
 
     /**
@@ -40,21 +40,20 @@ class AlarmReceiver : BroadcastReceiver() {
      *
      * @param context, activity context.
      */
-    private fun deliverNotification(context: Context, msgArrayList: ArrayList<String>?) {        // Create the content intent for the notification, which launches this activity
+    private fun deliverNotification(context: Context, msgArrayList: ArrayList<String>?) { // Create the content intent for the notification, which launches this activity
         //val contentIntent = Intent(context, MainActivity::class.java)
         //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context!!.packageName)
         val drawable = context.resources.getDrawable(imageGiftBoxId);
-        val bitmap =  drawableToBitmap(drawable)           //Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
+        val bitmap =  drawableToBitmap(drawable) // Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
         var dynamicMsg = ""
         if (!msgArrayList.isNullOrEmpty()){
             dynamicMsg = "Your friend "+ msgArrayList[0] +" has Birthday today."
         }
 
-        // Build the notification
-        var builder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+        var notificationBuilder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_gift_box)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(dynamicMsg) //<---------------------------------- Make dynamic
@@ -62,19 +61,15 @@ class AlarmReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setLargeIcon(bitmap)
-            .setStyle(NotificationCompat.BigPictureStyle()
-                .bigPicture(bitmap)
-                .bigLargeIcon(null))
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
 
-        // Deliver the notification
-        mNotificationManager!!.notify(NOTIFICATION_ID, builder.build())
+        //--- (c) NotificationManager-Notification->
+        mNotificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
     companion object {
         //---------- (v)s for Notification.
         private const val NOTIFICATION_ID = 0
-        //--- (c) NotificationChannel Id.
         private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
-
 
         //---------- (v)s for |resource|.
         private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
@@ -82,9 +77,9 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun drawableToBitmap(drawable: Drawable): Bitmap? {
-        if (drawable is BitmapDrawable) {
-            return drawable.bitmap
-        }
+        //--- A
+        if (drawable is BitmapDrawable) { return drawable.bitmap }
+        //--- B
         val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
