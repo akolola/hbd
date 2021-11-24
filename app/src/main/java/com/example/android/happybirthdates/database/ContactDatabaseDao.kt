@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import androidx.room.Query
 import androidx.room.Update
 
 /**
- * Defines methods for using the SleepNight class with Room.
+ * Defines (m)s for using (c) ContactPerson class with Room.
  */
 @Dao
 interface ContactDatabaseDao {
@@ -57,15 +57,13 @@ interface ContactDatabaseDao {
     suspend fun clear()
 
     /**
-     * Selects and returns all rows in the table,
-     *
-     * sorted by start time in descending order.
+     * Selects and returns all rows in the table, sorted by start time in descending order.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC")
     fun getAllPersons(): LiveData<List<ContactPerson>>
 
     /**
-     * Selects and returns the latest night.
+     * Selects and returns latest ContactPerson.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC LIMIT 1")
     suspend fun getPerson(): ContactPerson?
@@ -75,5 +73,8 @@ interface ContactDatabaseDao {
      */
     @Query("SELECT * from contact_table WHERE personId = :key")
     fun getContactWithId(key: Long): LiveData<ContactPerson>
+
+    //@Query("SELECT * FROM contact_table WHERE birthdate = today ORDER BY personId DESC")
+    //fun getContactPersonsWithBirthdayToday:() LiveData<List<ContactPerson>>
 }
 

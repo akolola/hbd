@@ -87,6 +87,7 @@ class ContactTrackerFragment : Fragment() {
         msgList.add("John Doe") //<---------------------------------- Make read out from DB
         val notifyIntent = Intent(context, AlarmReceiver::class.java)
         notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)
+        /// notifyIntent.    <- (o) DAO
         val notifyPendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
@@ -157,9 +158,9 @@ class ContactTrackerFragment : Fragment() {
                 //--- A. <ToggleButton> 'alarmToggle' is turned on.
                 val toastMsg: String = if (isChecked) {
                     //- (c) AlarmManager
-                    val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
+                    ///val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
                     val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
-                    alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent) // Repeating Alarm with 15 min interval.
+                    alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,5000  , notifyPendingIntent) //repeatInterval, notifyPendingIntent) // Repeating Alarm with 15 min interval.
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
                 }

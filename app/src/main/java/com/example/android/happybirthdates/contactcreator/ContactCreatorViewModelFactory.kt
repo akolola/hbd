@@ -25,8 +25,7 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
  *
  * Provides the key for the night and the SleepDatabaseDao to the ViewModel.
  */
-class ContactCreatorViewModelFactory(
-        private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
+class ContactCreatorViewModelFactory(private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactCreatorViewModel::class.java)) {

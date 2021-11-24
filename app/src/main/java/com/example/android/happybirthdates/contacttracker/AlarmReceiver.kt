@@ -13,6 +13,9 @@ import android.graphics.drawable.BitmapDrawable
 
 import android.graphics.drawable.Drawable
 import java.util.ArrayList
+import android.database.sqlite.SQLiteDatabase
+import androidx.lifecycle.Transformations
+import com.example.android.happybirthdates.database.ContactDatabase
 
 
 /**
@@ -32,6 +35,13 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val msgArrayList = intent.getStringArrayListExtra("MsgArrayList")
+
+        //----------------------------------------------------------------------------------------->
+        //----------  |DB| Contact
+        val dataSource = ContactDatabase.getInstance(context).contactDatabaseDao
+        val person = dataSource.getAllPersons()
+        //-----------------------------------------------------------------------------------------<
+
         deliverNotification(context, msgArrayList)
     }
 
