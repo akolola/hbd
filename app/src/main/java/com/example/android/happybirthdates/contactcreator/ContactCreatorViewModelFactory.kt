@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
 /**
  * This is pretty much boiler plate code for a ViewModel Factory.
  *
- * Provides the key for the night and the SleepDatabaseDao to the ViewModel.
+ * Provides the key for Contact and the ContactDatabaseDao to the ViewModel.
  */
 class ContactCreatorViewModelFactory(private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
