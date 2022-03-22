@@ -45,8 +45,10 @@ import android.os.SystemClock
 import androidx.core.content.ContextCompat.getSystemService
 
 import android.app.AlarmManager
+import android.content.ComponentName
 
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat.startForegroundService
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -80,7 +82,7 @@ class ContactTrackerFragment : Fragment() {
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
         //---------- (v)s for Push Notifications.
-        //--- (c) AlarmManager
+        //--- (c) AlarmManager Service
         var alarmManager = getSystemService(context!!, AlarmManager::class.java)
         //--- (v) notifyPendingIntent <-(v) notifyIntent <- (v) Birthday Contacts list.
         val msgList : ArrayList<String> = arrayListOf()
@@ -157,13 +159,23 @@ class ContactTrackerFragment : Fragment() {
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 //--- A. <ToggleButton> 'alarmToggle' is turned on.
                 val toastMsg: String = if (isChecked) {
+
                     //- (c) AlarmManager
                     ///val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
                     val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
                     alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,5000  , notifyPendingIntent) //repeatInterval, notifyPendingIntent) // Repeating Alarm with 15 min interval.
+
+                    //- (c) ContactStatusService
+                    //--------------------------------------------------------------------------------------->
+                    requireActivity().startService(Intent(context, ContactStatusService::class.java))
+                    //---------------------------------------------------------------------------------------<
+
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
                 }
+
+
+
                 //--- B. <ToggleButton> 'alarmToggle' is turned off.
                 else {
                     //- (c) NotificationManager.
