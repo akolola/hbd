@@ -45,10 +45,8 @@ import android.os.SystemClock
 import androidx.core.content.ContextCompat.getSystemService
 
 import android.app.AlarmManager
-import android.content.ComponentName
 
 import android.widget.CompoundButton
-import androidx.core.content.ContextCompat.startForegroundService
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -167,7 +165,7 @@ class ContactTrackerFragment : Fragment() {
 
                     //- (c) ContactStatusService
                     //--------------------------------------------------------------------------------------->
-                    requireActivity().startService(Intent(context, ContactStatusService::class.java))
+                    requireActivity().startService(Intent(context, ContactStatusBackgroundService::class.java))
                     //---------------------------------------------------------------------------------------<
 
                     //- (v) toastMsg -"on"->.

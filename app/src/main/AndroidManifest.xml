@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".contacttracker.ContactStatusService"
+            android:name=".contacttracker.ContactStatusBackgroundService"
             android:icon="@drawable/ic_contact_status_foreground"
             android:label="@string/service_name"/>
         <activity android:name=".MainActivity">
