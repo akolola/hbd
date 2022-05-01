@@ -54,8 +54,8 @@ class AlarmReceiver : BroadcastReceiver() {
         //val contentIntent = Intent(context, MainActivity::class.java)
         //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context!!.packageName)
-        val drawable = context.resources.getDrawable(imageGiftBoxId);
+        val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context.packageName)
+        val drawable = context.resources.getDrawable(imageGiftBoxId)
         val bitmap =  drawableToBitmap(drawable) // Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
         var dynamicMsg = ""
@@ -92,7 +92,7 @@ class AlarmReceiver : BroadcastReceiver() {
         //--- B
         val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
         return bitmap
     }

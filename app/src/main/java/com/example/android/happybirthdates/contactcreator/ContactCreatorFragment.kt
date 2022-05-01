@@ -240,7 +240,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         calendar.set(Calendar.YEAR, year)
 
         val viewFormatter = SimpleDateFormat("dd.MM.yyyy")
-        var viewFormattedDate = viewFormatter.format(calendar.getTime())
+        var viewFormattedDate = viewFormatter.format(calendar.time)
         textViewBirthdate.text = viewFormattedDate
     }
 
