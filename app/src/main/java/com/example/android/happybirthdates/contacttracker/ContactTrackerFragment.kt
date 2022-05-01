@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.example.android.happybirthdates.contacttracker
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Intent
 
 import android.os.Build
@@ -41,10 +40,7 @@ import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 import android.graphics.Color
-import android.os.SystemClock
 import androidx.core.content.ContextCompat.getSystemService
-
-import android.app.AlarmManager
 
 import android.widget.CompoundButton
 
@@ -55,10 +51,8 @@ import android.widget.CompoundButton
 class ContactTrackerFragment : Fragment() {
 
     //---------- (v) for Push Notifications.
-    private val NOTIFICATION_ID = 0
     private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     private var mNotificationManager: NotificationManager? = null
-
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to the screen.
@@ -78,19 +72,6 @@ class ContactTrackerFragment : Fragment() {
         //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.
         val viewModelFactory = ContactTrackerViewModelFactory(dbPerson, application)
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
-
-        //---------- (v)s for Push Notifications.
-        //--- (c) AlarmManager Service
-        var alarmManager = getSystemService(context!!, AlarmManager::class.java)
-        //--- (v) notifyPendingIntent <-(v) notifyIntent <- (v) Birthday Contacts list.
-        val msgList : ArrayList<String> = arrayListOf()
-        msgList.add("John Doe") //<---------------------------------- Make read out from DB
-        val notifyIntent = Intent(context, AlarmReceiver::class.java)
-        notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)
-        /// notifyIntent.    <- (o) DAO
-        val notifyPendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
 
         //--------------------------- Processing ---------------------------------------------------
         binding.contactTrackerViewModel = contactTrackerViewModel
@@ -151,35 +132,27 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //-------------------- (v)s for Push Notifications.
-        //---------- Click listener; <ToggleButton> 'alarmToggle'.
+        //-------------------- <ToggleButton> 'alarmToggle' | (v)s for Push Notifications.
         binding.alarmToggle.setOnCheckedChangeListener(
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 //--- A. <ToggleButton> 'alarmToggle' is turned on.
                 val toastMsg: String = if (isChecked) {
 
-                    //- (c) AlarmManager
-                    ///val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
-                    val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
-                    alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,5000  , notifyPendingIntent) //repeatInterval, notifyPendingIntent) // Repeating Alarm with 15 min interval.
-
                     //- (c) ContactStatusService
-                    //--------------------------------------------------------------------------------------->
-                    requireActivity().startService(Intent(context, ContactStatusBackgroundService::class.java))
-                    //---------------------------------------------------------------------------------------<
+                    requireActivity().startService(Intent(context, ContactStatusBackgroundService()::class.java))
 
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
                 }
-
-
-
                 //--- B. <ToggleButton> 'alarmToggle' is turned off.
                 else {
+
                     //- (c) NotificationManager.
                     mNotificationManager!!.cancelAll()
-                    //- (c) AlarmManager off.
-                    alarmManager?.cancel(notifyPendingIntent)
+
+                    //- (c) ContactStatusService
+                    requireActivity().stopService(Intent(context, ContactStatusBackgroundService::class.java))
+
                     //- (v) toastMsg -"off->.
                     getString(R.string.alarm_off_toast)
                 }
