@@ -12,7 +12,6 @@ import com.example.android.happybirthdates.R
 import android.graphics.drawable.BitmapDrawable
 
 import android.graphics.drawable.Drawable
-import java.util.ArrayList
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.android.happybirthdates.database.ContactDatabase
@@ -41,18 +40,23 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     override fun onReceive(context: Context, intent: Intent) {
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val msgArrayList = intent.getStringArrayListExtra("MsgArrayList")
 
-        //----------------------------------------------------------------------------------------->
         //----------  |DB| Contact
         val dbPerson = ContactDatabase.getInstance(context).contactDatabaseDao
         var person = MutableLiveData<ContactPerson?>()
+
         val serviceJob = SupervisorJob()
         val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
-        checkBirthdayPeople(serviceScope, person, dbPerson) //<---- <) /!\
-        //-----------------------------------------------------------------------------------------<
 
-        deliverNotification(context, msgArrayList)
+        serviceScope.launch {
+            person.value = getPersonFromDatabase(dbPerson)
+            Log.i(TAG, "DB req res = "+ (person.value?.name ?: "EMPTY"))
+            val name : String? = person.value?.name
+            val msgArrayList = listOf(name)
+            //----------  Notification
+            deliverNotification(context, msgArrayList)
+        }
+
     }
 
     /**
@@ -60,7 +64,7 @@ class AlarmReceiver : BroadcastReceiver() {
      *
      * @param context, activity context.
      */
-    private fun deliverNotification(context: Context, msgArrayList: ArrayList<String>?) { // Create the content intent for the notification, which launches this activity
+    private suspend fun  deliverNotification(context: Context, msgArrayList: List<String?>) { // Create the content intent for the notification, which launches this activity
         //val contentIntent = Intent(context, MainActivity::class.java)
         //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -108,12 +112,6 @@ class AlarmReceiver : BroadcastReceiver() {
         return bitmap
     }
 
-    private fun checkBirthdayPeople(serviceScope: CoroutineScope, person: MutableLiveData<ContactPerson?>, dbPerson: ContactDatabaseDao) {
-        serviceScope.launch {
-            person.value = getPersonFromDatabase(dbPerson)
-            Log.i(TAG, "DB req res = "+ (person.value?.name ?: "EMPTY"))
-        }
-    }
 
     //-------------------- DB query (m)s.
     private suspend fun getPersonFromDatabase(dbPerson: ContactDatabaseDao): ContactPerson? {

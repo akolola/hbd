@@ -69,17 +69,6 @@ class ContactStatusBackgroundService() : Service() {
         val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,5000  , notifyPendingIntent) //repeatInterval, notifyPendingIntent)
 
-        /*
-        //---------- |DB| ContactDatabase -> (c) ContactStatusBackgroundService.
-        var dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
-        //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-        //---------- (v) person.
-        var person = MutableLiveData<ContactPerson?>()
-        val serviceJob = SupervisorJob()
-        val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
-        checkBirthdayPeople(serviceScope, person, dbPerson)
-        */
-
         return START_NOT_STICKY
 
     }
@@ -95,19 +84,6 @@ class ContactStatusBackgroundService() : Service() {
         //- (c) AlarmManager off.
         alarmManager?.cancel(notifyPendingIntent)
 
-    }
-    /*
-    private fun checkBirthdayPeople(serviceScope: CoroutineScope, person: MutableLiveData<ContactPerson?>, dbPerson: ContactDatabaseDao) {
-        serviceScope.launch {
-            person.value = getPersonFromDatabase(dbPerson)
-            Log.i(TAG, "DB req res = "+ (person.value?.name ?: "EMPTY"))
-        }
-    }
-    */
-
-    //-------------------- DB query (m)s.
-    private suspend fun getPersonFromDatabase(dbPerson: ContactDatabaseDao): ContactPerson? {
-        return dbPerson.getPerson()
     }
 
 
