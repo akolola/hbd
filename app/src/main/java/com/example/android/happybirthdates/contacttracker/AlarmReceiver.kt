@@ -13,10 +13,17 @@ import android.graphics.drawable.BitmapDrawable
 
 import android.graphics.drawable.Drawable
 import java.util.ArrayList
-import android.database.sqlite.SQLiteDatabase
-import androidx.lifecycle.Transformations
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.database.ContactDatabaseDao
+import com.example.android.happybirthdates.database.ContactPerson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
+private const val TAG = "AlarmReceiver"
 
 /**
  * Broadcast receiver for the alarm, which delivers the notification.
@@ -38,8 +45,11 @@ class AlarmReceiver : BroadcastReceiver() {
 
         //----------------------------------------------------------------------------------------->
         //----------  |DB| Contact
-        val dataSource = ContactDatabase.getInstance(context).contactDatabaseDao
-        val person = dataSource.getAllPersons()
+        val dbPerson = ContactDatabase.getInstance(context).contactDatabaseDao
+        var person = MutableLiveData<ContactPerson?>()
+        val serviceJob = SupervisorJob()
+        val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+        checkBirthdayPeople(serviceScope, person, dbPerson) //<---- <) /!\
         //-----------------------------------------------------------------------------------------<
 
         deliverNotification(context, msgArrayList)
@@ -86,6 +96,7 @@ class AlarmReceiver : BroadcastReceiver() {
         private const val RESOURCE_TYPE = "mipmap"
     }
 
+
     private fun drawableToBitmap(drawable: Drawable): Bitmap? {
         //--- A
         if (drawable is BitmapDrawable) { return drawable.bitmap }
@@ -95,6 +106,18 @@ class AlarmReceiver : BroadcastReceiver() {
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
         return bitmap
+    }
+
+    private fun checkBirthdayPeople(serviceScope: CoroutineScope, person: MutableLiveData<ContactPerson?>, dbPerson: ContactDatabaseDao) {
+        serviceScope.launch {
+            person.value = getPersonFromDatabase(dbPerson)
+            Log.i(TAG, "DB req res = "+ (person.value?.name ?: "EMPTY"))
+        }
+    }
+
+    //-------------------- DB query (m)s.
+    private suspend fun getPersonFromDatabase(dbPerson: ContactDatabaseDao): ContactPerson? {
+        return dbPerson.getPerson()
     }
 
 }
