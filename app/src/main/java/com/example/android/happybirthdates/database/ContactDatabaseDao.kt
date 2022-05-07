@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,12 +69,19 @@ interface ContactDatabaseDao {
     suspend fun getPerson(): ContactPerson?
 
     /**
-     * Selects and returns the night with given nightId.
+     * Selects and returns ContactPerson with given personId.
+     *
+     * @param key personId
      */
     @Query("SELECT * from contact_table WHERE personId = :key")
     fun getContactWithId(key: Long): LiveData<ContactPerson>
 
-    //@Query("SELECT * FROM contact_table WHERE birthdate = today ORDER BY personId DESC")
-    //fun getContactPersonsWithBirthdayToday:() LiveData<List<ContactPerson>>
+    /**
+     * Selects and returns ContactPerson list with given Birthday date.
+     *
+     * @param key  date (string) formatted 'dd.MM.yyyy'  to match
+     */
+    @Query("SELECT * FROM contact_table WHERE birthdate LIKE :key")
+    suspend fun getContactPersonsWithBirthdayGiven(key: String): List<ContactPerson>?
 }
 

@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "ContactStatusBkgrndServ"
 
-class ContactStatusBackgroundService() : Service() {
+class ContactStatusBackgroundService : Service() {
 
     //---------- (v)s for Push Notifications.
     private val NOTIFICATION_ID = 0
@@ -61,7 +61,7 @@ class ContactStatusBackgroundService() : Service() {
         val notifyIntent = Intent(this, AlarmReceiver::class.java)
         notifyIntent.putStringArrayListExtra("MsgArrayList", msgList)
 
-        var mContext = getApplicationContext()
+        var mContext = applicationContext
         notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //- (c) AlarmManager

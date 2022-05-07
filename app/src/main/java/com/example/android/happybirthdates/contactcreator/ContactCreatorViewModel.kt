@@ -23,7 +23,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 import com.example.android.happybirthdates.database.ContactPerson
 import kotlinx.coroutines.*
-import java.util.*
 
 
 /**
