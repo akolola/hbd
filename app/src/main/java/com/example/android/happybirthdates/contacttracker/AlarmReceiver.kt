@@ -31,7 +31,7 @@ private const val TAG = "AlarmReceiver"
  */
 class AlarmReceiver : BroadcastReceiver() {
 
-    //---------- (v) NotificationManager
+    //---------- Technical (v) mNotificationManager
     private var mNotificationManager: NotificationManager? = null
 
     /**
@@ -45,21 +45,25 @@ class AlarmReceiver : BroadcastReceiver() {
 
         Log.i(TAG, "(m) onReceive. Received intent: $intent")
 
+        //---------- Technical (v) mNotificationManager. Assign val.
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         //---------- |DB| Contact
         val database = ContactDatabase.getInstance(context).contactDatabaseDao
+
+        //---------- (c) SupervisorJob & (c) CoroutineScope. Launch new coroutine without blocking current thread => |DB| -[Notification]->.
         val serviceJob = SupervisorJob()
         val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
-
         serviceScope.launch {
-            //--- |DB|
+
+            //--- 1. |DB|
             val birthDate: String = prepareBirthDateForContactPersonListSelect()
             val birthdayPersonListFromDatabase = getBirthdayPersonListFromDatabase(database, "$birthDate.%%%%")
             val birthdayPersonList : List<String>? = birthdayPersonListFromDatabase?.map { it.name }
 
-            //---  Notification
+            //--- 2.  Notification
             deliverNotification(context, birthdayPersonList)
+
         }
 
     }
@@ -75,17 +79,9 @@ class AlarmReceiver : BroadcastReceiver() {
         return comingDate
     }
 
-    /**
-     * Builds and delivers Notification.
-     *
-     * @param context, activity context.
-     */
     private suspend fun  deliverNotification(context: Context, birthdayPersonList: List<String>?) {
 
         Log.i(TAG, "(m) deliverNotification. Received birthdayPersonList: $birthdayPersonList")
-
-        //val contentIntent = Intent(context, MainActivity::class.java)
-        //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context.packageName)
         val drawable = context.resources.getDrawable(imageGiftBoxId)
@@ -101,8 +97,29 @@ class AlarmReceiver : BroadcastReceiver() {
             .setLargeIcon(bitmap)
             .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
 
-        //--- (c) NotificationManager-Notification->
+        //---- (c) NotificationManager -[(c) Notification]->.
         mNotificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
+        //---  A.
+        if (drawable is BitmapDrawable) { return drawable.bitmap }
+        //---  B.
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
+    }
+
+    companion object {
+        //---------- (v)s for Notification.
+        private const val NOTIFICATION_ID = 0
+        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+
+        //---------- (v)s for |resource|.
+        private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
+        private const val RESOURCE_TYPE = "mipmap"
     }
 
     private fun formContentText(birthdayPersonList: List<String>?): String {
@@ -124,32 +141,10 @@ class AlarmReceiver : BroadcastReceiver() {
         return contentText
     }
 
-    companion object {
-        //---------- (v)s for Notification.
-        private const val NOTIFICATION_ID = 0
-        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
-
-        //---------- (v)s for |resource|.
-        private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
-        private const val RESOURCE_TYPE = "mipmap"
-    }
-
-
-    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
-        //--- A
-        if (drawable is BitmapDrawable) { return drawable.bitmap }
-        //--- B
-        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
-    }
-
-
-    //-------------------- DB query (m)s.
+    //-------------------- DB query (m).
     private suspend fun getBirthdayPersonListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<ContactPerson>? {
         return database.getContactPersonListWithGivenBirthday(chosenBirthDate)
     }
+
 
 }

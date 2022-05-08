@@ -50,6 +50,7 @@ import android.widget.CompoundButton
  */
 class ContactTrackerFragment : Fragment() {
 
+    //--------------------------- Notification -----------------------------------------------------
     //---------- (v) for Push Notifications.
     private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     private var mNotificationManager: NotificationManager? = null
@@ -139,7 +140,7 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService
-                    requireActivity().startService(Intent(context, ContactStatusBackgroundService()::class.java))
+                    requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
 
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
@@ -151,7 +152,7 @@ class ContactTrackerFragment : Fragment() {
                     mNotificationManager!!.cancelAll()
 
                     //- (c) ContactStatusService
-                    requireActivity().stopService(Intent(context, ContactStatusBackgroundService::class.java))
+                    requireActivity().stopService(Intent(context, ContactStatusNotificationBackgroundService::class.java))
 
                     //- (v) toastMsg -"off->.
                     getString(R.string.alarm_off_toast)
@@ -169,22 +170,24 @@ class ContactTrackerFragment : Fragment() {
 
 
     //--------------------------- Notification -----------------------------------------------------
+    //-------------------- NotificationChannel is obligational for Push Notifications
     /**
      *   Create (c) NotificationChannel if >= Android ver OREO.
      */
     private fun createNotificationChannel() {
 
-        //- (c) NotificationManager.
+        //---------- (c) NotificationManager.
         mNotificationManager = getSystemService(context!!, NotificationManager::class.java)
 
-        // (c) NotificationManager -(c) NotificationChannel->.
+        //---------- (c) NotificationChannel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create (c) NotificationChannel. Add params.
-            val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Stand up notification", NotificationManager.IMPORTANCE_HIGH)
+            //---- (v) notificationChannel. Assign val. Add params.
+            val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.BLUE
             notificationChannel.enableVibration(true)
-            notificationChannel.description = "Notifies every 15 minutes to stand up and walk"
+            notificationChannel.description = "Notifies about Birthdays"
+            //---- (c) NotificationManager -[(c) NotificationChannel]->.
             mNotificationManager!!.createNotificationChannel(notificationChannel)
         }
 

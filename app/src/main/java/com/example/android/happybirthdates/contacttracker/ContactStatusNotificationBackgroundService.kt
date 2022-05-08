@@ -11,11 +11,11 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 
 
-private const val TAG = "ContactStatusBkgrndServ"
+private const val TAG = "ConStatNotfnBkgrndServ"
 
-class ContactStatusBackgroundService : Service() {
+class ContactStatusNotificationBackgroundService : Service() {
 
-    //---------- (v)s for Push Notifications.
+    //---------- Technical (v)s for Notifications.
     private val NOTIFICATION_ID = 0
     var alarmManager : AlarmManager? = null
     var notifyPendingIntent: PendingIntent? = null
@@ -24,17 +24,16 @@ class ContactStatusBackgroundService : Service() {
 
         Log.i(TAG, "(m) onStartCommand.  Service started by user. Received start id $startId: $intent") ///<-> Toast.makeText(this, "(m) onStartCommand. Service started by user.", Toast.LENGTH_LONG).show()
 
-        //---------- (v) for Push Notifications.
-        //--- (c) AlarmManager Service
+        //---------- Technical (v) alarmManager Service. Assign val.
         alarmManager = ContextCompat.getSystemService(this, AlarmManager::class.java)
 
-        //- (v) notifyPendingIntent <-(v) notifyIntent
+        //---------- (v) notifyPendingIntent <- (v) notifyIntent.
         val notifyIntent = Intent(this, AlarmReceiver::class.java)
         var mContext = applicationContext
         notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        //- Start (c) AlarmManager Service
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),AlarmManager.INTERVAL_HALF_DAY, notifyPendingIntent)
+        //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
+        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 5000, notifyPendingIntent) //AlarmManager.INTERVAL_HALF_DAY
 
         return START_NOT_STICKY
 
@@ -48,7 +47,7 @@ class ContactStatusBackgroundService : Service() {
 
         Log.i(TAG, "(m) onDestroy. Service stopped.") ///<->Toast.makeText(this, "(m) onDestroy. Service stopped.", Toast.LENGTH_LONG).show()
 
-        //- (c) AlarmManager off.
+        //---------- Technical (v) alarmManager Service. Turn off Service.
         alarmManager?.cancel(notifyPendingIntent)
 
     }
