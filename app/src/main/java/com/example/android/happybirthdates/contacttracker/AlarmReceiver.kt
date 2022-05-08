@@ -42,6 +42,7 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onReceive(context: Context, intent: Intent) {
+
         Log.i(TAG, "(m) onReceive. Received intent: $intent")
 
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

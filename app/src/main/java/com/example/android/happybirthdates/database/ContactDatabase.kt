@@ -22,7 +22,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * A database that stores SleepNight information.
+ * A database that stores Contacts information.
  * And a global method to get access to the database.
  *
  * This pattern is pretty much the same for any database,

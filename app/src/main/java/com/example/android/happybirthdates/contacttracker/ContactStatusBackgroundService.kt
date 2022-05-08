@@ -28,15 +28,13 @@ class ContactStatusBackgroundService : Service() {
         //--- (c) AlarmManager Service
         alarmManager = ContextCompat.getSystemService(this, AlarmManager::class.java)
 
-        //--- (v) notifyPendingIntent <-(v) notifyIntent
+        //- (v) notifyPendingIntent <-(v) notifyIntent
         val notifyIntent = Intent(this, AlarmReceiver::class.java)
         var mContext = applicationContext
         notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        //- (c) AlarmManager
-        ///val repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES
-        val triggerTime = (SystemClock.elapsedRealtime()) ///+ repeatInterval)
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime,5000  , notifyPendingIntent) //repeatInterval, notifyPendingIntent)
+        //- Start (c) AlarmManager Service
+        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),AlarmManager.INTERVAL_HALF_DAY, notifyPendingIntent)
 
         return START_NOT_STICKY
 
