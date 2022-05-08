@@ -47,8 +47,7 @@ class ContactStatusBackgroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        Log.i(TAG, "Received start id $startId: $intent")
-        Toast.makeText(this, "(m) onStartCommand. Service started by user.", Toast.LENGTH_LONG).show()
+        Log.i(TAG, "(m)onStartCommand.  Service started by user. Received start id $startId: $intent") ///<-> Toast.makeText(this, "(m) onStartCommand. Service started by user.", Toast.LENGTH_LONG).show()
 
         //---------- (v) for Push Notifications.
         //--- (c) AlarmManager Service
@@ -79,7 +78,7 @@ class ContactStatusBackgroundService : Service() {
 
     override fun onDestroy() {
 
-        Toast.makeText(this, "(m) onDestroy. Service stopped.", Toast.LENGTH_LONG).show()
+        Log.i(TAG, "(m)onDestroy. Service stopped.") ///<->Toast.makeText(this, "(m) onDestroy. Service stopped.", Toast.LENGTH_LONG).show()
 
         //- (c) AlarmManager off.
         alarmManager?.cancel(notifyPendingIntent)

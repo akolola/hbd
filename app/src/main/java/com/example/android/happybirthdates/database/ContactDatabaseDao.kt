@@ -82,6 +82,6 @@ interface ContactDatabaseDao {
      * @param key  date (string) formatted 'dd.MM.yyyy'  to match
      */
     @Query("SELECT * FROM contact_table WHERE birthdate LIKE :key")
-    suspend fun getContactPersonsWithBirthdayGiven(key: String): List<ContactPerson>?
+    suspend fun getContactPersonListWithGivenBirthday(key: String): List<ContactPerson>?
 }
 
