@@ -42,7 +42,7 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onReceive(context: Context, intent: Intent) {
-        //Log.i(TAG, "(m)onReceive. Received intent: $intent")
+        Log.i(TAG, "(m) onReceive. Received intent: $intent")
 
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -81,7 +81,7 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     private suspend fun  deliverNotification(context: Context, birthdayPersonList: List<String>?) {
 
-        Log.i(TAG, "(m)deliverNotification. Received birthdayPersonList: $birthdayPersonList")
+        Log.i(TAG, "(m) deliverNotification. Received birthdayPersonList: $birthdayPersonList")
 
         //val contentIntent = Intent(context, MainActivity::class.java)
         //val contentPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
