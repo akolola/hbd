@@ -1,12 +1,14 @@
 package com.example.android.happybirthdates.contacttracker
 
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.icu.text.SimpleDateFormat
@@ -14,6 +16,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.database.ContactDatabaseDao
@@ -31,8 +34,9 @@ private const val TAG = "AlarmReceiver"
  */
 class AlarmReceiver : BroadcastReceiver() {
 
+    //--------------------------- Notification -----------------------------------------------------
     //---------- Technical (v) mNotificationManager
-    private var mNotificationManager: NotificationManager? = null
+    var mNotificationManager: NotificationManager? = null
 
     /**
      * Called when BroadcastReceiver receives Intent broadcast.
@@ -48,7 +52,7 @@ class AlarmReceiver : BroadcastReceiver() {
         //---------- Technical (v) mNotificationManager. Assign val.
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        //---------- |DB| Contact
+        //---------- |DB| Contact.
         val database = ContactDatabase.getInstance(context).contactDatabaseDao
 
         //---------- (c) SupervisorJob & (c) CoroutineScope. Launch new coroutine without blocking current thread => |DB| -[Notification]->.
@@ -98,6 +102,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
 
         //---- (c) NotificationManager -[(c) Notification]->.
+        createNotificationChannel()
         mNotificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
@@ -144,6 +149,27 @@ class AlarmReceiver : BroadcastReceiver() {
     //-------------------- DB query (m).
     private suspend fun getBirthdayPersonListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<ContactPerson>? {
         return database.getContactPersonListWithGivenBirthday(chosenBirthDate)
+    }
+
+    //--------------------------- Notification -----------------------------------------------------
+    //-------------------- NotificationChannel is obligational for Push Notifications
+    /**
+     *   Create (c) NotificationChannel if >= Android ver OREO.
+     */
+    private fun createNotificationChannel() {
+
+        //---------- (c) NotificationChannel.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //---- (v) notificationChannel. Assign val. Add params.
+            val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.BLUE
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Notifies about Birthdays"
+            //---- (c) NotificationManager -[(c) NotificationChannel]->.
+            mNotificationManager!!.createNotificationChannel(notificationChannel)
+        }
+
     }
 
 

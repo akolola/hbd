@@ -17,11 +17,8 @@
 package com.example.android.happybirthdates.contacttracker
 
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Intent
 
-import android.os.Build
 import android.os.Bundle
 
 import android.view.LayoutInflater
@@ -39,8 +36,6 @@ import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
-import android.graphics.Color
-import androidx.core.content.ContextCompat.getSystemService
 
 import android.widget.CompoundButton
 
@@ -49,11 +44,6 @@ import android.widget.CompoundButton
  * displayed in RecyclerView.
  */
 class ContactTrackerFragment : Fragment() {
-
-    //--------------------------- Notification -----------------------------------------------------
-    //---------- (v) for Push Notifications.
-    private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
-    private var mNotificationManager: NotificationManager? = null
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to the screen.
@@ -148,9 +138,6 @@ class ContactTrackerFragment : Fragment() {
                 //--- B. <ToggleButton> 'alarmToggle' is turned off.
                 else {
 
-                    //- (c) NotificationManager.
-                    mNotificationManager!!.cancelAll()
-
                     //- (c) ContactStatusService
                     requireActivity().stopService(Intent(context, ContactStatusNotificationBackgroundService::class.java))
 
@@ -161,37 +148,12 @@ class ContactTrackerFragment : Fragment() {
                 Toast.makeText(context!!, toastMsg, Toast.LENGTH_SHORT).show()
             }
         )
-        createNotificationChannel()
 
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 
-
-    //--------------------------- Notification -----------------------------------------------------
-    //-------------------- NotificationChannel is obligational for Push Notifications
-    /**
-     *   Create (c) NotificationChannel if >= Android ver OREO.
-     */
-    private fun createNotificationChannel() {
-
-        //---------- (c) NotificationManager.
-        mNotificationManager = getSystemService(context!!, NotificationManager::class.java)
-
-        //---------- (c) NotificationChannel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //---- (v) notificationChannel. Assign val. Add params.
-            val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.BLUE
-            notificationChannel.enableVibration(true)
-            notificationChannel.description = "Notifies about Birthdays"
-            //---- (c) NotificationManager -[(c) NotificationChannel]->.
-            mNotificationManager!!.createNotificationChannel(notificationChannel)
-        }
-
-    }
 
 
 }
