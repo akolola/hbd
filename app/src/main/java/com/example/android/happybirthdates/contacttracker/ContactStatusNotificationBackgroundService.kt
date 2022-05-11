@@ -24,7 +24,6 @@ class ContactStatusNotificationBackgroundService : Service() {
 
     //--------------------------- Notification -----------------------------------------------------
     //---------- (v) for Push Notifications.
-    private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
     private var mNotificationManager: NotificationManager? = null
 
 
@@ -64,17 +63,13 @@ class ContactStatusNotificationBackgroundService : Service() {
         Log.i(TAG, "(m) onDestroy. Service stopped.") ///<->Toast.makeText(this, "(m) onDestroy. Service stopped.", Toast.LENGTH_LONG).show()
 
         //-------------------- Alarm.
-        //---------- (c) AlarmManager. Turn off Service.
+        //---------- (c) AlarmManager Service. Turn off.
         alarmManager?.cancel(notifyPendingIntent)
-
         //-------------------- Notification.
-        //---------- (c) NotificationManager. Turn off Service.
+        //---------- (c) NotificationManager Service. Turn off.
         mNotificationManager!!.cancelAll()
 
-
-
     }
-
 
 
 }

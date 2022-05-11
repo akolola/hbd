@@ -1,6 +1,7 @@
 package com.example.android.happybirthdates.contacttracker
 
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -16,7 +17,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.database.ContactDatabaseDao
@@ -35,8 +35,17 @@ private const val TAG = "AlarmReceiver"
 class AlarmReceiver : BroadcastReceiver() {
 
     //--------------------------- Notification -----------------------------------------------------
-    //---------- Technical (v) mNotificationManager
+    companion object {
+        //---------- (v)s for Notification.
+        private const val NOTIFICATION_ID = 0
+        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+        //---------- (v)s for |resource|.
+        private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
+        private const val RESOURCE_TYPE = "mipmap"
+    }
+
     var mNotificationManager: NotificationManager? = null
+
 
     /**
      * Called when BroadcastReceiver receives Intent broadcast.
@@ -49,25 +58,24 @@ class AlarmReceiver : BroadcastReceiver() {
 
         Log.i(TAG, "(m) onReceive. Received intent: $intent")
 
-        //---------- Technical (v) mNotificationManager. Assign val.
+        //---------- (c) NotificationManager Service.
         mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        //---------- |DB| Contact.
+        //---------- |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(context).contactDatabaseDao
 
-        //---------- (c) SupervisorJob & (c) CoroutineScope. Launch new coroutine without blocking current thread => |DB| -[Notification]->.
+        //---------- (c) SupervisorJob & (c) CoroutineScope & (m) launch new coroutine without blocking current thread => |DB| -[Notification]->.
         val serviceJob = SupervisorJob()
         val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
         serviceScope.launch {
-
-            //--- 1. |DB|
+            //--- 1. |DB| ContactDatabase.
             val birthDate: String = prepareBirthDateForContactPersonListSelect()
             val birthdayPersonListFromDatabase = getBirthdayPersonListFromDatabase(database, "$birthDate.%%%%")
-            val birthdayPersonList : List<String>? = birthdayPersonListFromDatabase?.map { it.name }
-
-            //--- 2.  Notification
-            deliverNotification(context, birthdayPersonList)
-
+            //--- 2.  Notification.
+            if (birthdayPersonListFromDatabase != null && birthdayPersonListFromDatabase.isNotEmpty()) {
+                    val birthdayPersonList : List<String>? = birthdayPersonListFromDatabase?.map { it.name }
+                    buildAndDisplayNotification(context, birthdayPersonList)
+            }
         }
 
     }
@@ -83,14 +91,60 @@ class AlarmReceiver : BroadcastReceiver() {
         return comingDate
     }
 
-    private suspend fun  deliverNotification(context: Context, birthdayPersonList: List<String>?) {
+    /**
+     * Created and display push notification.
+     *
+     * @param context Context in which the receiver is running.
+     * @param birthdayPersonList List of names of contacts (persones or companies) wihich have birthdays soon.
+     */
+    private suspend fun  buildAndDisplayNotification(context: Context, birthdayPersonList: List<String>?) {
 
-        Log.i(TAG, "(m) deliverNotification. Received birthdayPersonList: $birthdayPersonList")
+        Log.i(TAG, "(m) buildAndDeliverNotification. Received birthdayPersonList: $birthdayPersonList")
 
+        //---- 1. (m) building (c) Notification containing info about (c) Contacts with coming Birthdays.
+        var notification = buildNotification(context, birthdayPersonList)
+        //---- 2. (m) building (c) NotificationChannel
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
+            val notificationChannel = buildNotificationChannel()
+        //---- 3. (c) NotificationManager <- (c) NotificationChannel.
+            mNotificationManager!!.createNotificationChannel(notificationChannel)
+        }
+        //---- 4. (c) NotificationManager <- (c) Notification. (m) displaying push notification.
+        mNotificationManager!!.notify(NOTIFICATION_ID, notification)
+
+    }
+
+    /**
+     * Create (c) NotificationChannel if Android ver >= 'O' (OREO).
+     * (c) NotificationChannel is mandatory for push notifications.
+     *
+     * @return notificationChannel with specific attributes.
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun buildNotificationChannel(): NotificationChannel {
+        val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
+        notificationChannel.enableLights(true)
+        notificationChannel.lightColor = Color.BLUE
+        notificationChannel.enableVibration(true)
+        notificationChannel.description = "Notifies about Birthdays"
+        return notificationChannel
+    }
+
+    /**
+     * Build notification to be displayed.
+     *
+     * @param context Context in which the receiver is running.
+     * @param birthdayPersonList List of names of contacts (persones or companies) wihich have birthdays soon.
+     *
+     * @return notification with complete description and image.
+     */
+    private fun buildNotification(context: Context, birthdayPersonList: List<String>?): Notification? {
+        //---------- |resource| ic_gift_box_foreground.
         val imageGiftBoxId: Int = context.resources.getIdentifier(RESOURCE_GIFT_PACKAGE_NAME, RESOURCE_TYPE, context.packageName)
-        val drawable = context.resources.getDrawable(imageGiftBoxId)
-        val bitmap =  drawableToBitmap(drawable) // Alternative to not working:  val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
+        val drawableGiftBox = context.resources.getDrawable(imageGiftBoxId)
+        val bitmapGiftBox = convertDrawableToBitmap(drawableGiftBox) // Alternative to not working line: val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
+        //---- (c) [Notification]Builder.
         var notificationBuilder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_gift_box)
             .setContentTitle(context.getString(R.string.notification_title))
@@ -98,35 +152,37 @@ class AlarmReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .setLargeIcon(bitmap)
-            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
+            .setLargeIcon(bitmapGiftBox) // (c) [Notification]Builder <- |resource| ic_gift_box_foreground.
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmapGiftBox).bigLargeIcon(null))
 
-        //---- (c) NotificationManager -[(c) Notification]->.
-        createNotificationChannel()
-        mNotificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+        //---- (c) Notification.
+        var notification = notificationBuilder.build()
+        return notification
     }
 
-    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
+    /**
+     * Image format conversion form 'Drawable' to 'Bitmap'.
+     *
+     * @param drawableImage image of the format 'Drawable' to be converted.
+     * @return bitmapImage  image with converted format 'Bitmap'.
+     */
+    private fun convertDrawableToBitmap(drawableImage: Drawable): Bitmap? {
         //---  A.
-        if (drawable is BitmapDrawable) { return drawable.bitmap }
+        if (drawableImage is BitmapDrawable) { return drawableImage.bitmap }
         //---  B.
-        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        return bitmap
+        val bitmapImage = Bitmap.createBitmap(drawableImage.intrinsicWidth, drawableImage.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmapImage)
+        drawableImage.setBounds(0, 0, canvas.width, canvas.height)
+        drawableImage.draw(canvas)
+        return bitmapImage
     }
 
-    companion object {
-        //---------- (v)s for Notification.
-        private const val NOTIFICATION_ID = 0
-        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
-
-        //---------- (v)s for |resource|.
-        private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
-        private const val RESOURCE_TYPE = "mipmap"
-    }
-
+    /**
+     * Write readable message for app users about (c) Contacts with incoming Birthdays.
+     *
+     * @param birthdayPersonList List of names of contacts (persones or companies) wihich have birthdays soon.
+     * @return contentText Readable text for notification message.
+     */
     private fun formContentText(birthdayPersonList: List<String>?): String {
         var contentText = ""
         if (!birthdayPersonList.isNullOrEmpty()) {
@@ -146,30 +202,10 @@ class AlarmReceiver : BroadcastReceiver() {
         return contentText
     }
 
+
     //-------------------- DB query (m).
     private suspend fun getBirthdayPersonListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<ContactPerson>? {
         return database.getContactPersonListWithGivenBirthday(chosenBirthDate)
-    }
-
-    //--------------------------- Notification -----------------------------------------------------
-    //-------------------- NotificationChannel is obligational for Push Notifications
-    /**
-     *   Create (c) NotificationChannel if >= Android ver OREO.
-     */
-    private fun createNotificationChannel() {
-
-        //---------- (c) NotificationChannel.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //---- (v) notificationChannel. Assign val. Add params.
-            val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.BLUE
-            notificationChannel.enableVibration(true)
-            notificationChannel.description = "Notifies about Birthdays"
-            //---- (c) NotificationManager -[(c) NotificationChannel]->.
-            mNotificationManager!!.createNotificationChannel(notificationChannel)
-        }
-
     }
 
 
