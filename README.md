@@ -1,10 +1,8 @@
 # Happy Birthdates
 
-##Description
+## Description
 
-* The app storing bithdays of the user's contacts. 
-* The contact list is synchroneszid with the contacts of an Android device.
-* A pop message remindes about incoming friend's or organisation's birthday.
-* The displayed contact list is display in the order correasponding nearest birthdates.
-
-
+* The app storing Birthdays of the user's contacts. 
+* The contact list is synchronized with the contacts of an Android device.
+* A push notification remindes about incoming friend's or organisation's Birthday.
+* The displayed contact list is shown in the order corresponding nearest birthdays.
