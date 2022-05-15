@@ -47,6 +47,8 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
 
     }
 
+    //List<String> listOfTodayBDMenNames = dataSource.getTodayBDMenNames()
+
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
     //----------  <Button> 'Close' is clicked.

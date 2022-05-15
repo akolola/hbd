@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
 
 package com.example.android.happybirthdates.contacttracker
 
+
+import android.content.Intent
+
 import android.os.Bundle
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -31,6 +37,7 @@ import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import com.google.android.material.snackbar.Snackbar
 
+import android.widget.CompoundButton
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -56,8 +63,6 @@ class ContactTrackerFragment : Fragment() {
         //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.
         val viewModelFactory = ContactTrackerViewModelFactory(dbPerson, application)
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
-
-
 
         //--------------------------- Processing ---------------------------------------------------
         binding.contactTrackerViewModel = contactTrackerViewModel
@@ -111,18 +116,44 @@ class ContactTrackerFragment : Fragment() {
                 Snackbar.make(
                     requireActivity().findViewById(android.R.id.content),
                     getString(R.string.cleared_message),
-                    Snackbar.LENGTH_SHORT // How long to display the message.
+                    Snackbar.LENGTH_SHORT // How long to display the msg.
                 ).show()
-                // Reset state to make sure the snackbar is only shown once, even if the device
-                // has a configuration change.
+                // Reset state to make sure Snackbar is only shown once, even if the device has a config change.
                 contactTrackerViewModel.doneShowingSnackbar()
             }
         })
 
+        //-------------------- <ToggleButton> 'alarmToggle' | (v)s for Push Notifications.
+        binding.alarmToggle.setOnCheckedChangeListener(
+            CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                //--- A. <ToggleButton> 'alarmToggle' is turned on.
+                val toastMsg: String = if (isChecked) {
+
+                    //- (c) ContactStatusService
+                    requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+
+                    //- (v) toastMsg -"on"->.
+                    getString(R.string.alarm_on_toast)
+                }
+                //--- B. <ToggleButton> 'alarmToggle' is turned off.
+                else {
+
+                    //- (c) ContactStatusService
+                    requireActivity().stopService(Intent(context, ContactStatusNotificationBackgroundService::class.java))
+
+                    //- (v) toastMsg -"off->.
+                    getString(R.string.alarm_off_toast)
+                }
+                // Show toast to say the alarm is turned on or off.
+                Toast.makeText(context!!, toastMsg, Toast.LENGTH_SHORT).show()
+            }
+        )
 
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
+
+
 
 }

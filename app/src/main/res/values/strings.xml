@@ -60,4 +60,10 @@
     <string name="submit">Submit</string>
     <string name="show_date_picker">Set</string>
     <string name="birthdate">&#160;Birthdate</string>
+    <string name="alarm_off">Alarm Off</string>
+    <string name="alarm_on">Alarm on</string>
+    <string name="alarm_on_toast">Alarms activated</string>
+    <string name="alarm_off_toast">Alarms deactivated</string>
+    <string name="notification_title">Reminder</string>
+    <string name="service_name">contact status</string>
 </resources>

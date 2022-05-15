@@ -1,5 +1,5 @@
 /*
- * Copyright 2018, The Android Open Source Project
+ * Copyright 2021, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
- * A database that stores SleepNight information.
+ * A database that stores Contacts information.
  * And a global method to get access to the database.
  *
  * This pattern is pretty much the same for any database,
@@ -82,12 +82,8 @@ abstract class ContactDatabase : RoomDatabase() {
                 var instance = INSTANCE
                 // If instance is `null` make a new database instance.
                 if (instance == null) {
-                    instance = Room.databaseBuilder(
-                            context.applicationContext,
-                            ContactDatabase::class.java,
-                            "special_day_database"
-                    )
-                            // Wipes and rebuilds instead of migrating if no Migration object.
+                    instance = Room.databaseBuilder(context.applicationContext, ContactDatabase::class.java, "special_day_database")
+                            // Wipes and rebuilds instead of migrating if no Migration obj.
                             // Migration is not part of this lesson. You can learn more about
                             // migration with Room in this blog post:
                             // https://medium.com/androiddevelopers/understanding-migrations-with-room-f01e04b07929
