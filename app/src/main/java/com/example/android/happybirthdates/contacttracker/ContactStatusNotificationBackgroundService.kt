@@ -22,7 +22,6 @@ class ContactStatusNotificationBackgroundService : Service() {
     private var alarmManager : AlarmManager? = null
     var notifyPendingIntent: PendingIntent? = null
 
-    //--------------------------- Notification -----------------------------------------------------
     //---------- (v) for Push Notifications.
     private var mNotificationManager: NotificationManager? = null
 
