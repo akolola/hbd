@@ -18,7 +18,7 @@ class ContactStatusNotificationBackgroundService : Service() {
     //--------------------------- Notification -----------------------------------------------------
     //-------------------- (c) AlarmManager.
     //---------- Technical (v)s for Notifications.
-    private val NOTIFICATION_ID = 0
+    private val REQUEST_CODE = 0
     private var alarmManager : AlarmManager? = null
     var notifyPendingIntent: PendingIntent? = null
 
@@ -43,8 +43,8 @@ class ContactStatusNotificationBackgroundService : Service() {
         alarmManager = ContextCompat.getSystemService(this, AlarmManager::class.java)
 
         //---------- (c) AlarmManager <- (c) AlarmReceiver, i.e. ((v) notifyPendingIntent <- (v) notifyIntent).
-        val notifyIntent = Intent(this, AlarmReceiver::class.java)
-        notifyPendingIntent = PendingIntent.getBroadcast(mContext, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val notifyIntent = Intent(this, AlarmReceiver::class.java) // IMPORTANT! Here's connection between (c) AlarmManager & (c) AlarmReceiver.
+        notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 5000, notifyPendingIntent) //AlarmManager.INTERVAL_HALF_DAY
