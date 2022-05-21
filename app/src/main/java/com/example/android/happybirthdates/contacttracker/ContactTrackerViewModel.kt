@@ -29,9 +29,7 @@ import androidx.lifecycle.viewModelScope
 /**
  * ContactTrackerFragment's ViewModel.
  */
-class ContactTrackerViewModel(
-    val database: ContactDatabaseDao,
-    application: Application) : AndroidViewModel(application) {
+class ContactTrackerViewModel constructor(val database: ContactDatabaseDao, application: Application) : AndroidViewModel(application) {
 
 
 
@@ -48,7 +46,7 @@ class ContactTrackerViewModel(
     //---------- (m) clear
     private suspend fun clear() {
         withContext(Dispatchers.IO) {
-            database.clear()
+            database.delete()
         }
     }
 
@@ -108,7 +106,6 @@ class ContactTrackerViewModel(
     fun doneNavigatingToContactDetailsFragment() {
         _navigateToContactDetails.value = null
     }
-
 
 
     //--------------------------- Snackbar ---------------------------------------------------------

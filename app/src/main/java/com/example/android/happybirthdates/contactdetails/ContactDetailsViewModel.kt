@@ -16,12 +16,12 @@
 
 package com.example.android.happybirthdates.contactdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 import com.example.android.happybirthdates.database.ContactPerson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ContactDetailsFragment's ViewModel.
@@ -29,9 +29,9 @@ import com.example.android.happybirthdates.database.ContactPerson
  * @param contactKey The key of the current (c) Contact we are working on.
  * @param database (o) to |DB| where we get info about (c) Contact.
  */
-class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, database: ContactDatabaseDao) : ViewModel() {
+class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
-    //--------------------------- LiveData: <-(o) ContactPerson- DB ---------------------------------------
+    //--------------------------- LiveData: <-(o) ContactPerson- DB --------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
     val ldPerson = MediatorLiveData<ContactPerson>()
@@ -45,6 +45,13 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
         ldPerson.addSource(dbPerson.getContactWithId(contactKey), ldPerson::setValue)
     }
 
+    //-------------------- Query (m)s
+    //---------- (m) clear
+    private suspend fun delete() {
+        withContext(Dispatchers.IO) {
+            database.delete()
+        }
+    }
 
 
     //--------------------------- Buttons ----------------------------------------------------------
@@ -53,6 +60,21 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
     fun onClose() {
         _navigateToContactTracker.value = true
     }
+
+    //----------  <Button> 'Delete' is clicked.
+    fun onDelete() {
+        viewModelScope.launch {
+            // Clear the database table.
+            delete()
+            // And clear (o) Person since it's no longer in the DB
+            ldPerson.value = null
+        }
+
+        // Show a snackbar msg, because it's friendly.
+        ///_showSnackbarEvent.value = true
+        _navigateToContactTracker.value = true
+    }
+
 
 
     //-------------------- Navigation
@@ -64,6 +86,16 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
 
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
+    }
+
+    //--------------------------- Snackbar ---------------------------------------------------------
+    private var _showSnackbarEvent = MutableLiveData<Boolean>()
+
+    val showSnackBarEvent: LiveData<Boolean>
+        get() = _showSnackbarEvent
+
+    fun doneShowingSnackbar() {
+        _showSnackbarEvent.value = false
     }
 
 }

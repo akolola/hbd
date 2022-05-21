@@ -54,7 +54,7 @@ interface ContactDatabaseDao {
      * This does not delete the table, only its contents.
      */
     @Query("DELETE FROM contact_table")
-    suspend fun clear()
+    suspend fun delete()
 
     /**
      * Selects and returns all rows in the table, sorted by start time in descending order.
