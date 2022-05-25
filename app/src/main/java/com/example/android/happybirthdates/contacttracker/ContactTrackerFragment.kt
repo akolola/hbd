@@ -118,9 +118,9 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //-------------------- <Button> Clear.
+        //--------------------  'Delete' <Button> of (c) ContactDetailsFragment.
         //---------- Observer; Snackbar.
-        // Add Observer on state (v) showing Snackbar msg when <Button> Clear is pressed.
+        // Add Observer on state (v) showing Snackbar msg when 'Delete' <Button> of (c) ContactDetailsFragment is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 Snackbar.make(requireActivity().findViewById(android.R.id.content), getString(R.string.cleared_message), Snackbar.LENGTH_SHORT).show()

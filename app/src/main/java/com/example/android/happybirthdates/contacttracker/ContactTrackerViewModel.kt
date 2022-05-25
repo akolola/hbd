@@ -38,18 +38,6 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     //---------- <list> persons
     val persons = database.getAllPersons()
 
-    //---------- (v) person
-    private var person = MutableLiveData<ContactPerson?>()
-
-
-    //-------------------- Query (m)s
-    //---------- (m) clear
-    private suspend fun clear() {
-        withContext(Dispatchers.IO) {
-            database.delete()
-        }
-    }
-
 
 
     //--------------------------- Buttons ----------------------------------------------------------
@@ -72,19 +60,6 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }
-
-    //----------  <Button> 'Clear' is clicked.
-    fun onClear() {
-        viewModelScope.launch {
-            // Clear the database table.
-            clear()
-            // And clear (o) Person since it's no longer in the DB
-            person.value = null
-        }
-        // Show a snackbar msg, because it's friendly.
-        _showSnackbarEvent.value = true
-    }
-
 
     //-------------------- Navigation
     //---------- (c) ContactTrackerFragment => (c) ContactCreatorFragment.
@@ -110,10 +85,6 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
 
     //--------------------------- Snackbar ---------------------------------------------------------
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
-
-/*    init {
-        _showSnackbarEvent.value = isContactDeleted
-    }*/
 
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
