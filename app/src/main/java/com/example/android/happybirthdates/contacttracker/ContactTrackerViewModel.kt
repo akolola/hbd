@@ -29,7 +29,7 @@ import androidx.lifecycle.viewModelScope
 /**
  * ContactTrackerFragment's ViewModel.
  */
-class ContactTrackerViewModel constructor(val database: ContactDatabaseDao, application: Application) : AndroidViewModel(application) {
+class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val database: ContactDatabaseDao, application: Application) : AndroidViewModel(application) {
 
 
 
@@ -110,6 +110,10 @@ class ContactTrackerViewModel constructor(val database: ContactDatabaseDao, appl
 
     //--------------------------- Snackbar ---------------------------------------------------------
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
+
+/*    init {
+        _showSnackbarEvent.value = isContactDeleted
+    }*/
 
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent

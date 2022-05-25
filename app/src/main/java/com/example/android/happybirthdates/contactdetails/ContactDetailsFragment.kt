@@ -42,12 +42,12 @@ private const val TAG = "ContactDetailsFragment"
 class ContactDetailsFragment : Fragment() {
 
     /**
-     * The (m) is called when (c) ContactDetailsFragment is ready to display content to the screen.
+     * The (m) is called when (c) ContactDetailsFragment is ready to display content to screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- (c) ContactDetailsFragment <- <xml> |fragment layout| fragment_contact_details
+        //---------- (c) ContactDetailsFragment <- |fragment layout| fragment_contact_details.
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_details, container, false)
 
         //---------- Technical (v) application.
@@ -59,7 +59,7 @@ class ContactDetailsFragment : Fragment() {
         //---------- |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s arguments: (v) contactPersonKey & (v) database.
+        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
         val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
         val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
@@ -77,10 +77,10 @@ class ContactDetailsFragment : Fragment() {
         })
 
 
-        //---------- Observer;  <Button> 'Close'; Navigating.
+        //---------- Observer; 'Close' <Button>; Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment())
+                this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment(true))
                 contactDetailsViewModel.doneNavigatingToContactTrackerFragment()
             }
         })
@@ -110,6 +110,7 @@ class ContactDetailsFragment : Fragment() {
             Log.e(TAG, e.toString())
         }
     }
+
 
 
 }

@@ -70,8 +70,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
             ldPerson.value = null
         }
 
-        // Show a snackbar msg, because it's friendly.
-        ///_showSnackbarEvent.value = true
+        //---- Navigation
         _navigateToContactTracker.value = true
     }
 
@@ -86,16 +85,6 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
 
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
-    }
-
-    //--------------------------- Snackbar ---------------------------------------------------------
-    private var _showSnackbarEvent = MutableLiveData<Boolean>()
-
-    val showSnackBarEvent: LiveData<Boolean>
-        get() = _showSnackbarEvent
-
-    fun doneShowingSnackbar() {
-        _showSnackbarEvent.value = false
     }
 
 }

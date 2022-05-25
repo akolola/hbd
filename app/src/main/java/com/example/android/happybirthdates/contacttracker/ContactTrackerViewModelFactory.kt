@@ -22,17 +22,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 
 /**
- * This is pretty much boiler plate code for a ViewModel Factory.
+ * Boiler plate code for ViewModel Factory.
  *
- * Provides the SleepDatabaseDao and context to the ViewModel.
+ * ContactDatabaseDao and context -> ViewModel.
  */
-class ContactTrackerViewModelFactory(
-    private val dataSource: ContactDatabaseDao,
-    private val application: Application) : ViewModelProvider.Factory {
+class ContactTrackerViewModelFactory(private val isContactDeleted : Boolean, private val dataSource: ContactDatabaseDao, private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactTrackerViewModel::class.java)) {
-            return ContactTrackerViewModel(dataSource, application) as T
+            return ContactTrackerViewModel(isContactDeleted, dataSource, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

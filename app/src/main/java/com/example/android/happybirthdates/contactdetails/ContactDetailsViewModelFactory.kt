@@ -21,12 +21,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 
 /**
- * The ViewModelFactory. Provides the key for the contact and
- * the ContactDatabaseDao to the ViewModel.
+ * (c) ViewModelFactory. Provides key for Contact and (c) ContactDatabaseDao to the ViewModel.
  */
-class ContactDetailsViewModelFactory(
-    private val contactKey: Long,
-    private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
+class ContactDetailsViewModelFactory(private val contactKey: Long, private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactDetailsViewModel::class.java)) {
