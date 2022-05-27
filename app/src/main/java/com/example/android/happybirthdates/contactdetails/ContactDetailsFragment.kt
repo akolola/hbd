@@ -92,13 +92,11 @@ class ContactDetailsFragment : Fragment() {
             var builder = AlertDialog.Builder(activity)
             builder.setTitle(getString(R.string.confirm_delete))
             builder.setMessage(getString(R.string.delete_confirmation_msg))
-            builder.setPositiveButton(getString(R.string.yes), DialogInterface.OnClickListener { dialog, _ ->
+            builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                 contactDetailsViewModel.onDelete()
                 dialog.cancel()
-            })
-            builder.setNegativeButton(getString(R.string.no), DialogInterface.OnClickListener { dialog, _ ->
-                dialog.cancel()
-            })
+            }
+            builder.setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.cancel() }
             var alert = builder.create()
             alert.show()
         }
