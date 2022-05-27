@@ -29,9 +29,7 @@ import androidx.lifecycle.viewModelScope
 /**
  * ContactTrackerFragment's ViewModel.
  */
-class ContactTrackerViewModel(
-    val database: ContactDatabaseDao,
-    application: Application) : AndroidViewModel(application) {
+class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val database: ContactDatabaseDao, application: Application) : AndroidViewModel(application) {
 
 
 
@@ -39,18 +37,6 @@ class ContactTrackerViewModel(
     //-------------------- LiveData preparation
     //---------- <list> persons
     val persons = database.getAllPersons()
-
-    //---------- (v) person
-    private var person = MutableLiveData<ContactPerson?>()
-
-
-    //-------------------- Query (m)s
-    //---------- (m) clear
-    private suspend fun clear() {
-        withContext(Dispatchers.IO) {
-            database.clear()
-        }
-    }
 
 
 
@@ -75,19 +61,6 @@ class ContactTrackerViewModel(
         _navigateToContactDetails.value = contactId
     }
 
-    //----------  <Button> 'Clear' is clicked.
-    fun onClear() {
-        viewModelScope.launch {
-            // Clear the database table.
-            clear()
-            // And clear (o) Person since it's no longer in the DB
-            person.value = null
-        }
-        // Show a snackbar msg, because it's friendly.
-        _showSnackbarEvent.value = true
-    }
-
-
     //-------------------- Navigation
     //---------- (c) ContactTrackerFragment => (c) ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
@@ -108,7 +81,6 @@ class ContactTrackerViewModel(
     fun doneNavigatingToContactDetailsFragment() {
         _navigateToContactDetails.value = null
     }
-
 
 
     //--------------------------- Snackbar ---------------------------------------------------------

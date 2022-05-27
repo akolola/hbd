@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package com.example.android.happybirthdates.contactdetails
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -37,32 +39,30 @@ import java.io.FileInputStream
 private const val TAG = "ContactDetailsFragment"
 
 /**
- * (c) Fragment with Contact details
+ * (c) Fragment with detailed description of one Contact.
  */
 class ContactDetailsFragment : Fragment() {
 
     /**
-     * The (m) is called when (c) ContactDetailsFragment is ready to display content to the screen.
+     * The (m) is called when (c) ContactDetailsFragment is ready to display content to screen.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- <xml> |fragment| fragment_contact_details
-        val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_contact_details, container, false)
+        //---------- (c) ContactDetailsFragment <- |fragment layout| fragment_contact_details.
+        val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_details, container, false)
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //---------- |navigation| navigation's (v) arguments.
+        //---------- |navigation| navigation's (v) args.
         val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
 
-        //---------- |DB| Contact.
-        val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
+        //---------- |DB| ContactDatabase.
+        val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- (v) arguments & (v) dataSource.
-        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, dbPerson)
+        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
+        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
         val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
 
@@ -79,31 +79,53 @@ class ContactDetailsFragment : Fragment() {
         })
 
 
-        //---------- Observer;  <Button> 'Clear'; Navigating.
+        //---------- Observer; 'Close' <Button>; Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                this.findNavController().navigate(
-                    ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment())
+                this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment(true))
                 contactDetailsViewModel.doneNavigatingToContactTrackerFragment()
             }
         })
 
+        //---------- Observer; 'Delete' <Button>; Confirmation dialog window & (c) Contact deletion.
+        binding.buttonDelete.setOnClickListener {
+            var builder = AlertDialog.Builder(activity)
+            builder.setTitle(getString(R.string.confirm_delete))
+            builder.setMessage(getString(R.string.delete_confirmation_msg))
+            builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+                contactDetailsViewModel.onDelete()
+                dialog.cancel()
+            }
+            builder.setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.cancel() }
+            var alert = builder.create()
+            alert.show()
+        }
 
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 
-    private fun loadImageFromInternalStorage(fileName: String) {
+
+    /**
+     * For given filename determines path to the images resource &
+     * sets 'URI' param of 'imageViewContactPicture' <ImageView> to updated val.
+     *
+     * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
+     */
+    private fun loadImageFromInternalStorage(imageFileName: String) {
         try {
-            val absolutePath = context!!.getFileStreamPath(fileName).absolutePath
+            val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)
             ///val bitmap = BitmapFactory.decodeStream(fin)
+            //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
             imageViewContactPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
             fin.close()
         } catch (e : Exception ) {
             Log.e(TAG, e.toString())
         }
     }
+
+
 
 }

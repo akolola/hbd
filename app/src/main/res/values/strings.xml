@@ -53,6 +53,7 @@
     <string name="cleared_message">All your data is gone forever.</string>
     <string name="header_text">Your Contacts</string>
     <string name="close">Close</string>
+    <string name="delete">Delete</string>
     <string name="minutes_length">%d minutes on %s</string>
     <string name="hours_length">%d hours on %s</string>
     <string name="seconds_length">%d seconds on %s</string>
@@ -66,4 +67,8 @@
     <string name="alarm_off_toast">Alarms deactivated</string>
     <string name="notification_title">Reminder</string>
     <string name="service_name">contact status</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="delete_confirmation_msg">Do you want to delete this contact?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

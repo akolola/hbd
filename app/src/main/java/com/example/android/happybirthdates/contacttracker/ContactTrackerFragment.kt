@@ -38,6 +38,8 @@ import com.example.android.happybirthdates.databinding.FragmentContactTrackerBin
 import com.google.android.material.snackbar.Snackbar
 
 import android.widget.CompoundButton
+import androidx.annotation.NonNull
+import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -46,23 +48,31 @@ import android.widget.CompoundButton
 class ContactTrackerFragment : Fragment() {
 
     /**
-     * The (m) is called when (c) ContactTrackerFragment is ready to display content to the screen.
+     * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- |fragment layout| fragment_contact_tracker -> (c) ContactTrackerFragment.
+        //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
         val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //---------- |DB| ContactDatabase -> (c) ContactTrackerFragment.
+        //---------- (c) ContactTrackerFragment <- |DB| ContactDatabase.
         val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactTrackerViewModel -> (c) ContactTrackerFragment.
-        val viewModelFactory = ContactTrackerViewModelFactory(dbPerson, application)
+        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) isContactDeleted & (v) database  & (v) application.
+        val  viewModelFactory = if (arguments != null){
+            ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(arguments!!).isContactDeleted, dbPerson, application)
+        } else{
+            ContactTrackerViewModelFactory(false, dbPerson, application)
+        }
+
+        //---------- (c) ContactDetailsViewModel <-  (c) ContactTrackerViewModel.
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
+
+
 
         //--------------------------- Processing ---------------------------------------------------
         binding.contactTrackerViewModel = contactTrackerViewModel
@@ -79,7 +89,7 @@ class ContactTrackerFragment : Fragment() {
         })
 
         //-------------------- <RecyclerView> 'recyclerContactListGrid'.
-        //----------  (c) GridLayoutManager -> (c) ContactListAdapter.
+        //---------- (c) ContactListAdapter <- (c) GridLayoutManager.
         val manager = GridLayoutManager(activity, 3)
         binding.recyclerViewContactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -89,7 +99,7 @@ class ContactTrackerFragment : Fragment() {
             }
         }
 
-        //---------- (c) ContactListAdapter -> (c) ContactTrackerFragment.
+        //---------- (c) ContactTrackerFragment <- (c) ContactListAdapter.
         val adapter = ContactListAdapter(ContactListListener { contactId -> contactTrackerViewModel.onContactClicked(contactId) })
         binding.recyclerViewContactListGrid.adapter = adapter
 
@@ -100,7 +110,7 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //---------- Observer; Navigating.
+        //---------- Observer; 'Contact' <Image>; Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer {
             contactId -> contactId?.let {
                 this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactDetailsFragment(contactId))
@@ -108,16 +118,12 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
-        //-------------------- <Button> Clear.
+        //--------------------  'Delete' <Button> of (c) ContactDetailsFragment.
         //---------- Observer; Snackbar.
-        // Add an Observer on the state var showing a Snackbar msg when <Button> Clear is pressed.
+        // Add Observer on state (v) showing Snackbar msg when 'Delete' <Button> of (c) ContactDetailsFragment is pressed.
         contactTrackerViewModel.showSnackBarEvent.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content),
-                    getString(R.string.cleared_message),
-                    Snackbar.LENGTH_SHORT // How long to display the msg.
-                ).show()
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), getString(R.string.cleared_message), Snackbar.LENGTH_SHORT).show()
                 // Reset state to make sure Snackbar is only shown once, even if the device has a config change.
                 contactTrackerViewModel.doneShowingSnackbar()
             }

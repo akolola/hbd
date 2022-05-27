@@ -72,7 +72,21 @@
             android:text="@string/close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.247"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            style="@style/ContactButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.559"
+            app:layout_constraintStart_toEndOf="@+id/buttonClose" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

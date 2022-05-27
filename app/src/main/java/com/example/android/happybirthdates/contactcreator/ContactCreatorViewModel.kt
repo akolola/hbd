@@ -26,7 +26,9 @@ import kotlinx.coroutines.*
 
 
 /**
- *  (c) ContactCreatorFragment's ViewModel.
+ * (c) ContactCreatorFragment's ViewModel.
+ *
+ * @param database (o) to |DB| where we get info about (c) Contact.
  */
 class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : ViewModel() {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, The Android Open Source Project
+ * Copyright 2022, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +16,43 @@
 
 package com.example.android.happybirthdates.contactdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 import com.example.android.happybirthdates.database.ContactPerson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ContactDetailsFragment's ViewModel.
  *
- * @param contactKey The key of the current (o) Contact we are working on.
+ * @param contactKey The key of the current (c) Contact we are working on.
+ * @param database (o) to |DB| where we get info about (c) Contact.
  */
-class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dataSource: ContactDatabaseDao) : ViewModel() {
+class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
-    //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
-    //-------------------- MediatorLiveData preparation.
-    //---------- (v) ldPerson.
+    //--------------------------- LiveData: <-(o) ContactPerson- DB --------------------------------
+    //-------------------- (c) MediatorLiveData preparation.
+    //---------- (c) MediatorLiveData.
     val ldPerson = MediatorLiveData<ContactPerson>()
-
     fun getPerson() = ldPerson
 
     //---------- |DB| Contact.
-    val dbPerson = dataSource
-
+    val dbPerson = database
 
     init {
         // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
         ldPerson.addSource(dbPerson.getContactWithId(contactKey), ldPerson::setValue)
-
     }
 
-    //List<String> listOfTodayBDMenNames = dataSource.getTodayBDMenNames()
+    //-------------------- Query (m)s
+    //---------- (m) clear
+    private suspend fun delete() {
+        withContext(Dispatchers.IO) {
+            database.delete()
+        }
+    }
+
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
@@ -55,6 +60,20 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, dat
     fun onClose() {
         _navigateToContactTracker.value = true
     }
+
+    //----------  <Button> 'Delete' is clicked.
+    fun onDelete() {
+        viewModelScope.launch {
+            // Clear the database table.
+            delete()
+            // And clear (o) Person since it's no longer in the DB
+            ldPerson.value = null
+        }
+
+        //---- Navigation
+        _navigateToContactTracker.value = true
+    }
+
 
 
     //-------------------- Navigation
