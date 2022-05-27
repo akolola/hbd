@@ -87,7 +87,7 @@ class ContactDetailsFragment : Fragment() {
             }
         })
 
-        //---------- Observer; 'Delete' <Button>; Navigating.
+        //---------- Observer; 'Delete' <Button>; Confirmation dialog window & (c) Contact deletion.
         binding.buttonDelete.setOnClickListener {
             var builder = AlertDialog.Builder(activity)
             builder.setTitle(getString(R.string.confirm_delete))
