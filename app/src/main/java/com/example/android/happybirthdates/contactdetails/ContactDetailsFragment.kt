@@ -17,7 +17,6 @@
 package com.example.android.happybirthdates.contactdetails
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -101,7 +100,7 @@ class ContactDetailsFragment : Fragment() {
             builder.setTitle(getString(R.string.confirm_delete))
             builder.setMessage(getString(R.string.delete_confirmation_msg))
             builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
-                contactDetailsViewModel.onDelete()
+                contactDetailsViewModel.onDelete(arguments.contactPersonKey)
                 dialog.cancel()
             }
             builder.setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.cancel() }

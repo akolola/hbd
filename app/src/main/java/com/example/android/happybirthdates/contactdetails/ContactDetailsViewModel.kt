@@ -47,9 +47,9 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
 
     //-------------------- Query (m)s
     //---------- (m) clear
-    private suspend fun delete() {
+    private suspend fun delete(contactPersonKey: Long) {
         withContext(Dispatchers.IO) {
-            database.delete()
+            database.deleteById(contactPersonKey)
         }
     }
 
@@ -62,10 +62,10 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     }
 
     //----------  <Button> 'Delete' is clicked.
-    fun onDelete() {
+    fun onDelete(contactPersonKey: Long) {
         viewModelScope.launch {
             // Clear the database table.
-            delete()
+            delete(contactPersonKey)
             // And clear (o) Person since it's no longer in the DB
             ldPerson.value = null
         }

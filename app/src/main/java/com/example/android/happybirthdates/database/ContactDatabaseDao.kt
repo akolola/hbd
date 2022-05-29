@@ -49,10 +49,10 @@ interface ContactDatabaseDao {
     suspend fun get(key: Long): ContactPerson?
 
     /**
-     * Deletes all contents from table.
+     * Deletes Contact with given ID.
      */
-    @Query("DELETE FROM contact_table")
-    suspend fun delete()
+    @Query("DELETE FROM contact_table WHERE personId = :key")
+    suspend fun deleteById(key: Long)
 
     /**
      * Selects and returns all rows in the table, sorted by start time in descending order.
