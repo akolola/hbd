@@ -43,6 +43,8 @@ private const val TAG = "ContactDetailsFragment"
  */
 class ContactDetailsFragment : Fragment() {
 
+
+
     /**
      * The (m) is called when (c) ContactDetailsFragment is ready to display content to screen.
      */
@@ -77,7 +79,6 @@ class ContactDetailsFragment : Fragment() {
                 loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
             }
         })
-
 
         //---------- Observer; 'Close' <Button>; Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {

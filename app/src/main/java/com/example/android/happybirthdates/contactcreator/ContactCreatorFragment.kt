@@ -65,27 +65,30 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- |fragment layout| fragment_contact_creator.
-        var binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
+        //----------  (c) ContactCreatorFragment <- |fragment layout| fragment_contact_creator.
+        val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //----------  |DB| Contact.
-        val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
+        //---------- |navigation| navigation's (v) args.
+        // n.a.
 
-        //---------- (c) ContactCreatorViewModel.
-        val viewModelFactory = ContactCreatorViewModelFactory(dataSource)
+        //----------  |DB| ContactDatabase.
+        val database = ContactDatabase.getInstance(application).contactDatabaseDao
+
+        //---------- (c) ContactCreatorViewModel <- (v) database.
+        val viewModelFactory = ContactCreatorViewModelFactory(database)
         val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
 
 
         //--------------------------- Processing ---------------------------------------------------
-        //---------- (c) ContactCreatorViewModel -> (c) ContactTrackerFragment.
+        //---------- (c) ContactTrackerFragment <- (c) ContactCreatorViewModel.
         binding.contactCreatorViewModel = contactCreatorViewModel
 
-
-        //---------- Click listener; <Image> 'imageButtonAddPicture'.
+        //-------------------- 'imageButtonAddPicture' <Image>;
+        //---------- Click listener; Contact's image attribute, adding from Android gallery.
         binding.imageButtonAddPicture.setOnClickListener {
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                    if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
@@ -98,8 +101,23 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                   chooseImageGallery()
               }
         }
+        //--------------------
 
-        //---------- Click listener; <EditText> 'editTextName' & <Button> 'buttonSubmit'.
+        //-------------------- 'editTextName' <EditText>;
+        // n.a.
+        // --------------------
+
+        //-------------------- 'datePickerButton' <Button>;
+        //---------- Click listener; Create & display (c) DatePickerFragment.
+        binding.buttonDatePicker.setOnClickListener {
+            //---------- Show Date Picker
+            val datePickerFragment = DatePickerFragment(this)
+            datePickerFragment.show(fragmentManager!!, "datePicker")
+        }
+        //--------------------
+
+        //-------------------- 'buttonSubmit' <Button>;
+        //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(
@@ -108,15 +126,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                     binding.imageButtonAddPicture.tag.toString())
             }
         }
-
-        //---------- Click listener; <Button> 'datePickerButton'. Create & display (c)DatePickerFragment.
-        binding.buttonDatePicker.setOnClickListener {
-            //---------- Show Date Picker
-            val datePickerFragment = DatePickerFragment(this)
-            datePickerFragment.show(fragmentManager!!, "datePicker")
-        }
-
-        //---------- Observer; <Button> 'buttonSubmit'; Navigating.
+        //---------- Observer; Navigating.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(
@@ -125,6 +135,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                 contactCreatorViewModel.doneNavigating()
             }
         })
+        //--------------------
 
 
 
@@ -132,7 +143,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         return binding.root
     }
 
-    //--------------------------- Image Picker -------------------------------------------------------
+
+
+    //--------------------------- Image Picker -----------------------------------------------------
     companion object {private const val PERMISSION_CODE = 1001}
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -154,7 +167,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     private fun chooseImageGallery() {
         CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
         if(resultCode == Activity.RESULT_OK && imagePickResultIntent!=null){
@@ -180,7 +192,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         }
     }
 
-    //--------------------------- File -------------------------------------------------------
     private fun saveImageToInternalStorage(imageBitmap : Bitmap, fileName: String) {
         try {
             // Use compress (m) on (o) Bitmap for: image -> OutputStream
@@ -207,12 +218,12 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
 
-    //--------------------------- DatePicker -------------------------------------------------------
+    //--------------------------- Date Picker ------------------------------------------------------
     /**
      * (c) DatePickerFragment displaying calendar.
      */
     //---------- (c) inner DatePickerFragment.
-    class DatePickerFragment(val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
+    class DatePickerFragment(private val dateSelected: DateSelected): DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val calendar = Calendar.getInstance()
@@ -239,7 +250,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         calendar.set(Calendar.YEAR, year)
 
         val viewFormatter = SimpleDateFormat("dd.MM.yyyy")
-        var viewFormattedDate = viewFormatter.format(calendar.time)
+        val viewFormattedDate = viewFormatter.format(calendar.time)
         textViewBirthdate.text = viewFormattedDate
     }
 
