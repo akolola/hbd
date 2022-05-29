@@ -50,6 +50,8 @@ class ContactDetailsFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+
+
         //--------------------------- Preparation --------------------------------------------------
         //---------- (c) ContactDetailsFragment <- |fragment layout| fragment_contact_details.
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_details, container, false)
@@ -73,22 +75,27 @@ class ContactDetailsFragment : Fragment() {
         binding.contactDetailsViewModel = contactDetailsViewModel
         binding.lifecycleOwner = this       // Kotlin syntax like 'binding.setLifecycleOwner(this)'
 
-        //---------- Observer;  (v) ldPerson; Value emptiness.
+        //--------------------  (v) ldPerson;
+        //---------- Observer; Value emptiness.
         contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
             if(contactDetailsViewModel.ldPerson.value != null){
                 loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
             }
         })
+        //--------------------
 
-        //---------- Observer; 'Close' <Button>; Navigating.
+        //-------------------- 'Close' <Button>;
+        //---------- Observer;  Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment(true))
                 contactDetailsViewModel.doneNavigatingToContactTrackerFragment()
             }
         })
+        //--------------------
 
-        //---------- Observer; 'Delete' <Button>; Confirmation dialog window & (c) Contact deletion.
+        //-------------------- 'Delete' <Button>;
+        //---------- Observer; Confirmation dialog window & (c) Contact deletion.
         binding.buttonDelete.setOnClickListener {
             var builder = AlertDialog.Builder(activity)
             builder.setTitle(getString(R.string.confirm_delete))
@@ -101,6 +108,8 @@ class ContactDetailsFragment : Fragment() {
             var alert = builder.create()
             alert.show()
         }
+        //--------------------
+
 
 
         //--------------------------- Finish -------------------------------------------------------

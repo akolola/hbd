@@ -49,9 +49,7 @@ interface ContactDatabaseDao {
     suspend fun get(key: Long): ContactPerson?
 
     /**
-     * Deletes all values from the table.
-     *
-     * This does not delete the table, only its contents.
+     * Deletes all contents from table.
      */
     @Query("DELETE FROM contact_table")
     suspend fun delete()
