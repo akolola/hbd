@@ -110,6 +110,7 @@ class ContactTrackerFragment : Fragment() {
             }
         })
 
+
         //---------- Observer; 'Contact' <Image>; Navigating.
         contactTrackerViewModel.navigateToContactDetails.observe(viewLifecycleOwner, Observer {
             contactId -> contactId?.let {

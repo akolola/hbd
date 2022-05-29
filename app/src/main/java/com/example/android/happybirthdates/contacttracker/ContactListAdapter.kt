@@ -30,8 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM = 1
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM = 1
 
 
 //--------------------------- (c) Adapter ----------------------------------------------------------
@@ -48,9 +48,9 @@ private val ITEM_VIEW_TYPE_ITEM = 1
  */
 class ContactListAdapter constructor(val clickListener: ContactListListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
+    //---------- (c) CoroutineScope
+    //---------- CoroutineScope & (m) launch 2 new coroutines without blocking current thread => 1. (m) contactPersonList & 2. (m) submitList ->.
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
-    //---------- Non std (m)
     fun addHeaderAndSubmitList(contactPersonList: List<ContactPerson>?) {
         adapterScope.launch {
             val items = when (contactPersonList) {
@@ -96,15 +96,6 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
      */
     class ContactViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        /**
-        * This (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
-         */
-        fun bind(clickListener: ContactListListener, item: ContactPerson) {
-            binding.contactPerson = item
-            binding.clickListener = clickListener
-            binding.executePendingBindings()
-        }
-
         companion object {
             fun from(parent: ViewGroup): ContactViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -112,6 +103,16 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
                 return ContactViewHolder(binding)
             }
         }
+
+        /**
+        * This (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
+        */
+        fun bind(clickListener: ContactListListener, item: ContactPerson) {
+            binding.contactPerson = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
+        }
+
     }
 
     //--- ViewHolder (3B)

@@ -65,16 +65,16 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- |fragment layout| fragment_contact_creator
+        //---------- |fragment layout| fragment_contact_creator.
         var binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
 
-        //---------- Technical (v) application
+        //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
-        //----------  |DB| Contact
+        //----------  |DB| Contact.
         val dataSource = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactCreatorViewModel
+        //---------- (c) ContactCreatorViewModel.
         val viewModelFactory = ContactCreatorViewModelFactory(dataSource)
         val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
@@ -133,16 +133,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     //--------------------------- Image Picker -------------------------------------------------------
-    companion object {
-        private const val PERMISSION_CODE = 1001
-    }
-
-    /**
-     * The (m) starts picker to get image for cropping and then use the image in cropping activity
-     */
-    private fun chooseImageGallery() {
-        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
-    }
+    companion object {private const val PERMISSION_CODE = 1001}
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
@@ -156,6 +147,14 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             }
         }
     }
+
+    /**
+     * The (m) starts picker to get image for cropping and then use the image in cropping activity
+     */
+    private fun chooseImageGallery() {
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
         if(resultCode == Activity.RESULT_OK && imagePickResultIntent!=null){

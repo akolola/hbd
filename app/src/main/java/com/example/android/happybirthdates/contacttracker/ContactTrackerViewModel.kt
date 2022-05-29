@@ -41,13 +41,6 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
 
 
     //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Visibility
-    //----------  <Button> 'Create' is visible if there are any persons in the database.
-    val clearButtonVisible = Transformations.map(persons) {
-        it?.isNotEmpty()
-    }
-
-
     //-------------------- Execution
     //----------  <Button> 'buttonCreate' is clicked.
     fun onCreateTracking() {

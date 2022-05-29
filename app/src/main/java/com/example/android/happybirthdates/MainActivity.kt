@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 /**
- * The HappyBirthday app
+ * The HappyBirthday app.
  *
- * The HappyBirthday app is an app that helps you to not  orget about Birthdays of your
+ * The HappyBirthday app is an app that helps you to not forget about Birthdays of your
  * friends and acquaintances.
  *
  */
