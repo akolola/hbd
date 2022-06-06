@@ -64,7 +64,7 @@ interface ContactDatabaseDao {
      * Selects and returns latest ContactPerson.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC LIMIT 1")
-    suspend fun getPerson(): ContactPerson?
+    suspend fun getLatestPerson(): ContactPerson?
 
     /**
      * Selects and returns ContactPerson with given personId.

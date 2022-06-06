@@ -46,18 +46,18 @@ class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : V
         }
     }
 
-    //-------------------- DB query (m)s.
+    //-------------------- |DB| query (m)s.
     private suspend fun getPersonFromDatabase(): ContactPerson? {
-        return database.getPerson()
+        return database.getLatestPerson()
     }
 
-    private suspend fun insert(person: ContactPerson) {
+    private suspend fun insertPersonIntoDatabase(person: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.insert(person)
         }
     }
 
-    private suspend fun update(person: ContactPerson) {
+    private suspend fun updatePersonInDatabase(person: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.update(person)
         }
@@ -72,18 +72,23 @@ class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : V
         viewModelScope.launch {
 
             //--- 1
+            //- A. Creation Mode.
             val newPerson = ContactPerson()
-            insert(newPerson)
+            insertPersonIntoDatabase(newPerson)
 
             //--- 2
+            //- A. Creation Mode.
             person.value = getPersonFromDatabase()
+            //- B. Edit Mode.
+            ///person.value = getPersonFromDatabaseByID()
+            //- Check (v).
             val liveDataPerson = person.value ?: return@launch
 
             //--- 3
             liveDataPerson.name = name
             liveDataPerson.birthDate = birthDate
             liveDataPerson.imageNameId = imageNameId
-            update(liveDataPerson)
+            updatePersonInDatabase(liveDataPerson)
 
             //--- 4
             // Set '(v) = true' --> Observer &  -> Navigation.
