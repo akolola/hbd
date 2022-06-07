@@ -30,7 +30,7 @@ import kotlinx.coroutines.*
  *
  * @param database (o) to |DB| where we get info about (c) Contact.
  */
-class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : ViewModel() {
+class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
@@ -72,12 +72,13 @@ class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : V
         viewModelScope.launch {
 
             //--- 1
-            //- A. Creation Mode.
+            //- A. Creation Mode, contactKey (v) == null.
+
             val newPerson = ContactPerson()
             insertPersonIntoDatabase(newPerson)
 
             //--- 2
-            //- A. Creation Mode.
+            //- A. Creation Mode, contactKey (v) != null.
             person.value = getPersonFromDatabase()
             //- B. Edit Mode.
             ///person.value = getPersonFromDatabaseByID()

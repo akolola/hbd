@@ -23,13 +23,13 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
 /**
  * This is pretty much boiler plate code for a ViewModel Factory.
  *
- * Provides the key for Contact and the ContactDatabaseDao to the ViewModel.
+ * Contact key (v), ContactDatabaseDao and context -> ViewModel.
  */
-class ContactCreatorViewModelFactory(private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
+class ContactCreatorViewModelFactory(private val contactKey: Long, private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactCreatorViewModel::class.java)) {
-            return ContactCreatorViewModel(dataSource) as T
+            return ContactCreatorViewModel(contactKey, dataSource) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

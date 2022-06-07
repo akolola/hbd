@@ -42,6 +42,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
 import com.theartofdev.edmodo.cropper.CropImage
@@ -72,13 +73,13 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         val application = requireNotNull(this.activity).application
 
         //---------- |navigation| navigation's (v) args.
-        // n.a.
+        val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
 
         //----------  |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
         //---------- (c) ContactCreatorViewModel <- (v) database.
-        val viewModelFactory = ContactCreatorViewModelFactory(database)
+        val viewModelFactory = ContactCreatorViewModelFactory(arguments.contactPersonKey,database)
         val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
 

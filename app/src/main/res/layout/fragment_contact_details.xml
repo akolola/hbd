@@ -66,14 +66,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="36dp"
             android:onClick="@{() -> contactDetailsViewModel.onClose()}"
             android:text="@string/close"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonEdit"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/buttonEdit" />
+
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:onClick="@{() -> contactDetailsViewModel.onClose()}"
+            android:text="@string/edit"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.247"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/buttonDelete" />
 
         <Button
             android:id="@+id/buttonDelete"
@@ -81,12 +93,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="36dp"
             android:text="@string/delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.559"
-            app:layout_constraintStart_toEndOf="@+id/buttonClose" />
+            app:layout_constraintHorizontal_bias="0.606"
+            app:layout_constraintStart_toEndOf="@+id/buttonEdit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

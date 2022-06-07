@@ -54,6 +54,7 @@
     <string name="header_text">Your Contacts</string>
     <string name="close">Close</string>
     <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
     <string name="minutes_length">%d minutes on %s</string>
     <string name="hours_length">%d hours on %s</string>
     <string name="seconds_length">%d seconds on %s</string>

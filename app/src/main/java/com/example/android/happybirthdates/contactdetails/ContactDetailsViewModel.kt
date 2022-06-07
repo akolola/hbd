@@ -56,6 +56,11 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
+    //----------  <Button> 'Edit' is clicked.
+    fun onEdit() {
+        _navigateToContactTracker.value = true
+    }
+
     //----------  <Button> 'Close' is clicked.
     fun onClose() {
         _navigateToContactTracker.value = true
@@ -86,6 +91,17 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
     }
+
+    //---------- ContactDetailsFragment (v)-> => ContactCreatorFragment.
+    private val _navigateToContactCreator = MutableLiveData<Long?>()
+
+    val navigateToContactCreator: LiveData<Long?>
+        get() = _navigateToContactCreator
+
+    fun doneNavigatingToContactCreatorFragment() {
+        _navigateToContactCreator.value = null
+    }
+
 
 }
 

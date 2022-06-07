@@ -44,6 +44,9 @@
         android:name="com.example.android.happybirthdates.contactcreator.ContactCreatorFragment"
         android:label="@string/fragment_contact_creator"
         tools:layout="@layout/fragment_contact_creator">
+        <argument
+            android:name="contactPersonKey"
+            app:argType="long" />
         <action
             android:id="@+id/action_contact_creator_fragment_to_contact_tracker_fragment"
             app:destination="@id/contact_tracker_fragment"
@@ -65,5 +68,10 @@
             app:launchSingleTop="false"
             app:popUpTo="@+id/contact_tracker_fragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contact_details_fragment_to_contact_creator_fragment"
+            app:destination="@id/contact_creator_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
 </navigation>

@@ -29,6 +29,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.contacttracker.ContactTrackerFragmentDirections
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactDetailsBinding
 import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
@@ -90,6 +91,16 @@ class ContactDetailsFragment : Fragment() {
                 this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment(true))
                 contactDetailsViewModel.doneNavigatingToContactTrackerFragment()
             }
+        })
+        //--------------------
+
+        //-------------------- 'Edit' <Button>;
+        //---------- Observer; Navigating.
+        contactDetailsViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
+                contactId -> contactId?.let {
+            this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactCreatorFragment(contactId))
+            contactDetailsViewModel.doneNavigatingToContactCreatorFragment()
+        }
         })
         //--------------------
 

@@ -82,7 +82,7 @@ class ContactTrackerFragment : Fragment() {
         //---------- Observer; Navigating.
         contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment())
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment(0))
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
             }

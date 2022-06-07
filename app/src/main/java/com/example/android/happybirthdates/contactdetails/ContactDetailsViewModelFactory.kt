@@ -22,6 +22,8 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
 
 /**
  * (c) ViewModelFactory. Provides key for Contact and (c) ContactDatabaseDao to the ViewModel.
+ *
+ * Contact key (v), ContactDatabaseDao and context -> ViewModel.
  */
 class ContactDetailsViewModelFactory(private val contactKey: Long, private val dataSource: ContactDatabaseDao) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")

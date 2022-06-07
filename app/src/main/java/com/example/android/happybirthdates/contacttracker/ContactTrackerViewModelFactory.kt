@@ -24,7 +24,7 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
 /**
  * Boiler plate code for ViewModel Factory.
  *
- * ContactDatabaseDao and context -> ViewModel.
+ * Contact status (v), ContactDatabaseDao and context -> ViewModel.
  */
 class ContactTrackerViewModelFactory(private val isContactDeleted : Boolean, private val dataSource: ContactDatabaseDao, private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
