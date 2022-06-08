@@ -16,10 +16,7 @@
 
 package com.example.android.happybirthdates.contactcreator
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
 import com.example.android.happybirthdates.database.ContactPerson
 import kotlinx.coroutines.*
@@ -35,8 +32,15 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation.
-    //---------- (v) person.
-    private var person = MutableLiveData<ContactPerson?>()
+    //---------- (v) ldContact.
+    private var ldContact = MutableLiveData<ContactPerson?>()
+
+/*    fun getContact() = ldContact
+    init {
+        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+        ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
+    }*/
+
 
     //-------------------- |DB| query (m)s.
     private suspend fun getLatestPersonFromDb(): ContactPerson? {
@@ -61,6 +65,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
 
 
+
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution.
     //----------  <Button> 'Create' buttonClose is clicked.
@@ -74,11 +79,11 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
             //--- 2
             //- A. Creation Mode, contactKey (v) != null.
-            person.value = getLatestPersonFromDb()
+            ldContact.value = getLatestPersonFromDb()
             //- B. Edit Mode.
             ///person.value = getPersonFromDatabaseByID()
             //- Check (v).
-            val liveDataPerson = person.value ?: return@launch
+            val liveDataPerson = ldContact.value ?: return@launch
 
             //--- 3
             liveDataPerson.name = name

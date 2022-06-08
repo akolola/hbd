@@ -59,13 +59,13 @@ class ContactPersonDatabaseTest {
         db.close()
     }
 
-    @Test
+/*    @Test
     @Throws(Exception::class)
     fun insertAndGetNight() {
         val night = ContactPerson()
         contactDao.insert(night)
         val tonight = contactDao.getLatestPerson()
         assertEquals(tonight?.sleepQuality, -1)
-    }
+    }*/
 }
 

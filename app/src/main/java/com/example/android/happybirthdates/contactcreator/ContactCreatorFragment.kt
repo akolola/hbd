@@ -118,7 +118,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //--------------------
 
         //-------------------- 'buttonSubmit' <Button>;
-        //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate
+        //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
                 contactCreatorViewModel.onCreateContact(

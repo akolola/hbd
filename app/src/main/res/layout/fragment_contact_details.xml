@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
             app:layout_constraintVertical_bias="0.649"
-            app:text="@{contactDetailsViewModel.person.name}" />
+            app:text="@{contactDetailsViewModel.contact.name}" />
 
         <TextView
             android:id="@+id/textViewBirthDateString"
@@ -53,7 +53,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="32sp"
-            app:text ="@{contactDetailsViewModel.person.birthDate}"
+            app:text ="@{contactDetailsViewModel.contact.birthDate}"
             app:layout_constraintBottom_toTopOf="@+id/buttonClose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
