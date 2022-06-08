@@ -39,23 +39,23 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     private var person = MutableLiveData<ContactPerson?>()
 
     //-------------------- |DB| query (m)s.
-    private suspend fun getLatestPersonFromDatabase(): ContactPerson? {
-        return database.getLatestPerson()
+    private suspend fun getLatestPersonFromDb(): ContactPerson? {
+        return database.getLatestContact()
     }
 
 /*    private suspend fun getPersonFromDatabaseById(contactPersonKey: Long): LiveData<ContactPerson> {
         return database.getContactWithId(contactPersonKey)
     }*/
 
-    private suspend fun insertPersonIntoDatabase(person: ContactPerson) {
+    private suspend fun insertContactIntoDb(person: ContactPerson) {
         withContext(Dispatchers.IO) {
-            database.insert(person)
+            database.insertContact(person)
         }
     }
 
-    private suspend fun updatePersonInDatabase(person: ContactPerson) {
+    private suspend fun updatePersonInDb(person: ContactPerson) {
         withContext(Dispatchers.IO) {
-            database.update(person)
+            database.updateContact(person)
         }
     }
 
@@ -69,13 +69,12 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
             //--- 1
             //- A. Creation Mode, contactKey (v) == null.
-
             val newPerson = ContactPerson()
-            insertPersonIntoDatabase(newPerson)
+            insertContactIntoDb(newPerson)
 
             //--- 2
             //- A. Creation Mode, contactKey (v) != null.
-            person.value = getLatestPersonFromDatabase()
+            person.value = getLatestPersonFromDb()
             //- B. Edit Mode.
             ///person.value = getPersonFromDatabaseByID()
             //- Check (v).
@@ -85,7 +84,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
             liveDataPerson.name = name
             liveDataPerson.birthDate = birthDate
             liveDataPerson.imageNameId = imageNameId
-            updatePersonInDatabase(liveDataPerson)
+            updatePersonInDb(liveDataPerson)
 
             //--- 4
             // Set '(v) = true' --> Observer &  -> Navigation.

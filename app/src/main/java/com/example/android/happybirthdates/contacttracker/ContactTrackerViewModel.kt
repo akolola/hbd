@@ -20,9 +20,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
 import kotlinx.coroutines.*
 import androidx.lifecycle.viewModelScope
 
@@ -36,7 +34,7 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation
     //---------- <list> persons
-    val persons = database.getAllPersons()
+    val persons = database.getAllContacts()
 
 
 

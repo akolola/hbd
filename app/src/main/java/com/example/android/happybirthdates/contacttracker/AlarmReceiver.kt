@@ -193,7 +193,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     //-------------------- DB query (m).
     private suspend fun getBirthdayPersonListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<ContactPerson>? {
-        return database.getContactPersonListWithGivenBirthday(chosenBirthDate)
+        return database.getContactListWithGivenBirthday(chosenBirthDate)
     }
 
 

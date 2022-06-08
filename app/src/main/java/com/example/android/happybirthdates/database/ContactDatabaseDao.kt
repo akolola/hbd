@@ -32,7 +32,7 @@ interface ContactDatabaseDao {
      * Selects and returns latest ContactPerson.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC LIMIT 1")
-    suspend fun getLatestPerson(): ContactPerson?
+    suspend fun getLatestContact(): ContactPerson?
 
     /**
      * Selects and returns ContactPerson with given personId.
@@ -48,16 +48,16 @@ interface ContactDatabaseDao {
      * @param key  date (string) formatted 'dd.MM.yyyy'  to match
      */
     @Query("SELECT * FROM contact_table WHERE birthdate LIKE :key")
-    suspend fun getContactPersonListWithGivenBirthday(key: String): List<ContactPerson>?
+    suspend fun getContactListWithGivenBirthday(key: String): List<ContactPerson>?
 
     /**
-     * Selects and returns all rows in the table, sorted by start time in descending order.
+     * Selects and returns all rows, i.e. Contacts, in the table, sorted by start time in descending order.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC")
-    fun getAllPersons(): LiveData<List<ContactPerson>>
+    fun getAllContacts(): LiveData<List<ContactPerson>>
 
     @Insert
-    suspend fun insert(night: ContactPerson)
+    suspend fun insertContact(night: ContactPerson)
 
     /**
      * When updating a row with a value already set in a column,
@@ -66,13 +66,13 @@ interface ContactDatabaseDao {
      * @param night new value to write
      */
     @Update
-    suspend fun update(night: ContactPerson)
+    suspend fun updateContact(night: ContactPerson)
 
     /**
      * Deletes Contact with given ID.
      */
     @Query("DELETE FROM contact_table WHERE personId = :key")
-    suspend fun deleteById(key: Long)
+    suspend fun deleteContactsById(key: Long)
 
 }
 

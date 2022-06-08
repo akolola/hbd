@@ -49,7 +49,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     //---------- (m) clear
     private suspend fun delete(contactPersonKey: Long) {
         withContext(Dispatchers.IO) {
-            database.deleteById(contactPersonKey)
+            database.deleteContactsById(contactPersonKey)
         }
     }
 
