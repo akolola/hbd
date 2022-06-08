@@ -28,38 +28,6 @@ import androidx.room.Update
 @Dao
 interface ContactDatabaseDao {
 
-    @Insert
-    suspend fun insert(night: ContactPerson)
-
-    /**
-     * When updating a row with a value already set in a column,
-     * replaces the old value with the new one.
-     *
-     * @param night new value to write
-     */
-    @Update
-    suspend fun update(night: ContactPerson)
-
-    /**
-     * Selects and returns the row that matches the supplied start time, which is our key.
-     *
-     * @param key startTimeMilli to match
-     */
-    @Query("SELECT * from contact_table WHERE personId = :key")
-    suspend fun get(key: Long): ContactPerson?
-
-    /**
-     * Deletes Contact with given ID.
-     */
-    @Query("DELETE FROM contact_table WHERE personId = :key")
-    suspend fun deleteById(key: Long)
-
-    /**
-     * Selects and returns all rows in the table, sorted by start time in descending order.
-     */
-    @Query("SELECT * FROM contact_table ORDER BY personId DESC")
-    fun getAllPersons(): LiveData<List<ContactPerson>>
-
     /**
      * Selects and returns latest ContactPerson.
      */
@@ -81,5 +49,30 @@ interface ContactDatabaseDao {
      */
     @Query("SELECT * FROM contact_table WHERE birthdate LIKE :key")
     suspend fun getContactPersonListWithGivenBirthday(key: String): List<ContactPerson>?
+
+    /**
+     * Selects and returns all rows in the table, sorted by start time in descending order.
+     */
+    @Query("SELECT * FROM contact_table ORDER BY personId DESC")
+    fun getAllPersons(): LiveData<List<ContactPerson>>
+
+    @Insert
+    suspend fun insert(night: ContactPerson)
+
+    /**
+     * When updating a row with a value already set in a column,
+     * replaces the old value with the new one.
+     *
+     * @param night new value to write
+     */
+    @Update
+    suspend fun update(night: ContactPerson)
+
+    /**
+     * Deletes Contact with given ID.
+     */
+    @Query("DELETE FROM contact_table WHERE personId = :key")
+    suspend fun deleteById(key: Long)
+
 }
 

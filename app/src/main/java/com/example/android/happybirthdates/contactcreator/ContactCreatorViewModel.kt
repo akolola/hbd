@@ -37,19 +37,15 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //-------------------- LiveData preparation.
     //---------- (v) person.
     private var person = MutableLiveData<ContactPerson?>()
-    init {
-        initializePerson()
-    }
-    private fun initializePerson() {
-        viewModelScope.launch {
-            person.value = getPersonFromDatabase()
-        }
-    }
 
     //-------------------- |DB| query (m)s.
-    private suspend fun getPersonFromDatabase(): ContactPerson? {
+    private suspend fun getLatestPersonFromDatabase(): ContactPerson? {
         return database.getLatestPerson()
     }
+
+/*    private suspend fun getPersonFromDatabaseById(contactPersonKey: Long): LiveData<ContactPerson> {
+        return database.getContactWithId(contactPersonKey)
+    }*/
 
     private suspend fun insertPersonIntoDatabase(person: ContactPerson) {
         withContext(Dispatchers.IO) {
@@ -79,7 +75,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
             //--- 2
             //- A. Creation Mode, contactKey (v) != null.
-            person.value = getPersonFromDatabase()
+            person.value = getLatestPersonFromDatabase()
             //- B. Edit Mode.
             ///person.value = getPersonFromDatabaseByID()
             //- Check (v).
