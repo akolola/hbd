@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 /**
  * ContactDetailsFragment's ViewModel.
  *
@@ -31,19 +32,20 @@ import kotlinx.coroutines.withContext
  */
 class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
+
     //--------------------------- LiveData: <-(o) ContactPerson- DB --------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
-    val ldPerson = MediatorLiveData<ContactPerson>()
-    fun getContact() = ldPerson
+    val ldContact = MediatorLiveData<ContactPerson>()
+    fun getContact() = ldContact
     init {
         // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-        ldPerson.addSource(database.getContactWithId(contactKey), ldPerson::setValue)
+        ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
     }
 
     //-------------------- Query (m)s
     //---------- (m) clear
-    private suspend fun delete(contactPersonKey: Long) {
+    private suspend fun deleteContact(contactPersonKey: Long) {
         withContext(Dispatchers.IO) {
             database.deleteContactsById(contactPersonKey)
         }
@@ -54,7 +56,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     //-------------------- Execution
     //----------  <Button> 'Edit' is clicked.
     fun onEdit() {
-        _navigateToContactTracker.value = true
+        _navigateToContactCreator.value = contactKey
     }
 
     //----------  <Button> 'Close' is clicked.
@@ -66,9 +68,9 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     fun onDelete(contactPersonKey: Long) {
         viewModelScope.launch {
             // Clear the database table.
-            delete(contactPersonKey)
+            deleteContact(contactPersonKey)
             // And clear (o) Person since it's no longer in the DB
-            ldPerson.value = null
+            ldContact.value = null
         }
 
         //---- Navigation

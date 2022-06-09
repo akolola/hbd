@@ -33,13 +33,12 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
     //-------------------- LiveData preparation.
     //---------- (v) ldContact.
-    private var ldContact = MutableLiveData<ContactPerson?>()
-
-/*    fun getContact() = ldContact
+    var ldContact = MediatorLiveData<ContactPerson>()
+    fun getContact() = ldContact
     init {
         // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
         ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
-    }*/
+    }
 
 
     //-------------------- |DB| query (m)s.
@@ -47,9 +46,6 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
         return database.getLatestContact()
     }
 
-/*    private suspend fun getPersonFromDatabaseById(contactPersonKey: Long): LiveData<ContactPerson> {
-        return database.getContactWithId(contactPersonKey)
-    }*/
 
     private suspend fun insertContactIntoDb(person: ContactPerson) {
         withContext(Dispatchers.IO) {

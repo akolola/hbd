@@ -65,8 +65,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+
+
         //--------------------------- Preparation --------------------------------------------------
-        //----------  (c) ContactCreatorFragment <- |fragment layout| fragment_contact_creator.
+        //---------- (c) ContactCreatorFragment <- |fragment layout| fragment_contact_creator.
         val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
 
         //---------- Technical (v) application.
@@ -78,16 +80,27 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //----------  |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactCreatorViewModel <- (v) database.
-        val viewModelFactory = ContactCreatorViewModelFactory(arguments.contactPersonKey,database)
-        val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
 
+
+        //--------------------------- Connection ---------------------------------------------------
+        //-------------------- (c) ContactCreatorViewModel;
+        //--- <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
+        val viewModelFactory = ContactCreatorViewModelFactory(arguments.contactPersonKey, database)
+        //--- <- (c) ContactCreatorFragment.
+        val contactCreatorViewModel = ViewModelProvider(this, viewModelFactory).get(ContactCreatorViewModel::class.java)
+        //--------------------
+
+        //-------------------- |fragment layout| fragment_contact_creator.
+        //---------- <- (c) ContactCreatorViewModel.
+        binding.contactCreatorViewModel = contactCreatorViewModel
+        //---------- <- (c) ContactCreatorFragment.
+        // LifecycleOwner should be used for observing changes of LiveData in this binding, i.e. LiveData (v)s in (c) ContactCreatorViewModel.
+        // Kotlin syntax like 'binding.setLifecycleOwner(this)'.
+        binding.lifecycleOwner = this
+        //--------------------
 
 
         //--------------------------- Processing ---------------------------------------------------
-        //---------- (c) ContactTrackerFragment <- (c) ContactCreatorViewModel.
-        binding.contactCreatorViewModel = contactCreatorViewModel
-
         //-------------------- 'imageButtonAddPicture' <Image>;
         //---------- Click listener; Contact's image attribute, adding from Android gallery.
         binding.imageButtonAddPicture.setOnClickListener {

@@ -29,7 +29,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
-import com.example.android.happybirthdates.contacttracker.ContactTrackerFragmentDirections
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactDetailsBinding
 import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
@@ -52,7 +51,7 @@ class ContactDetailsFragment : Fragment() {
 
 
 
-        //--------------------------- Preparation --------------------------------------------------
+        //--------------------------- Declaration --------------------------------------------------
         //---------- (c) ContactDetailsFragment <- |fragment layout| fragment_contact_details.
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_details, container, false)
 
@@ -65,21 +64,32 @@ class ContactDetailsFragment : Fragment() {
         //---------- |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
-        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
-        val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
+
+        //--------------------------- Connection ---------------------------------------------------
+        //-------------------- (c) ContactDetailsViewModel;
+        //---------- <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
+        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
+        //---------- <- (c) ContactDetailsFragment.
+        val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
+        //--------------------
+
+        //-------------------- |fragment layout| fragment_contact_details;
+        //---------- <- (c) ContactDetailsViewModel.
+        binding.contactDetailsViewModel = contactDetailsViewModel
+        //---------- <- (c) ContactDetailsFragment.
+        // LifecycleOwner should be used for observing changes of LiveData in this binding, i.e. LiveData (v)s in (c) ContactDetailsViewModel.
+        // Kotlin syntax like 'binding.setLifecycleOwner(this)'.
+        binding.lifecycleOwner = this
+        //--------------------
 
 
         //--------------------------- Processing ---------------------------------------------------
-        binding.contactDetailsViewModel = contactDetailsViewModel
-        binding.lifecycleOwner = this       // Kotlin syntax like 'binding.setLifecycleOwner(this)'
-
         //--------------------  (v) ldPerson;
         //---------- Observer; Value emptiness.
-        contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
-            if(contactDetailsViewModel.ldPerson.value != null){
-                loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
+        contactDetailsViewModel.ldContact.observe(viewLifecycleOwner, Observer {
+            if(contactDetailsViewModel.ldContact.value != null){
+                loadImageFromInternalStorage(contactDetailsViewModel.ldContact.value!!.imageNameId.toString())
             }
         })
         //--------------------
