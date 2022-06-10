@@ -42,6 +42,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
         // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
         ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
     }
+    //--------------------
 
     //-------------------- Query (m)s
     //---------- (m) clear
@@ -50,22 +51,22 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
             database.deleteContactsById(contactPersonKey)
         }
     }
-
+    //--------------------
 
     //--------------------------- Buttons ----------------------------------------------------------
     //-------------------- Execution
     //----------  <Button> 'Edit' is clicked.
-    fun onEdit() {
+    fun onEditContact() {
         _navigateToContactCreator.value = contactKey
     }
 
     //----------  <Button> 'Close' is clicked.
-    fun onClose() {
+    fun onCloseContactDetails() {
         _navigateToContactTracker.value = true
     }
 
     //----------  <Button> 'Delete' is clicked.
-    fun onDelete(contactPersonKey: Long) {
+    fun onDeleteContact(contactPersonKey: Long) {
         viewModelScope.launch {
             // Clear the database table.
             deleteContact(contactPersonKey)
@@ -76,30 +77,26 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
         //---- Navigation
         _navigateToContactTracker.value = true
     }
-
+    //--------------------
 
 
     //-------------------- Navigation
     //---------- ContactDetailsFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-
     val navigateToContactTracker: LiveData<Boolean?>
-        get() = _navigateToContactTracker
-
+    get() = _navigateToContactTracker
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
     }
 
     //---------- ContactDetailsFragment (v)-> => ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Long?>()
-
     val navigateToContactCreator: LiveData<Long?>
-        get() = _navigateToContactCreator
-
+    get() = _navigateToContactCreator
     fun doneNavigatingToContactCreatorFragment() {
         _navigateToContactCreator.value = null
     }
-
+    //--------------------
 
 }
 

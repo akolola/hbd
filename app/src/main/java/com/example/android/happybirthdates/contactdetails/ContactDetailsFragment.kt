@@ -85,8 +85,8 @@ class ContactDetailsFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
-        //--------------------  (v) ldPerson;
-        //---------- Observer; Value emptiness.
+        //--------------------  'imageViewContactPicture' <ImageView>;
+        //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
         contactDetailsViewModel.ldContact.observe(viewLifecycleOwner, Observer {
             if(contactDetailsViewModel.ldContact.value != null){
                 loadImageFromInternalStorage(contactDetailsViewModel.ldContact.value!!.imageNameId.toString())
@@ -121,7 +121,7 @@ class ContactDetailsFragment : Fragment() {
             builder.setTitle(getString(R.string.confirm_delete))
             builder.setMessage(getString(R.string.delete_confirmation_msg))
             builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
-                contactDetailsViewModel.onDelete(arguments.contactPersonKey)
+                contactDetailsViewModel.onDeleteContact(arguments.contactPersonKey)
                 dialog.cancel()
             }
             builder.setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.cancel() }
@@ -139,7 +139,7 @@ class ContactDetailsFragment : Fragment() {
 
     /**
      * For given filename determines path to the images resource &
-     * sets 'URI' param of 'imageViewContactPicture' <ImageView> to updated val.
+     * sets 'imageURI' param of 'imageViewContactPicture' <ImageView> to updated val.
      *
      * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
      */
@@ -147,7 +147,6 @@ class ContactDetailsFragment : Fragment() {
         try {
             val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)
-            ///val bitmap = BitmapFactory.decodeStream(fin)
             //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
             imageViewContactPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
             fin.close()
