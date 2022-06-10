@@ -48,6 +48,7 @@ import com.example.android.happybirthdates.databinding.FragmentContactCreatorBin
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
+import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,6 +116,15 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                   chooseImageGallery()
               }
         }
+        //--------------------
+
+        //--------------------  'imageViewContactPicture' <ImageView>;
+        //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
+        contactCreatorViewModel.ldContact.observe(viewLifecycleOwner, Observer {
+            if(contactCreatorViewModel.ldContact.value != null){
+                loadImageFromInternalStorage(contactCreatorViewModel.ldContact.value!!.imageNameId.toString())
+            }
+        })
         //--------------------
 
         //-------------------- 'editTextName' <EditText>;
@@ -218,17 +228,24 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         }
     }
 
-    private fun loadImageFromInternalStorage(fileName: String) {
+    /**
+     * For given filename determines path to the images resource &
+     * sets 'imageURI' param of 'imageViewContactPicture' <ImageView> to updated val.
+     *
+     * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
+     */
+    private fun loadImageFromInternalStorage(imageFileName: String) {
         try {
-            val absolutePath = context!!.getFileStreamPath(fileName).absolutePath
+            val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)
-            ///val bitmap = BitmapFactory.decodeStream(fin)
+            //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
             imageButtonAddPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
             fin.close()
         } catch (e : Exception ) {
             Log.e(TAG, e.toString())
         }
     }
+
 
 
 
