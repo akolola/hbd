@@ -30,21 +30,20 @@ import kotlinx.coroutines.*
 class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
-    //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
+    //--------------------------- LiveData: <-(o) Person- |DB| -------------------------------------
     //-------------------- LiveData preparation.
     //---------- (v) ldContact.
     var ldContact = MediatorLiveData<ContactPerson>()
-    fun getContact() = ldContact
-    init {
-        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-        ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
-    }
+    //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+    init { ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue) }
 
 
-    //-------------------- |DB| query (m)s.
+
+    //--------------------------- |DB| query (m)s --------------------------------------------------
     private suspend fun getLatestPersonFromDb(): ContactPerson? {
         return database.getLatestContact()
     }
+
 
 
     private suspend fun insertContactIntoDb(person: ContactPerson) {
@@ -61,10 +60,12 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
 
 
+    //--------------------------- GUI Elements -----------------------------------------------------
+    //-------------------- 'editTextName' <EditText> & 'textViewBirthdate' <TextView>.
+    fun getContact() = ldContact
+    //--------------------
 
-    //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution.
-    //----------  <Button> 'Create' buttonClose is clicked.
+    //-------------------- 'Create' <Button>.
     fun onCreateContact(name: String, birthDate: String, imageNameId: String) {
         viewModelScope.launch {
 
@@ -93,18 +94,19 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
         }
     }
+    //--------------------
 
 
-    //-------------------- Navigation
-    //---------- ContactCreatorFragment => ContactTrackerFragment
+
+    //--------------------------- Navigation -------------------------------------------------------
+    //--------------------ContactCreatorFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-
     val navigateToContactTracker: LiveData<Boolean?>
-        get() = _navigateToContactTracker
-
+    get() = _navigateToContactTracker
     fun doneNavigating() {
         _navigateToContactTracker.value = null
     }
+    //--------------------
 
 }
 

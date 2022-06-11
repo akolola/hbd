@@ -33,63 +33,67 @@ import kotlinx.coroutines.withContext
 class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
-    //--------------------------- LiveData: <-(o) ContactPerson- DB --------------------------------
+    //--------------------------- LiveData: <-(o) ContactPerson- |DB| ------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
     val ldContact = MediatorLiveData<ContactPerson>()
-    fun getContact() = ldContact
-    init {
-        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-        ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue)
-    }
+    //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+    init { ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue) }
     //--------------------
 
-    //-------------------- Query (m)s
-    //---------- (m) clear
+
+
+    //--------------------------- |DB| query (m)s --------------------------------------------------
     private suspend fun deleteContact(contactPersonKey: Long) {
         withContext(Dispatchers.IO) {
             database.deleteContactsById(contactPersonKey)
         }
     }
+
+
+
+    //--------------------------- GUI Elements -----------------------------------------------------
+    //-------------------- 'editTextName' <EditText> & 'textViewBirthdate' <TextView>.
+    fun getContact() = ldContact
     //--------------------
 
-    //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution
-    //----------  <Button> 'Edit' is clicked.
+    //-------------------- 'Edit' <Button>.
     fun onEditContact() {
         _navigateToContactCreator.value = contactKey
     }
 
-    //----------  <Button> 'Close' is clicked.
+    //-------------------- 'Close' <Button>.
     fun onCloseContactDetails() {
         _navigateToContactTracker.value = true
     }
 
-    //----------  <Button> 'Delete' is clicked.
+    //-------------------- 'Delete' <Button>.
     fun onDeleteContact(contactPersonKey: Long) {
         viewModelScope.launch {
-            // Clear the database table.
+
+            //--- Clear in |DB|.
             deleteContact(contactPersonKey)
-            // And clear (o) Person since it's no longer in the DB
+            //--- And clear (o) Contact since it's no longer in |DB|.
             ldContact.value = null
         }
 
-        //---- Navigation
         _navigateToContactTracker.value = true
     }
     //--------------------
 
 
-    //-------------------- Navigation
-    //---------- ContactDetailsFragment => ContactTrackerFragment.
+
+    //--------------------------- Navigation -------------------------------------------------------
+    //--------------------ContactDetailsFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
     val navigateToContactTracker: LiveData<Boolean?>
     get() = _navigateToContactTracker
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
     }
+    //--------------------
 
-    //---------- ContactDetailsFragment (v)-> => ContactCreatorFragment.
+    //-------------------- ContactDetailsFragment (v)-> => ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Long?>()
     val navigateToContactCreator: LiveData<Long?>
     get() = _navigateToContactCreator
