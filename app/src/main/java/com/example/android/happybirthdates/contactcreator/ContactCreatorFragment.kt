@@ -119,9 +119,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         //--------------------  'imageViewContactPicture' <ImageView>;
         //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
-        contactCreatorViewModel.ldContact.observe(viewLifecycleOwner, Observer {
-            if(contactCreatorViewModel.ldContact.value != null){
-                loadImageFromInternalStorage(contactCreatorViewModel.ldContact.value!!.imageNameId.toString())
+        contactCreatorViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
+            if(contactCreatorViewModel.liveDataContact.value != null){
+                loadImageFromInternalStorage(contactCreatorViewModel.liveDataContact.value!!.imageNameId.toString())
             }
         })
         //--------------------
@@ -143,14 +143,12 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 contactCreatorViewModel.onCreateContact(
                     arguments.contactPersonKey,
                     binding.editTextName.text.toString(),
                     binding.textViewBirthdate.text.toString(),
                     if (binding.imageButtonAddPicture.tag != null) binding.imageButtonAddPicture.tag.toString() else ""
                 )
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             }
         }
         //---------- Observer; Navigating.

@@ -23,7 +23,7 @@ import androidx.room.Query
 import androidx.room.Update
 
 /**
- * Defines (m)s for using (c) ContactPerson class with Room.
+ * Defines (m)s for using (c) Contact class with Room.
  */
 @Dao
 interface ContactDatabaseDao {
@@ -41,8 +41,7 @@ interface ContactDatabaseDao {
      */
     @Query("SELECT * from contact_table WHERE personId = :key LIMIT 1")
     suspend fun getContactWithIdNotLiveData(key: Long): ContactPerson?
-
-
+    
     /**
      * Selects and returns Contact with given contactId.
      *
@@ -66,16 +65,16 @@ interface ContactDatabaseDao {
     fun getAllContacts(): LiveData<List<ContactPerson>>
 
     @Insert
-    suspend fun insertContact(night: ContactPerson)
+    suspend fun insertContact(contact: ContactPerson)
 
     /**
      * When updating a row with a value already set in a column,
      * replaces the old value with the new one.
      *
-     * @param night new value to write
+     * @param contact new value to write
      */
     @Update
-    suspend fun updateContact(night: ContactPerson)
+    suspend fun updateContact(contact: ContactPerson)
 
     /**
      * Deletes Contact with given ID.

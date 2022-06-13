@@ -33,18 +33,18 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--------------------------- LiveData: <-(o) Person- |DB| -------------------------------------
     //-------------------- LiveData preparation.
     //---------- (v) ldContact.
-    var ldContact = MediatorLiveData<ContactPerson>()
+    var liveDataContact = MediatorLiveData<ContactPerson>()
     //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-    init { ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue) }
+    init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
 
 
 
     //--------------------------- |DB| query (m)s --------------------------------------------------
-    private suspend fun getLatestPersonFromDb(): ContactPerson? {
+    private suspend fun getLatestContactFromDb(): ContactPerson? {
         return database.getLatestContact()
     }
 
-    private suspend fun getPersonByIdFromDb(contactId: Long): ContactPerson? {
+    private suspend fun getContactByIdFromDb(contactId: Long): ContactPerson? {
         return database.getContactWithIdNotLiveData(contactId)
     }
 
@@ -55,7 +55,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
         }
     }
 
-    private suspend fun updatePersonInDb(person: ContactPerson) {
+    private suspend fun updateContactInDb(person: ContactPerson) {
         withContext(Dispatchers.IO) {
             database.updateContact(person)
         }
@@ -65,7 +65,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
     //--------------------------- GUI Elements -----------------------------------------------------
     //-------------------- 'editTextName' <EditText> & 'textViewBirthdate' <TextView>.
-    fun getContact() = ldContact
+    fun getContact() = liveDataContact
     //--------------------
 
     //-------------------- 'Create' <Button>.
@@ -76,20 +76,20 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
             if(contactId == 0L){
             //- A. Creation Mode.
                 insertContactIntoDb(ContactPerson())
-                ldContact.value = getLatestPersonFromDb()
+                liveDataContact.value = getLatestContactFromDb()
             }
             else{
             //- B. Edit Mode.
-                ldContact.value = getPersonByIdFromDb(contactId)
+                liveDataContact.value = getContactByIdFromDb(contactId)
             }
             //- Check (v).
-            val liveDataContact = ldContact.value ?: return@launch
+            val liveDataContact = liveDataContact.value ?: return@launch
 
             //--- 2
             liveDataContact.name = name                                     // May be updated with empty string ""
             liveDataContact.birthDate = birthDate                           // May be updated with empty string ""
             if(imageNameId != "") liveDataContact.imageNameId = imageNameId // May NOT be updated with empty string ""
-            updatePersonInDb(liveDataContact)
+            updateContactInDb(liveDataContact)
 
             //--- 3
             // Set '(v) = true' --> Observer &  -> Navigation.
