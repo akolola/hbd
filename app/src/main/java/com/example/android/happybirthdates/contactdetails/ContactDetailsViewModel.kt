@@ -53,7 +53,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
 
 
     //--------------------------- GUI Elements -----------------------------------------------------
-    //-------------------- 'editTextName' <EditText> & 'textViewBirthdate' <TextView>.
+    //-------------------- 'EditTextName' <EditText> & 'TextViewBirthdate' <TextView>.
     fun getContact() = ldContact
     //--------------------
 

@@ -29,21 +29,30 @@ import androidx.room.Update
 interface ContactDatabaseDao {
 
     /**
-     * Selects and returns latest ContactPerson.
+     * Selects and returns latest Contact.
      */
     @Query("SELECT * FROM contact_table ORDER BY personId DESC LIMIT 1")
     suspend fun getLatestContact(): ContactPerson?
 
     /**
-     * Selects and returns ContactPerson with given personId.
+     * Selects and returns not LiveData Contact with given personId.
      *
-     * @param key personId
+     * @param key contactId
+     */
+    @Query("SELECT * from contact_table WHERE personId = :key LIMIT 1")
+    suspend fun getContactWithIdNotLiveData(key: Long): ContactPerson?
+
+
+    /**
+     * Selects and returns Contact with given contactId.
+     *
+     * @param key contactId
      */
     @Query("SELECT * from contact_table WHERE personId = :key")
     fun getContactWithId(key: Long): LiveData<ContactPerson>
 
     /**
-     * Selects and returns ContactPerson list with given Birthday date.
+     * Selects and returns Contact list with given Birthday date.
      *
      * @param key  date (string) formatted 'dd.MM.yyyy'  to match
      */

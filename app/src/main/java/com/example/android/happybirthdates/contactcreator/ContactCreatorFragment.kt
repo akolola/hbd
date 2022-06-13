@@ -48,7 +48,6 @@ import com.example.android.happybirthdates.databinding.FragmentContactCreatorBin
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
-import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -144,10 +143,14 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 contactCreatorViewModel.onCreateContact(
+                    arguments.contactPersonKey,
                     binding.editTextName.text.toString(),
                     binding.textViewBirthdate.text.toString(),
-                    binding.imageButtonAddPicture.tag.toString())
+                    if (binding.imageButtonAddPicture.tag != null) binding.imageButtonAddPicture.tag.toString() else ""
+                )
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             }
         }
         //---------- Observer; Navigating.
@@ -186,7 +189,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
     /**
-     * The (m) starts picker to get image for cropping and then use the image in cropping activity
+     * The (m) starts picker to get image for cropping and then use the image in cropping activity.
      */
     private fun chooseImageGallery() {
         CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)

@@ -44,6 +44,9 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
         return database.getLatestContact()
     }
 
+    private suspend fun getPersonByIdFromDb(contactId: Long): ContactPerson? {
+        return database.getContactWithIdNotLiveData(contactId)
+    }
 
 
     private suspend fun insertContactIntoDb(person: ContactPerson) {
@@ -66,29 +69,29 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--------------------
 
     //-------------------- 'Create' <Button>.
-    fun onCreateContact(name: String, birthDate: String, imageNameId: String) {
+    fun onCreateContact(contactId: Long, name: String, birthDate: String, imageNameId: String) {
         viewModelScope.launch {
 
             //--- 1
-            //- A. Creation Mode, contactKey (v) == null.
-            val newPerson = ContactPerson()
-            insertContactIntoDb(newPerson)
+            if(contactId == 0L){
+            //- A. Creation Mode.
+                insertContactIntoDb(ContactPerson())
+                ldContact.value = getLatestPersonFromDb()
+            }
+            else{
+            //- B. Edit Mode.
+                ldContact.value = getPersonByIdFromDb(contactId)
+            }
+            //- Check (v).
+            val liveDataContact = ldContact.value ?: return@launch
 
             //--- 2
-            //- A. Creation Mode, contactKey (v) != null.
-            ldContact.value = getLatestPersonFromDb()
-            //- B. Edit Mode.
-            ///person.value = getPersonFromDatabaseByID()
-            //- Check (v).
-            val liveDataPerson = ldContact.value ?: return@launch
+            liveDataContact.name = name                                     // May be updated with empty string ""
+            liveDataContact.birthDate = birthDate                           // May be updated with empty string ""
+            if(imageNameId != "") liveDataContact.imageNameId = imageNameId // May NOT be updated with empty string ""
+            updatePersonInDb(liveDataContact)
 
             //--- 3
-            liveDataPerson.name = name
-            liveDataPerson.birthDate = birthDate
-            liveDataPerson.imageNameId = imageNameId
-            updatePersonInDb(liveDataPerson)
-
-            //--- 4
             // Set '(v) = true' --> Observer &  -> Navigation.
             _navigateToContactTracker.value = true
 
@@ -99,7 +102,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
 
     //--------------------------- Navigation -------------------------------------------------------
-    //--------------------ContactCreatorFragment => ContactTrackerFragment.
+    //-------------------- ContactCreatorFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
     val navigateToContactTracker: LiveData<Boolean?>
     get() = _navigateToContactTracker
