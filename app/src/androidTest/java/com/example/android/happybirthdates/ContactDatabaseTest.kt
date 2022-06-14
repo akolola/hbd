@@ -21,11 +21,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
-import org.junit.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
@@ -36,7 +33,7 @@ import java.io.IOException
  */
 
 @RunWith(AndroidJUnit4::class)
-class ContactPersonDatabaseTest {
+class ContactDatabaseTest {
 
     private lateinit var contactDao: ContactDatabaseDao
     private lateinit var db: ContactDatabase

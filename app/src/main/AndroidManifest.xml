@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.happybirthdates">
 
-    <!-- user permissions -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -13,10 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_happy_birthdates_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <service
             android:name=".contacttracker.ContactStatusNotificationBackgroundService"
             android:icon="@drawable/ic_contact_status_foreground"
             android:label="@string/service_name"/>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -87,9 +87,10 @@ class ContactDetailsFragment : Fragment() {
         //--------------------------- Processing ---------------------------------------------------
         //--------------------  'imageViewContactPicture' <ImageView>;
         //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
-        contactDetailsViewModel.ldContact.observe(viewLifecycleOwner, Observer {
-            if(contactDetailsViewModel.ldContact.value != null){
-                loadImageFromInternalStorage(contactDetailsViewModel.ldContact.value!!.imageNameId.toString())
+        contactDetailsViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
+            // Set new img only if it was chosen by user. Otherwise Contact keeps imageNameId "Unnamed" => std 'ic_default_person' img.
+            if(contactDetailsViewModel.liveDataContact.value != null && contactDetailsViewModel.liveDataContact.value!!.imageId.toString() != "Unnamed"){
+                loadImageFromInternalStorage(contactDetailsViewModel.liveDataContact.value!!.imageId.toString())
             }
         })
         //--------------------

@@ -1,24 +1,8 @@
-/*
- * Copyright 2022, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.happybirthdates.contactcreator
 
 import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import kotlinx.coroutines.*
 
 
@@ -33,29 +17,29 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--------------------------- LiveData: <-(o) Person- |DB| -------------------------------------
     //-------------------- LiveData preparation.
     //---------- (v) ldContact.
-    var liveDataContact = MediatorLiveData<ContactPerson>()
+    var liveDataContact = MediatorLiveData<Contact>()
     //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
     init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
 
 
 
     //--------------------------- |DB| query (m)s --------------------------------------------------
-    private suspend fun getLatestContactFromDb(): ContactPerson? {
+    private suspend fun getLatestContactFromDb(): Contact? {
         return database.getLatestContact()
     }
 
-    private suspend fun getContactByIdFromDb(contactId: Long): ContactPerson? {
+    private suspend fun getContactByIdFromDb(contactId: Long): Contact? {
         return database.getContactWithIdNotLiveData(contactId)
     }
 
 
-    private suspend fun insertContactIntoDb(person: ContactPerson) {
+    private suspend fun insertContactIntoDb(person: Contact) {
         withContext(Dispatchers.IO) {
             database.insertContact(person)
         }
     }
 
-    private suspend fun updateContactInDb(person: ContactPerson) {
+    private suspend fun updateContactInDb(person: Contact) {
         withContext(Dispatchers.IO) {
             database.updateContact(person)
         }
@@ -75,7 +59,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
             //--- 1
             if(contactId == 0L){
             //- A. Creation Mode.
-                insertContactIntoDb(ContactPerson())
+                insertContactIntoDb(Contact())
                 liveDataContact.value = getLatestContactFromDb()
             }
             else{
@@ -88,7 +72,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
             //--- 2
             liveDataContact.name = name                                     // May be updated with empty string ""
             liveDataContact.birthDate = birthDate                           // May be updated with empty string ""
-            if(imageNameId != "") liveDataContact.imageNameId = imageNameId // May NOT be updated with empty string ""
+            if(imageNameId != "") liveDataContact.imageId = imageNameId // May NOT be updated with empty string ""
             updateContactInDb(liveDataContact)
 
             //--- 3

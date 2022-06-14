@@ -18,7 +18,7 @@ package com.example.android.happybirthdates.contactdetails
 
 import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,9 +36,9 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     //--------------------------- LiveData: <-(o) ContactPerson- |DB| ------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
-    val ldContact = MediatorLiveData<ContactPerson>()
+    val liveDataContact = MediatorLiveData<Contact>()
     //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-    init { ldContact.addSource(database.getContactWithId(contactKey), ldContact::setValue) }
+    init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
     //--------------------
 
 
@@ -54,7 +54,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
 
     //--------------------------- GUI Elements -----------------------------------------------------
     //-------------------- 'EditTextName' <EditText> & 'TextViewBirthdate' <TextView>.
-    fun getContact() = ldContact
+    fun getContact() = liveDataContact
     //--------------------
 
     //-------------------- 'Edit' <Button>.
@@ -68,13 +68,13 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     }
 
     //-------------------- 'Delete' <Button>.
-    fun onDeleteContact(contactPersonKey: Long) {
+    fun onDeleteContact(contactKey: Long) {
         viewModelScope.launch {
 
             //--- Clear in |DB|.
-            deleteContact(contactPersonKey)
+            deleteContact(contactKey)
             //--- And clear (o) Contact since it's no longer in |DB|.
-            ldContact.value = null
+            liveDataContact.value = null
         }
 
         _navigateToContactTracker.value = true

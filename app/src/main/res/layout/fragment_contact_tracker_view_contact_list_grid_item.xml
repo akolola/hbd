@@ -6,7 +6,7 @@
     <data>
         <variable
             name="contactPerson"
-            type="com.example.android.happybirthdates.database.ContactPerson" />
+            type="com.example.android.happybirthdates.database.Contact" />
         <variable
             name="clickListener"
             type="com.example.android.happybirthdates.contacttracker.ContactListListener" />
