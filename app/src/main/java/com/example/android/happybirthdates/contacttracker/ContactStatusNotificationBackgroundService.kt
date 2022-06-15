@@ -47,7 +47,7 @@ class ContactStatusNotificationBackgroundService : Service() {
         notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 5000, notifyPendingIntent) //AlarmManager.INTERVAL_HALF_DAY
+        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HALF_DAY, notifyPendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
 
         return START_NOT_STICKY
         //--------------------
