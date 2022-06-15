@@ -1,19 +1,3 @@
-/*
- * Copyright 2022, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.happybirthdates.contacttracker
 
 import android.view.LayoutInflater
@@ -23,15 +7,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.happybirthdates.R
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerViewContactListGridItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM = 1
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM = 1
 
 
 //--------------------------- (c) Adapter ----------------------------------------------------------
@@ -48,14 +32,14 @@ private val ITEM_VIEW_TYPE_ITEM = 1
  */
 class ContactListAdapter constructor(val clickListener: ContactListListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(ContactListDiffCallback()) {
 
+    //---------- (c) CoroutineScope
+    //---------- CoroutineScope & (m) launch 2 new coroutines without blocking current thread => 1. (m) contactPersonList & 2. (m) submitList ->.
     private val adapterScope = CoroutineScope(Dispatchers.Default)
-
-    //---------- Non std (m)
-    fun addHeaderAndSubmitList(contactPersonList: List<ContactPerson>?) {
+    fun addHeaderAndSubmitList(contactList: List<Contact>?) {
         adapterScope.launch {
-            val items = when (contactPersonList) {
+            val items = when (contactList) {
                 null -> listOf(DataItem.Header)
-                else -> listOf(DataItem.Header) + contactPersonList.map { DataItem.ContactItem(it) }
+                else -> listOf(DataItem.Header) + contactList.map { DataItem.ContactItem(it) }
             }
             withContext(Dispatchers.Main) {
                 //---------- (c) RecyclerView's std (m)
@@ -96,15 +80,6 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
      */
     class ContactViewHolder private constructor(val binding: FragmentContactTrackerViewContactListGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        /**
-        * This (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
-         */
-        fun bind(clickListener: ContactListListener, item: ContactPerson) {
-            binding.contactPerson = item
-            binding.clickListener = clickListener
-            binding.executePendingBindings()
-        }
-
         companion object {
             fun from(parent: ViewGroup): ContactViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -112,6 +87,16 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
                 return ContactViewHolder(binding)
             }
         }
+
+        /**
+        * This (m) takes the item & clickListener, then -> fragment_contact_tracker_view_contact_list_grid_item
+        */
+        fun bind(clickListener: ContactListListener, item: Contact) {
+            binding.contactPerson = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
+        }
+
     }
 
     //--- ViewHolder (3B)
@@ -141,7 +126,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
         when (holder) {
             is ContactViewHolder -> {
                 val item = getItem(position) as DataItem.ContactItem
-                holder.bind(clickListener, item.contactPerson)
+                holder.bind(clickListener, item.contact)
             }
         }
     }
@@ -154,7 +139,7 @@ class ContactListAdapter constructor(val clickListener: ContactListListener) : L
  * (c) Listener for (c) ContactTrackerFragment => (c) ContactDetailsFragment.
  */
 class ContactListListener constructor(val clickListener: (contactId: Long) -> Unit) {
-    fun onClick(contactPerson: ContactPerson) = clickListener(contactPerson.personId)
+    fun onClick(contact: Contact) = clickListener(contact.id)
 }
 
 //--------------------------- (c) Data (2) ---------------------------------------------------------
@@ -166,8 +151,8 @@ sealed class DataItem {
 
 
     //---------- Data (c) Std
-    data class ContactItem constructor(val contactPerson: ContactPerson): DataItem() {
-        override val id = contactPerson.personId
+    data class ContactItem constructor(val contact: Contact): DataItem() {
+        override val id = contact.id
     }
 
 

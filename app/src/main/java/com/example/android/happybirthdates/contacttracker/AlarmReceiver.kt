@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -68,6 +68,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
         serviceScope.launch {
 
+            // Every 1 step in the loop (from today to tomorrow and to after tomorrow) => 1 -[(c) Notification]->.
             for (addedDaysFromTodayAndNoficationId in 0..2){
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
                     //---- 1. (m) building (c) NotificationChannel
@@ -75,13 +76,13 @@ class AlarmReceiver : BroadcastReceiver() {
                     //---- 2. (c) NotificationManager <- (c) NotificationChannel.
                     mNotificationManager!!.createNotificationChannel(notificationChannel)
                 }
-                //---- 3. |DB| ContactDatabase & 4. Prepare notification's text
-                val birthdayPersonListFromDatabase = getBirthdayPersonListFromDatabase(database, prepareBirthDateForContactPersonListSelect(addedDaysFromTodayAndNoficationId) + ".%%%%")
-                if(!birthdayPersonListFromDatabase.isNullOrEmpty()) {
-                    val formedContentText = formContentText(birthdayPersonListFromDatabase)
-                    //---- 5. (m) building (c) Notification containing info about (c) Contacts.
+                // |DB| ContactDatabase & prepare (c) Notification's text.
+                val birthdayContactListFromDatabase = getBirthdayContactListFromDatabase(database, prepareBirthDateForContactListSelect(addedDaysFromTodayAndNoficationId) + ".%%%%")
+                if(!birthdayContactListFromDatabase.isNullOrEmpty()) {
+                    val formedContentText = formContentText(context,birthdayContactListFromDatabase, addedDaysFromTodayAndNoficationId==0)
+                    // (m) building (c) Notification containing info about (c) Contacts.
                     var notification = buildNotification(context, formedContentText)
-                    //---- 6. (c) NotificationManager <- (c) Notification. (m) displaying push notification.
+                    // (c) NotificationManager <- (c) Notification. (m) displaying push notification.
                     mNotificationManager!!.notify(addedDaysFromTodayAndNoficationId, notification)
                 }
             }
@@ -93,34 +94,34 @@ class AlarmReceiver : BroadcastReceiver() {
     /**
      * Write readable message for app users about (c) Contacts with incoming Birthdays.
      *
-     * @param birthdayPersonList List of names of contacts (persones or companies) wihich have birthdays soon.
+     * @param birthdayContactList List of names of contacts (persones or companies) which have birthdays soon.
      * @return contentText Readable text for notification message.
      */
-    private fun formContentText(birthdayTodayPersonListFromDatabase: List<ContactPerson>?): String {
-            val birthdayPersonList: List<String>? = birthdayTodayPersonListFromDatabase?.map { it.name }
+    private fun formContentText(context: Context, birthdayPersonListFromDatabase: List<Contact>?, isToday : Boolean): String {
+            val birthdayContactList: List<String>? = birthdayPersonListFromDatabase?.map { it.name }
             var contentText = ""
-            if (!birthdayPersonList.isNullOrEmpty()) {
-                if (birthdayPersonList.size == 1) {
-                    contentText = "Your friend " + birthdayPersonList[0] + " has Birthday soon."
+            if (!birthdayContactList.isNullOrEmpty()) {
+                if (birthdayContactList.size == 1) {
+                    contentText = context.getString(R.string.your_friend)+" "+birthdayContactList[0].trim()+" "+context.getString(R.string.has_birthday)+" "+if(isToday) context.getString(R.string.today) else context.getString(R.string.soon)
                 } else {
                     var contentTextBuffer = ""
-                    for ((index, value) in birthdayPersonList.withIndex()) {
+                    for ((index, value) in birthdayContactList.withIndex()) {
                         contentTextBuffer = contentTextBuffer.plus(value.trim())
-                        if (index != birthdayPersonList.size - 1) {
+                        if (index != birthdayContactList.size - 1) {
                             contentTextBuffer = contentTextBuffer.plus(", ")
                         }
                     }
-                    contentText = "Your friend $contentTextBuffer have Birthday soon."
+                    contentText = context.getString(R.string.your_friends)+" "+contentTextBuffer.trim()+" "+context.getString(R.string.have_birthday)+" "+if(isToday) context.getString(R.string.today) else context.getString(R.string.soon)
                 }
             }
             return contentText
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun prepareBirthDateForContactPersonListSelect(addedDaysFromToday: Int): String {
+    private fun prepareBirthDateForContactListSelect(addedDaysFromToday: Int): String {
         var date = Date()
         val calendar = Calendar.getInstance()
-        calendar.setTime(date)
+        calendar.time = date
         calendar.add(Calendar.DATE, addedDaysFromToday)
         date = calendar.time
         val comingDate: String = SimpleDateFormat("dd.MM", Locale.getDefault()).format(date)
@@ -147,7 +148,7 @@ class AlarmReceiver : BroadcastReceiver() {
      * Build notification to be displayed.
      *
      * @param context Context in which the receiver is running.
-     * @param birthdayPersonList List of names of contacts (persones or companies) wihich have birthdays soon.
+     * @param contentText Description about persons or companies having birthdays soon.
      *
      * @return notification with complete description and image.
      */
@@ -192,8 +193,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
     //-------------------- DB query (m).
-    private suspend fun getBirthdayPersonListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<ContactPerson>? {
-        return database.getContactPersonListWithGivenBirthday(chosenBirthDate)
+    private suspend fun getBirthdayContactListFromDatabase(database: ContactDatabaseDao, chosenBirthDate: String): List<Contact>? {
+        return database.getContactListWithGivenBirthday(chosenBirthDate)
     }
 
 

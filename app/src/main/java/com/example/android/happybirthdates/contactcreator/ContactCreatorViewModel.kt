@@ -1,27 +1,8 @@
-/*
- * Copyright 2022, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.happybirthdates.contactcreator
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import kotlinx.coroutines.*
 
 
@@ -30,79 +11,91 @@ import kotlinx.coroutines.*
  *
  * @param database (o) to |DB| where we get info about (c) Contact.
  */
-class ContactCreatorViewModel constructor (val database: ContactDatabaseDao) : ViewModel() {
+class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
-    //--------------------------- LiveData: <-(o) Person- DB ---------------------------------------
+    //--------------------------- LiveData: <-(o) Person- |DB| -------------------------------------
     //-------------------- LiveData preparation.
-    //---------- (v) person.
-    private var person = MutableLiveData<ContactPerson?>()
-    init {
-        initializePerson()
-    }
-    private fun initializePerson() {
-        viewModelScope.launch {
-            person.value = getPersonFromDatabase()
-        }
+    //---------- (v) ldContact.
+    var liveDataContact = MediatorLiveData<Contact>()
+    //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+    init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
+    //--------------------
+
+
+    //--------------------------- |DB| query (m)s --------------------------------------------------
+    private suspend fun getLatestContactFromDb(): Contact? {
+        return database.getLatestContact()
     }
 
-    //-------------------- DB query (m)s.
-    private suspend fun getPersonFromDatabase(): ContactPerson? {
-        return database.getPerson()
+    private suspend fun getContactByIdFromDb(contactId: Long): Contact? {
+        return database.getContactWithIdNotLiveData(contactId)
     }
 
-    private suspend fun insert(person: ContactPerson) {
+
+    private suspend fun insertContactIntoDb(person: Contact) {
         withContext(Dispatchers.IO) {
-            database.insert(person)
+            database.insertContact(person)
         }
     }
 
-    private suspend fun update(person: ContactPerson) {
+    private suspend fun updateContactInDb(person: Contact) {
         withContext(Dispatchers.IO) {
-            database.update(person)
+            database.updateContact(person)
         }
     }
 
 
 
-    //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution.
-    //----------  <Button> 'Create' buttonClose is clicked.
-    fun onCreateContact(name: String, birthDate: String, imageNameId: String) {
+    //--------------------------- GUI Elements -----------------------------------------------------
+    //-------------------- 'editTextName' <EditText> & 'textViewBirthdate' <TextView>.
+    fun getContact() = liveDataContact
+    //--------------------
+
+    //-------------------- 'Create' <Button>.
+    fun onCreateContact(contactId: Long, name: String, birthDate: String, imageNameId: String) {
         viewModelScope.launch {
 
             //--- 1
-            val newPerson = ContactPerson()
-            insert(newPerson)
+            if(contactId == 0L){
+            //- A. Creation Mode.
+                insertContactIntoDb(Contact())
+                liveDataContact.value = getLatestContactFromDb()
+            }
+            else{
+            //- B. Edit Mode.
+                liveDataContact.value = getContactByIdFromDb(contactId)
+            }
+            //- Check (v).
+            val liveDataContact = liveDataContact.value ?: return@launch
 
             //--- 2
-            person.value = getPersonFromDatabase()
-            val liveDataPerson = person.value ?: return@launch
+            liveDataContact.name = name                                     // May be updated with empty string ""
+            liveDataContact.birthDate = birthDate                           // May be updated with empty string ""
+            if(imageNameId != "") liveDataContact.imageId = imageNameId // May NOT be updated with empty string ""
+            updateContactInDb(liveDataContact)
 
             //--- 3
-            liveDataPerson.name = name
-            liveDataPerson.birthDate = birthDate
-            liveDataPerson.imageNameId = imageNameId
-            update(liveDataPerson)
-
-            //--- 4
             // Set '(v) = true' --> Observer &  -> Navigation.
             _navigateToContactTracker.value = true
 
         }
     }
+    //--------------------
 
 
-    //-------------------- Navigation
-    //---------- ContactCreatorFragment => ContactTrackerFragment
+
+    //--------------------------- Navigation -------------------------------------------------------
+    //-------------------- ContactCreatorFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-
     val navigateToContactTracker: LiveData<Boolean?>
-        get() = _navigateToContactTracker
-
+    get() = _navigateToContactTracker
     fun doneNavigating() {
         _navigateToContactTracker.value = null
     }
+    //--------------------
+
+
 
 }
 

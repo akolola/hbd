@@ -1,27 +1,12 @@
-/*
- * Copyright 2022, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.happybirthdates.contactdetails
 
 import androidx.lifecycle.*
 import com.example.android.happybirthdates.database.ContactDatabaseDao
-import com.example.android.happybirthdates.database.ContactPerson
+import com.example.android.happybirthdates.database.Contact
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 /**
  * ContactDetailsFragment's ViewModel.
@@ -31,61 +16,91 @@ import kotlinx.coroutines.withContext
  */
 class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
-    //--------------------------- LiveData: <-(o) ContactPerson- DB --------------------------------
+
+
+    //--------------------------- LiveData: <-(o) ContactPerson- |DB| ------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
-    val ldPerson = MediatorLiveData<ContactPerson>()
-    fun getPerson() = ldPerson
+    val liveDataContact = MediatorLiveData<Contact>()
+    //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
+    init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
+    //--------------------
 
-    //---------- |DB| Contact.
-    val dbPerson = database
 
-    init {
-        // (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
-        ldPerson.addSource(dbPerson.getContactWithId(contactKey), ldPerson::setValue)
-    }
 
-    //-------------------- Query (m)s
-    //---------- (m) clear
-    private suspend fun delete() {
+    //--------------------------- |DB| query (m)s --------------------------------------------------
+    private suspend fun deleteContact(contactPersonKey: Long) {
         withContext(Dispatchers.IO) {
-            database.delete()
+            database.deleteContactsById(contactPersonKey)
         }
     }
 
 
-    //--------------------------- Buttons ----------------------------------------------------------
-    //-------------------- Execution
-    //----------  <Button> 'Close' is clicked.
-    fun onClose() {
+
+    //--------------------------- GUI Elements -----------------------------------------------------
+    //-------------------- 'EditTextName' <EditText> & 'TextViewBirthdate' <TextView>.
+    fun getContact() = liveDataContact
+    //--------------------
+
+    //-------------------- 'Edit' <Button>.
+    fun onEditContact() {
+        _navigateToContactCreator.value = contactKey
+    }
+    //--------------------
+
+    //-------------------- 'Close' <Button>.
+    fun onCloseContactDetails() {
         _navigateToContactTracker.value = true
     }
+    //--------------------
 
-    //----------  <Button> 'Delete' is clicked.
-    fun onDelete() {
+    //-------------------- 'Delete' <Button>.
+    fun onDeleteContact(contactKey: Long) {
         viewModelScope.launch {
-            // Clear the database table.
-            delete()
-            // And clear (o) Person since it's no longer in the DB
-            ldPerson.value = null
+
+            //--- Clear in |DB|.
+            deleteContact(contactKey)
+            //--- And clear (o) Contact since it's no longer in |DB|.
+            liveDataContact.value = null
         }
 
-        //---- Navigation
+        _showPostDeleteSnackbarEvent.value = true
         _navigateToContactTracker.value = true
     }
+    //--------------------
 
 
 
-    //-------------------- Navigation
-    //---------- ContactDetailsFragment => ContactTrackerFragment.
+    //--------------------------- Navigation -------------------------------------------------------
+    //--------------------ContactDetailsFragment => ContactTrackerFragment.
     private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-
     val navigateToContactTracker: LiveData<Boolean?>
-        get() = _navigateToContactTracker
-
+    get() = _navigateToContactTracker
     fun doneNavigatingToContactTrackerFragment() {
         _navigateToContactTracker.value = null
     }
+    //--------------------
+
+    //-------------------- ContactDetailsFragment (v)-> => ContactCreatorFragment.
+    private val _navigateToContactCreator = MutableLiveData<Long?>()
+    val navigateToContactCreator: LiveData<Long?>
+    get() = _navigateToContactCreator
+    fun doneNavigatingToContactCreatorFragment() {
+        _navigateToContactCreator.value = null
+    }
+    //--------------------
+
+    //--------------------------- Snackbar ---------------------------------------------------------
+    //--------------------
+    private var _showPostDeleteSnackbarEvent = MutableLiveData<Boolean>()
+    val showPostDeleteSnackBarEvent: LiveData<Boolean>
+        get() = _showPostDeleteSnackbarEvent
+    fun doneShowingPostDeleteSnackbar() {
+        _showPostDeleteSnackbarEvent.value = false
+    }
+    //--------------------
+
+
 
 }
 

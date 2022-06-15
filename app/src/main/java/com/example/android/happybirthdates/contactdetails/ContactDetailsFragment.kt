@@ -1,23 +1,6 @@
-/*
- * Copyright 2022, The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.android.happybirthdates.contactdetails
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -32,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactDetailsBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
 import java.io.File
 import java.io.FileInputStream
@@ -43,12 +27,16 @@ private const val TAG = "ContactDetailsFragment"
  */
 class ContactDetailsFragment : Fragment() {
 
+
+
     /**
      * The (m) is called when (c) ContactDetailsFragment is ready to display content to screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        //--------------------------- Preparation --------------------------------------------------
+
+
+        //--------------------------- Declaration --------------------------------------------------
         //---------- (c) ContactDetailsFragment <- |fragment layout| fragment_contact_details.
         val binding: FragmentContactDetailsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_details, container, false)
 
@@ -61,39 +49,65 @@ class ContactDetailsFragment : Fragment() {
         //---------- |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
-        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
-        val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
 
+
+        //--------------------------- Connection ---------------------------------------------------
+        //-------------------- (c) ContactDetailsViewModel;
+        //---------- <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
+        val viewModelFactory = ContactDetailsViewModelFactory(arguments.contactPersonKey, database)
+        //---------- <- (c) ContactDetailsFragment.
+        val contactDetailsViewModel = ViewModelProvider(this, viewModelFactory).get(ContactDetailsViewModel::class.java)
+        //--------------------
+
+        //-------------------- |fragment layout| fragment_contact_details;
+        //---------- <- (c) ContactDetailsViewModel.
+        binding.contactDetailsViewModel = contactDetailsViewModel
+        //---------- <- (c) ContactDetailsFragment.
+        // LifecycleOwner should be used for observing changes of LiveData in this binding, i.e. LiveData (v)s in (c) ContactDetailsViewModel.
+        // Kotlin syntax like 'binding.setLifecycleOwner(this)'.
+        binding.lifecycleOwner = this
+        //--------------------
 
 
         //--------------------------- Processing ---------------------------------------------------
-        binding.contactDetailsViewModel = contactDetailsViewModel
-        binding.lifecycleOwner = this       // Kotlin syntax like 'binding.setLifecycleOwner(this)'
-
-        //---------- Observer;  (v) ldPerson; Value emptiness.
-        contactDetailsViewModel.ldPerson.observe(viewLifecycleOwner, Observer {
-            if(contactDetailsViewModel.ldPerson.value != null){
-                loadImageFromInternalStorage(contactDetailsViewModel.ldPerson.value!!.imageNameId.toString())
+        //--------------------  'imageViewContactPicture' <ImageView>;
+        //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
+        contactDetailsViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
+            // Set new img only if it was chosen by user. Otherwise Contact keeps imageNameId "Unnamed" => std 'ic_default_person' img.
+            if(contactDetailsViewModel.liveDataContact.value != null && contactDetailsViewModel.liveDataContact.value!!.imageId.toString() != "Unnamed"){
+                loadImageFromInternalStorage(contactDetailsViewModel.liveDataContact.value!!.imageId.toString())
             }
         })
+        //--------------------
 
-
-        //---------- Observer; 'Close' <Button>; Navigating.
+        //-------------------- 'Close' <Button>;
+        //---------- Observer;  Navigating.
         contactDetailsViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
                 this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactTrackerFragment(true))
                 contactDetailsViewModel.doneNavigatingToContactTrackerFragment()
             }
         })
+        //--------------------
 
-        //---------- Observer; 'Delete' <Button>; Confirmation dialog window & (c) Contact deletion.
+        //-------------------- 'Edit' <Button>;
+        //---------- Observer; Navigating.
+        contactDetailsViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
+                contactId -> contactId?.let {
+            this.findNavController().navigate(ContactDetailsFragmentDirections.actionContactDetailsFragmentToContactCreatorFragment(contactId))
+            contactDetailsViewModel.doneNavigatingToContactCreatorFragment()
+        }
+        })
+        //--------------------
+
+        //-------------------- 'Delete' <Button>;
+        //---------- Observer; Confirmation dialog window & (c) Contact deletion.
         binding.buttonDelete.setOnClickListener {
             var builder = AlertDialog.Builder(activity)
             builder.setTitle(getString(R.string.confirm_delete))
             builder.setMessage(getString(R.string.delete_confirmation_msg))
             builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
-                contactDetailsViewModel.onDelete()
+                contactDetailsViewModel.onDeleteContact(arguments.contactPersonKey)
                 dialog.cancel()
             }
             builder.setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.cancel() }
@@ -101,6 +115,15 @@ class ContactDetailsFragment : Fragment() {
             alert.show()
         }
 
+        //----------  Observer; Snackbar, Add Observer on state (v) showing Snackbar msg when 'Delete' <Button> is pressed.
+        contactDetailsViewModel.showPostDeleteSnackBarEvent.observe(viewLifecycleOwner, Observer {
+            if (it == true) { // Observed state is true.
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), getString(R.string.cleared_message), Snackbar.LENGTH_SHORT).show()
+                // Reset state to make sure Snackbar is only shown once, even if the device has a config change.
+                contactDetailsViewModel.doneShowingPostDeleteSnackbar()
+            }
+        })
+        //--------------------
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
@@ -109,7 +132,7 @@ class ContactDetailsFragment : Fragment() {
 
     /**
      * For given filename determines path to the images resource &
-     * sets 'URI' param of 'imageViewContactPicture' <ImageView> to updated val.
+     * sets 'imageURI' param of 'imageViewContactPicture' <ImageView> to updated val.
      *
      * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
      */
@@ -117,7 +140,6 @@ class ContactDetailsFragment : Fragment() {
         try {
             val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)
-            ///val bitmap = BitmapFactory.decodeStream(fin)
             //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
             imageViewContactPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
             fin.close()

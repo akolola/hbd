@@ -3,9 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Data to make available to the XML via data binding. In this case,
-         the whole ViewModel, so that we can access the LiveData,
-         click handlers, and state variables. -->
     <data>
         <variable
             name="contactDetailsViewModel"
@@ -44,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"
             app:layout_constraintVertical_bias="0.649"
-            app:text="@{contactDetailsViewModel.person.name}" />
+            app:text="@{contactDetailsViewModel.contact.name}" />
 
         <TextView
             android:id="@+id/textViewBirthDateString"
@@ -53,7 +50,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:textSize="32sp"
-            app:text ="@{contactDetailsViewModel.person.birthDate}"
+            app:text ="@{contactDetailsViewModel.contact.birthDate}"
             app:layout_constraintBottom_toTopOf="@+id/buttonClose"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -66,14 +63,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
-            android:onClick="@{() -> contactDetailsViewModel.onClose()}"
+            android:layout_marginBottom="36dp"
+            android:onClick="@{() -> contactDetailsViewModel.onCloseContactDetails()}"
             android:text="@string/close"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonEdit"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/buttonEdit" />
+
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:onClick="@{() -> contactDetailsViewModel.onEditContact()}"
+            android:text="@string/edit"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.247"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/buttonDelete" />
 
         <Button
             android:id="@+id/buttonDelete"
@@ -81,12 +90,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="36dp"
             android:text="@string/delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.559"
-            app:layout_constraintStart_toEndOf="@+id/buttonClose" />
+            app:layout_constraintHorizontal_bias="0.606"
+            app:layout_constraintStart_toEndOf="@+id/buttonEdit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
