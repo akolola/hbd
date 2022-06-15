@@ -79,7 +79,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 // |DB| ContactDatabase & prepare (c) Notification's text.
                 val birthdayContactListFromDatabase = getBirthdayContactListFromDatabase(database, prepareBirthDateForContactListSelect(addedDaysFromTodayAndNoficationId) + ".%%%%")
                 if(!birthdayContactListFromDatabase.isNullOrEmpty()) {
-                    val formedContentText = formContentText(birthdayContactListFromDatabase, addedDaysFromTodayAndNoficationId==0)
+                    val formedContentText = formContentText(context,birthdayContactListFromDatabase, addedDaysFromTodayAndNoficationId==0)
                     // (m) building (c) Notification containing info about (c) Contacts.
                     var notification = buildNotification(context, formedContentText)
                     // (c) NotificationManager <- (c) Notification. (m) displaying push notification.
@@ -97,12 +97,12 @@ class AlarmReceiver : BroadcastReceiver() {
      * @param birthdayContactList List of names of contacts (persones or companies) which have birthdays soon.
      * @return contentText Readable text for notification message.
      */
-    private fun formContentText(birthdayTodayPersonListFromDatabase: List<Contact>?, isToday : Boolean): String {
-            val birthdayContactList: List<String>? = birthdayTodayPersonListFromDatabase?.map { it.name }
+    private fun formContentText(context: Context, birthdayPersonListFromDatabase: List<Contact>?, isToday : Boolean): String {
+            val birthdayContactList: List<String>? = birthdayPersonListFromDatabase?.map { it.name }
             var contentText = ""
             if (!birthdayContactList.isNullOrEmpty()) {
                 if (birthdayContactList.size == 1) {
-                    contentText = "Your friend " + birthdayContactList[0] + " has Birthday "+ if(isToday) "today." else "soon."
+                    contentText = context.getString(R.string.your_friend)+" "+birthdayContactList[0].trim()+" "+context.getString(R.string.has_birthday)+" "+if(isToday) context.getString(R.string.today) else context.getString(R.string.soon)
                 } else {
                     var contentTextBuffer = ""
                     for ((index, value) in birthdayContactList.withIndex()) {
@@ -111,7 +111,7 @@ class AlarmReceiver : BroadcastReceiver() {
                             contentTextBuffer = contentTextBuffer.plus(", ")
                         }
                     }
-                    contentText = "Your friends $contentTextBuffer have Birthday "+ if(isToday) "today." else "soon."
+                    contentText = context.getString(R.string.your_friends)+" "+contentTextBuffer.trim()+" "+context.getString(R.string.have_birthday)+" "+if(isToday) context.getString(R.string.today) else context.getString(R.string.soon)
                 }
             }
             return contentText
