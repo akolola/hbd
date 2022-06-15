@@ -68,6 +68,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
         serviceScope.launch {
 
+            // Every 1 step in the loop (from today to tomorrow and to after tomorrow) => 1 -[(c) Notification]->.
             for (addedDaysFromTodayAndNoficationId in 0..2){
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
                     //---- 1. (m) building (c) NotificationChannel
@@ -75,13 +76,13 @@ class AlarmReceiver : BroadcastReceiver() {
                     //---- 2. (c) NotificationManager <- (c) NotificationChannel.
                     mNotificationManager!!.createNotificationChannel(notificationChannel)
                 }
-                //---- 3. |DB| ContactDatabase & 4. Prepare notification's text
+                // |DB| ContactDatabase & prepare (c) Notification's text.
                 val birthdayContactListFromDatabase = getBirthdayContactListFromDatabase(database, prepareBirthDateForContactListSelect(addedDaysFromTodayAndNoficationId) + ".%%%%")
                 if(!birthdayContactListFromDatabase.isNullOrEmpty()) {
-                    val formedContentText = formContentText(birthdayContactListFromDatabase)
-                    //---- 5. (m) building (c) Notification containing info about (c) Contacts.
+                    val formedContentText = formContentText(birthdayContactListFromDatabase, addedDaysFromTodayAndNoficationId==0)
+                    // (m) building (c) Notification containing info about (c) Contacts.
                     var notification = buildNotification(context, formedContentText)
-                    //---- 6. (c) NotificationManager <- (c) Notification. (m) displaying push notification.
+                    // (c) NotificationManager <- (c) Notification. (m) displaying push notification.
                     mNotificationManager!!.notify(addedDaysFromTodayAndNoficationId, notification)
                 }
             }
@@ -93,15 +94,15 @@ class AlarmReceiver : BroadcastReceiver() {
     /**
      * Write readable message for app users about (c) Contacts with incoming Birthdays.
      *
-     * @param birthdayContactList List of names of contacts (persones or companies) wihich have birthdays soon.
+     * @param birthdayContactList List of names of contacts (persones or companies) which have birthdays soon.
      * @return contentText Readable text for notification message.
      */
-    private fun formContentText(birthdayTodayPersonListFromDatabase: List<Contact>?): String {
+    private fun formContentText(birthdayTodayPersonListFromDatabase: List<Contact>?, isToday : Boolean): String {
             val birthdayContactList: List<String>? = birthdayTodayPersonListFromDatabase?.map { it.name }
             var contentText = ""
             if (!birthdayContactList.isNullOrEmpty()) {
                 if (birthdayContactList.size == 1) {
-                    contentText = "Your friend " + birthdayContactList[0] + " has Birthday soon."
+                    contentText = "Your friend " + birthdayContactList[0] + " has Birthday "+ if(isToday) "today." else "soon."
                 } else {
                     var contentTextBuffer = ""
                     for ((index, value) in birthdayContactList.withIndex()) {
@@ -110,7 +111,7 @@ class AlarmReceiver : BroadcastReceiver() {
                             contentTextBuffer = contentTextBuffer.plus(", ")
                         }
                     }
-                    contentText = "Your friend $contentTextBuffer have Birthday soon."
+                    contentText = "Your friends $contentTextBuffer have Birthday "+ if(isToday) "today." else "soon."
                 }
             }
             return contentText

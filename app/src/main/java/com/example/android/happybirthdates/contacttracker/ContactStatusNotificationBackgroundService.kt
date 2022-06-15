@@ -50,7 +50,7 @@ class ContactStatusNotificationBackgroundService : Service() {
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 5000, notifyPendingIntent) //AlarmManager.INTERVAL_HALF_DAY
 
         return START_NOT_STICKY
-
+        //--------------------
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -64,10 +64,12 @@ class ContactStatusNotificationBackgroundService : Service() {
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
         alarmManager?.cancel(notifyPendingIntent)
+        //--------------------
+
         //-------------------- Notification.
         //---------- (c) NotificationManager Service. Turn off.
         mNotificationManager!!.cancelAll()
-
+        //--------------------
     }
 
 
