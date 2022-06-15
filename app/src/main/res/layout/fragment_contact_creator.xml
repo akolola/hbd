@@ -84,7 +84,7 @@
             android:layout_marginEnd="24dp"
             android:inputType="date"
             android:text="@string/show_date_picker"
-            android:textSize="@dimen/set_text_size"
+            android:textSize="@dimen/submit_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

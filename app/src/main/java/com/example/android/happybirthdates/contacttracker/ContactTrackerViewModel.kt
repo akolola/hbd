@@ -19,6 +19,7 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     //-------------------- LiveData preparation
     //---------- <list> persons
     val persons = database.getAllContacts()
+    //--------------------
 
 
 
@@ -35,37 +36,28 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }
+    //--------------------
 
-    //-------------------- Navigation
+
+
+    //--------------------------- Navigation -------------------------------------------------------
     //---------- (c) ContactTrackerFragment => (c) ContactCreatorFragment.
     private val _navigateToContactCreator = MutableLiveData<Boolean?>()
-
     val navigateToContactCreator: LiveData<Boolean?>
         get() = _navigateToContactCreator
-
     fun doneNavigatingToContactCreatorFragment() {
         _navigateToContactCreator.value = null
     }
 
     //---------- (c) ContactTrackerFragment => (c) ContactDetailsFragment.
     private val _navigateToContactDetails = MutableLiveData<Long>()
-
     val navigateToContactDetails
         get() = _navigateToContactDetails
-
     fun doneNavigatingToContactDetailsFragment() {
         _navigateToContactDetails.value = null
     }
+    //--------------------
 
 
-    //--------------------------- Snackbar ---------------------------------------------------------
-    private var _showSnackbarEvent = MutableLiveData<Boolean>()
-
-    val showSnackBarEvent: LiveData<Boolean>
-        get() = _showSnackbarEvent
-
-    fun doneShowingSnackbar() {
-        _showSnackbarEvent.value = false
-    }
 
 }

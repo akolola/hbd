@@ -20,7 +20,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     var liveDataContact = MediatorLiveData<Contact>()
     //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
     init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
-
+    //--------------------
 
 
     //--------------------------- |DB| query (m)s --------------------------------------------------
@@ -94,6 +94,8 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
         _navigateToContactTracker.value = null
     }
     //--------------------
+
+
 
 }
 

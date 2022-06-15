@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
+
     //--------------------------- LiveData: <-(o) ContactPerson- |DB| ------------------------------
     //-------------------- (c) MediatorLiveData preparation.
     //---------- (c) MediatorLiveData.
@@ -45,11 +46,13 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
     fun onEditContact() {
         _navigateToContactCreator.value = contactKey
     }
+    //--------------------
 
     //-------------------- 'Close' <Button>.
     fun onCloseContactDetails() {
         _navigateToContactTracker.value = true
     }
+    //--------------------
 
     //-------------------- 'Delete' <Button>.
     fun onDeleteContact(contactKey: Long) {
@@ -61,6 +64,7 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
             liveDataContact.value = null
         }
 
+        _showPostDeleteSnackbarEvent.value = true
         _navigateToContactTracker.value = true
     }
     //--------------------
@@ -85,6 +89,18 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
         _navigateToContactCreator.value = null
     }
     //--------------------
+
+    //--------------------------- Snackbar ---------------------------------------------------------
+    //--------------------
+    private var _showPostDeleteSnackbarEvent = MutableLiveData<Boolean>()
+    val showPostDeleteSnackBarEvent: LiveData<Boolean>
+        get() = _showPostDeleteSnackbarEvent
+    fun doneShowingPostDeleteSnackbar() {
+        _showPostDeleteSnackbarEvent.value = false
+    }
+    //--------------------
+
+
 
 }
 

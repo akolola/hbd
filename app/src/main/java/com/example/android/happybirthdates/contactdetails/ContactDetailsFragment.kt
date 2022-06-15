@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactDetailsBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
 import java.io.File
 import java.io.FileInputStream
@@ -113,9 +114,16 @@ class ContactDetailsFragment : Fragment() {
             var alert = builder.create()
             alert.show()
         }
+
+        //----------  Observer; Snackbar, Add Observer on state (v) showing Snackbar msg when 'Delete' <Button> is pressed.
+        contactDetailsViewModel.showPostDeleteSnackBarEvent.observe(viewLifecycleOwner, Observer {
+            if (it == true) { // Observed state is true.
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), getString(R.string.cleared_message), Snackbar.LENGTH_SHORT).show()
+                // Reset state to make sure Snackbar is only shown once, even if the device has a config change.
+                contactDetailsViewModel.doneShowingPostDeleteSnackbar()
+            }
+        })
         //--------------------
-
-
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
