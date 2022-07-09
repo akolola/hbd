@@ -23,3 +23,4 @@
 * See the License for the specific language governing permissions and 
 * limitations under the License. 
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Android_robot_%282014-2019%29.svg" width="200" height="200" />
