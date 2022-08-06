@@ -7,7 +7,7 @@ apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 30
     defaultConfig {
-        applicationId "com.example.android.trackmysleepqualityrecyclerview"
+        applicationId "com.example.android.happybirthdates"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -68,7 +68,14 @@ dependencies {
     // Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
-
-
+    // Google
+    //implementation 'com.google.firebase:firebase-core:21.1.0'               // Google Firebase dependency. Basics. Added manually.
+    //implementation 'com.google.firebase:firebase-auth:21.0.6'               // Google Firebase dependency. Auth.   Added manually.
+    //implementation 'com.google.android.gms:play-services-auth:20.2.0'       // Google Google dependency. Auth.     Added manually.
 }
+
+// Google
+//apply plugin: 'com.google.gms.google-services'                              // Google Play services plugin.              Added manually.
+// Kotlin
+//apply plugin: 'kotlin-android-extensions'                                   // Kotlin stuff with boilerplate sourcecode. Added manually.
 
