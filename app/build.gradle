@@ -3,13 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
+// Google
+apply plugin: 'com.google.gms.google-services'                                // Google Play services plugin.              Added manually.
+// Kotlin
+apply plugin: 'kotlin-android-extensions'                                   // Kotlin stuff with boilerplate sourcecode. Added manually.
+
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.example.android.happybirthdates"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -69,13 +74,8 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
     // Google
-    //implementation 'com.google.firebase:firebase-core:21.1.0'               // Google Firebase dependency. Basics. Added manually.
-    //implementation 'com.google.firebase:firebase-auth:21.0.6'               // Google Firebase dependency. Auth.   Added manually.
-    //implementation 'com.google.android.gms:play-services-auth:20.2.0'       // Google Google dependency. Auth.     Added manually.
+    implementation 'com.google.firebase:firebase-core:21.1.0'               // Google Firebase dependency. Basics. Added manually.
+    implementation 'com.google.firebase:firebase-auth:21.0.6'               // Google Firebase dependency. Auth.   Added manually.
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'       // Google Google dependency. Auth.     Added manually.
 }
-
-// Google
-//apply plugin: 'com.google.gms.google-services'                              // Google Play services plugin.              Added manually.
-// Kotlin
-//apply plugin: 'kotlin-android-extensions'                                   // Kotlin stuff with boilerplate sourcecode. Added manually.
 
