@@ -40,9 +40,12 @@ import java.util.*
 private const val TAG = "ContactCreatorFragment"
 
 
+
 class ContactCreatorFragment : Fragment(), DateSelected {
 
-
+    companion object {
+        private const val PERMISSION_CODE = 1001
+    }
 
     /**
      * The (m) is called when (c) ContactCreatorFragment is ready to display content to the screen.
@@ -155,8 +158,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     //--------------------------- Image Picker -----------------------------------------------------
-    companion object {private const val PERMISSION_CODE = 1001}
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PERMISSION_CODE -> {
