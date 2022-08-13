@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactBackupBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -23,15 +24,15 @@ private val TAG = "ContactBackupFragment"
 
 
 
-class ContactBackupFragment : Fragment(), View.OnClickListener {
+class ContactBackupFragment : Fragment() {
 
-    companion object {
+/*    companion object {
         private val RC_SIGN_IN = 9001
     }
 
     private val mApplication = requireNotNull(this.activity).application
     private var mAuth: FirebaseAuth? = null
-    internal lateinit var mGoogleSignInClient: GoogleSignInClient
+    internal lateinit var mGoogleSignInClient: GoogleSignInClient*/
     ///private lateinit var viewModel: ContactBackupViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,8 +43,12 @@ class ContactBackupFragment : Fragment(), View.OnClickListener {
         //---------- (c) ContactBackupFragment <- |fragment layout| fragment_contact_backup.
         val binding: FragmentContactBackupBinding  = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_backup, container, false)
 
+/*
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
+
+        //---------- |navigation| navigation's (v) args.
+        val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
 
         //---------- (c) ContactTrackerFragment <- |DB| ContactDatabase.
         val database = ContactDatabase.getInstance(application).contactDatabaseDao
@@ -52,11 +57,13 @@ class ContactBackupFragment : Fragment(), View.OnClickListener {
         //--------------------------- Processing ---------------------------------------------------
         //-------------------- 'GoogleSignIn' <Button>;
         binding.signInButton.setOnClickListener(this)
+*/
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 
+/*
     override fun onClick(v: View) {
         when(v.id){
             sign_in_button.id -> signInToGoogle()
@@ -67,9 +74,10 @@ class ContactBackupFragment : Fragment(), View.OnClickListener {
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
+*/
 
 
-    override fun onStart() {
+/*    override fun onStart() {
         super.onStart()
 
         val currentUser = mAuth!!.currentUser
@@ -79,10 +87,10 @@ class ContactBackupFragment : Fragment(), View.OnClickListener {
             Toast.makeText(mApplication, "Google logged in: "+ currentUser.email!!, Toast.LENGTH_LONG).show()
         }
 
-    }
+    }*/
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+/*    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == RC_SIGN_IN){
@@ -97,7 +105,7 @@ class ContactBackupFragment : Fragment(), View.OnClickListener {
             }
         }
 
-    }
+    }*/
 
 }
 

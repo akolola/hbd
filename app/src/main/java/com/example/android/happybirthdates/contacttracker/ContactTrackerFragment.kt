@@ -73,6 +73,17 @@ class ContactTrackerFragment : Fragment() {
         })
         //--------------------
 
+        //-------------------- 'buttonBackup' <Button>;
+        //---------- Observer; Navigating.
+        contactTrackerViewModel.navigateToContactBackup.observe(viewLifecycleOwner, Observer {
+            if (it == true) {
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactBackupFragment(0))
+                // Reset state to make sure we only navigate once, even if the device has a configuration change.
+                contactTrackerViewModel.doneNavigatingToContactBackupFragment()
+            }
+        })
+        //--------------------
+
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
         binding.alarmToggle.setOnCheckedChangeListener(

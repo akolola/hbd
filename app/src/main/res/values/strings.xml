@@ -4,6 +4,7 @@
 
     <!-- Button labels -->
     <string name="create">Create</string>
+    <string name="backup">Backup</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="submit">Submit</string>
@@ -36,13 +37,17 @@
     <string name="today">today</string>
     <string name="soon">soon</string>
 
+
     <!-- App title and fragment titles -->
     <string name="app_name">Happy Birthdates</string>
     <string name="fragment_contact_tracker">ContactTrackerFragment</string>
     <string name="fragment_contact_creator">ContactCreatorFragment</string>
+    <string name="fragment_contact_backup">ContactBackupFragment</string>
     <string name="fragment_contact_details">ContactDetailsFragment</string>
+
 
     <!-- Tech inner strings -->
     <string name="service_name">contact status</string>
+
 
 </resources>
