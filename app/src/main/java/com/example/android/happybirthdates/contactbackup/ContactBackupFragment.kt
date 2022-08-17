@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.config.GservicesValue.value
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.fragment_contact_backup.*
@@ -57,7 +58,7 @@ class ContactBackupFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com").requestEmail().build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build()
         mGoogleSignInClient = GoogleSignIn.getClient(application!!, gso)
         mAuth = FirebaseAuth.getInstance()
 
