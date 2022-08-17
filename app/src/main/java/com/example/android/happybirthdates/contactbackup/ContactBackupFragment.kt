@@ -10,18 +10,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.android.happybirthdates.R
-import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
-import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactBackupBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.config.GservicesValue.value
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.fragment_contact_backup.*
 
 
 private val TAG = "ContactBackupFragment"
@@ -68,15 +64,41 @@ class ContactBackupFragment : Fragment() {
             signInToGoogle()
         }
 
+        //-------------------- 'GoogleSignOut' <Button>;
+        binding.signOutButton.setOnClickListener{
+            signOutFromGoogle()
+        }
+
+        //-------------------- 'Disconnect' <Button>;
+        binding.disconnectButton.setOnClickListener{
+            revokeAccess()
+        }
+
+
 
         //--------------------------- Finish -------------------------------------------------------
         return binding.root
     }
 
 
+
     fun signInToGoogle() {
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    private fun signOutFromGoogle(){
+        mAuth!!.signOut()
+        mGoogleSignInClient.signOut()
+        Log.w(TAG, "Signed ouf of Google")
+        Toast.makeText(requireActivity(),"Signed ouf of Google",Toast.LENGTH_LONG).show()
+    }
+
+    private fun revokeAccess(){
+        mAuth!!.signOut()
+        mGoogleSignInClient.revokeAccess()
+        Log.w(TAG, "Revoked Access")
+        Toast.makeText(requireActivity(),"Revoked Access",Toast.LENGTH_LONG).show()
     }
 
 
@@ -99,6 +121,7 @@ class ContactBackupFragment : Fragment() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
+                Log.w(TAG,"Google sign in succeeded")
                 Toast.makeText(requireActivity(),"Google sign in succeeded",Toast.LENGTH_LONG).show()
                 firebaseAuthWithGoogle(account!!)
             } catch (e: ApiException){
