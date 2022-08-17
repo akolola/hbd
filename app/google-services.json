@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "465961236651-rgb9ce9st0ehosi0mi2767221h27ca93.apps.googleusercontent.com",
+          "client_id": "465961236651-vdd0ohnn5dqourtefrhiacpej1mfs724.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.android.happybirthdates",
-            "certificate_hash": "394ff6807f8b2495bf3a076613d85e8233e1a56d"
+            "certificate_hash": "baf0351d9498620bee22a63ea8ddfeecf24245cc"
           }
         },
         {
