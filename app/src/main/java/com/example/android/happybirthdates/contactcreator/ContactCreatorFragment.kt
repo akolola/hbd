@@ -220,7 +220,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
      *
      * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
      */
-    private fun loadImageFromInternalStorage(imageFileName: String) {
+    private fun loadImageFromInternalStorage(imageFileName: String)   {
         try {
             val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)

@@ -26,6 +26,7 @@ private val TAG = "ContactBackupFragment"
 
 class ContactBackupFragment : Fragment() {
 
+
    companion object {
         private val RC_SIGN_IN = 9001
     }
@@ -80,9 +81,7 @@ class ContactBackupFragment : Fragment() {
         return binding.root
     }
 
-
-
-    fun signInToGoogle() {
+    private fun signInToGoogle() {
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -100,7 +99,6 @@ class ContactBackupFragment : Fragment() {
         Log.w(TAG, "Revoked Access")
         Toast.makeText(requireActivity(),"Revoked Access",Toast.LENGTH_LONG).show()
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -150,6 +148,7 @@ class ContactBackupFragment : Fragment() {
         }
 
     }
+
 
 }
 
