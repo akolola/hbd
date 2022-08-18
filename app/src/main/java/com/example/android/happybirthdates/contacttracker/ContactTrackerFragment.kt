@@ -77,7 +77,7 @@ class ContactTrackerFragment : Fragment() {
         //---------- Observer; Navigating.
         contactTrackerViewModel.navigateToContactBackup.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactBackupFragment())
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCloudFragment())
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactBackupFragment()
             }
