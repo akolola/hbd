@@ -8,7 +8,6 @@ apply plugin: 'com.google.gms.google-services'                                //
 // Kotlin
 apply plugin: 'kotlin-android-extensions'                                   // Kotlin stuff with boilerplate sourcecode. Added manually.
 
-
 android {
     compileSdkVersion 31
     defaultConfig {
@@ -40,19 +39,33 @@ dependencies {
 
     // Support libraries
     implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation "androidx.fragment:fragment:$version_fragment"
+    implementation "androidx.fragment:fragment:1.5.3"
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // Android KTX
     implementation "androidx.core:core-ktx:$version_core"
 
+
+
+
+
     // Room and Lifecycle dependencies
     implementation "androidx.room:room-runtime:$version_room"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "androidx.room:room-compiler:$version_room"
-    implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
 
+
+
+
+    //implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    //implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
+
+
+
+
+
 
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$version_room"
@@ -61,9 +74,14 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
 
+
+
     // Navigation
-    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0"
+
+
+
 
     // Testing
     testImplementation 'junit:junit:4.12'
@@ -71,11 +89,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // Cropper
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
     // Google
     implementation 'com.google.firebase:firebase-core:21.1.0'               // Google Firebase dependency. Basics. Added manually.
     implementation 'com.google.firebase:firebase-auth:21.0.6'               // Google Firebase dependency. Auth.   Added manually.
     implementation 'com.google.android.gms:play-services-auth:20.2.0'       // Google Google dependency. Auth.     Added manually.
-}
 
+}
