@@ -1,13 +1,13 @@
 plugins {
 
-    // Android
-    id 'com.android.application'
-    id 'androidx.navigation.safeargs'
-
     // Kotlin
     id 'kotlin-android'
     id 'kotlin-android-extensions'                                   // Stuff with boilerplate sourcecode. Added manually.
     id 'kotlin-kapt'
+
+    // Android
+    id 'com.android.application'
+    id 'androidx.navigation.safeargs'
 
     // Google
     id 'com.google.gms.google-services'                              // Play services plugin.              Added manually.
@@ -15,7 +15,9 @@ plugins {
 }
 
 android {
+
     compileSdkVersion 31
+
     defaultConfig {
         applicationId "com.example.android.happybirthdates"
         minSdkVersion 19
@@ -25,6 +27,7 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -41,54 +44,56 @@ android {
 
 dependencies {
 
-    //=== OS =======================================================================================
+    //=== Jetbrains ================================================================================
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-
-    // Support libraries
-    implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation "androidx.fragment:fragment:$version_fragment"
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
-
-    // Android KTX
-    implementation "androidx.core:core-ktx:$version_core"
-
-    // Room and Lifecycle dependencies
-    implementation "androidx.room:room-runtime:$version_room"
-    implementation "androidx.legacy:legacy-support-v4:$version_legacy"
-    kapt "androidx.room:room-compiler:$version_room"
-
-    //implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
-    //implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$version_room"
-
-    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
+
+    //=== Android ==================================================================================
+
+    // Room
+    implementation "androidx.room:room-ktx:$version_room"
+    implementation "androidx.room:room-runtime:$version_room"
+    kapt "androidx.room:room-compiler:$version_room"
+
+    //Fragment
+    implementation "androidx.fragment:fragment:$version_fragment"
+
+    //Lifecycles of Activities, Fragments
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
+
+    // Widgets positioning
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+
+    // Legacy
+    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "androidx.legacy:legacy-support-v4:$version_legacy"
 
     // Testing
     testImplementation "junit:junit:$version_test"
     androidTestImplementation "androidx.test.ext:junit:$version_andoid_test"
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_android_espresso"
 
+    //=== Old ====================================================================================
+
+    ///implementation fileTree(dir: 'libs', include: ['*.jar'])
+    ///implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    ///implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
     //=== External =================================================================================
 
-    // Cropper
+    // Image Cropper
     implementation "com.theartofdev.edmodo:android-image-cropper:$version_image_cropper"
 
     // Google
-    implementation "com.google.firebase:firebase-core:$version_google_firebase"           // Google Firebase dependency. Basics.  Added manually.
-    implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth"      // Google Firebase dependency. Auth.    Added manually.
-    implementation "com.google.android.gms:play-services-auth:$version_google_play"       // Google Play dependency. Auth. Added manually.
+    implementation "com.google.firebase:firebase-core:$version_google_firebase"
+    implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth"
+    implementation "com.google.android.gms:play-services-auth:$version_google_play"
 
 }
