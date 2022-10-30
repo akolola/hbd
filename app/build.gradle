@@ -59,20 +59,20 @@ dependencies {
     kapt "androidx.room:room-compiler:$version_room"
 
     //Fragment
-    implementation "androidx.fragment:fragment:$version_fragment"
+    implementation "androidx.fragment:fragment-ktx:$version_fragment"
 
     //Lifecycles of Activities, Fragments
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
     // Widgets positioning
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
 
     // Legacy
-    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "androidx.appcompat:appcompat:$version_appcompat" //Don't increase ver
     implementation "androidx.legacy:legacy-support-v4:$version_legacy"
 
     // Testing
