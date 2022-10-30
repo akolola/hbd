@@ -12,7 +12,7 @@ plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
 
-    
+
     //=== External =================================================================================
 
     id 'com.google.gms.google-services'                              // Play services plugin.              Added manually.
@@ -81,8 +81,8 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$version_legacy"
 
     // Testing
-    testImplementation "junit:junit:$version_test"
-    androidTestImplementation "androidx.test.ext:junit:$version_andoid_test" // Leave ver
+    testImplementation "junit:junit:$version_junit_test"
+    androidTestImplementation "androidx.test.ext:junit:$version_android_test" // Leave ver
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_android_espresso" // Leave ver
 
 
