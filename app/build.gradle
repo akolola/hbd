@@ -1,27 +1,32 @@
 plugins {
 
-    // Kotlin
+    //=== Kotlin ===================================================================================
+
     id 'kotlin-android'
     id 'kotlin-android-extensions'                                   // Stuff with boilerplate sourcecode. Added manually.
     id 'kotlin-kapt'
 
-    // Android
+
+    //=== Android ==================================================================================
+
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
 
-    // Google
+    
+    //=== External =================================================================================
+
     id 'com.google.gms.google-services'                              // Play services plugin.              Added manually.
 
 }
 
 android {
 
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.example.android.happybirthdates"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,12 +49,12 @@ android {
 
 dependencies {
 
-    //=== Jetbrains ================================================================================
+    //=== Kotlin ===================================================================================
 
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
+
 
     //=== Android ==================================================================================
 
@@ -58,33 +63,28 @@ dependencies {
     implementation "androidx.room:room-runtime:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
 
-    //Fragment
+    // Fragment
     implementation "androidx.fragment:fragment-ktx:$version_fragment"
 
-    //Lifecycles of Activities, Fragments
+    // Lifecycle of Activities, Fragments
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
-    // Widgets positioning
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    // Widgets Positioning
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
 
     // Legacy
-    implementation "androidx.appcompat:appcompat:$version_appcompat" //Don't increase ver
+    implementation "androidx.appcompat:appcompat:$version_appcompat" // Leave ver
     implementation "androidx.legacy:legacy-support-v4:$version_legacy"
 
     // Testing
     testImplementation "junit:junit:$version_test"
-    androidTestImplementation "androidx.test.ext:junit:$version_andoid_test"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$version_android_espresso"
+    androidTestImplementation "androidx.test.ext:junit:$version_andoid_test" // Leave ver
+    androidTestImplementation "androidx.test.espresso:espresso-core:$version_android_espresso" // Leave ver
 
-    //=== Old ====================================================================================
-
-    ///implementation fileTree(dir: 'libs', include: ['*.jar'])
-    ///implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
-    ///implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
     //=== External =================================================================================
 
@@ -92,8 +92,16 @@ dependencies {
     implementation "com.theartofdev.edmodo:android-image-cropper:$version_image_cropper"
 
     // Google
-    implementation "com.google.firebase:firebase-core:$version_google_firebase"
-    implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth"
-    implementation "com.google.android.gms:play-services-auth:$version_google_play"
+    implementation "com.google.firebase:firebase-core:$version_google_firebase" // <) ver later
+    implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth" // <) ver later
+    implementation "com.google.android.gms:play-services-auth:$version_google_play" // <) ver later
+
+
+    //=== Old ====================================================================================
+
+    ///implementation fileTree(dir: 'libs', include: ['*.jar'])
+    ///implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    ///implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    ///implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 
 }

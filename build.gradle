@@ -23,6 +23,7 @@ buildscript {
         version_google_gms = "4.3.10"
         version_image_cropper = "2.8.0"
         version_navigation_args = "2.5.3"
+        version_constraint_layout = "2.1.4"
     }
 
     repositories {
