@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        version_gradle = '7.1.1'
+        version_gradle = "7.1.1"
         version_kotlin = "1.7.20"
         version_room = "2.4.3"
         version_core = "1.3.1"
@@ -11,6 +11,16 @@ buildscript {
         version_fragment = "1.0.0"
         version_lifecycle_extensions = "2.2.0"
         version_lifecycle = "2.5.1"
+        version_navigation = "1.0.0"
+        version_legacy = "1.0.0"
+        version_fragment = "1.5.3"
+        version_test = "4.12"
+        version_andoid_test = "1.1.1"
+        version_android_espresso = "3.2.0"
+        version_google_firebase = "21.1.0"
+        version_google_firebase_auth = "21.0.6"
+        version_google_play = "20.2.0"
+        version_image_cropper = "2.8.0"
     }
 
     repositories {
@@ -23,7 +33,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         def nav_version = "2.5.3"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath 'com.google.gms:google-services:4.3.10'        // Google's basic services. Added manually.
+        classpath 'com.google.gms:google-services:4.3.10'   // Google's basic services. Added manually.
     }
 }
 
