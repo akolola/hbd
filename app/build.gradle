@@ -1,12 +1,18 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs'
-// Google
-apply plugin: 'com.google.gms.google-services'                                // Google Play services plugin.              Added manually.
-// Kotlin
-apply plugin: 'kotlin-android-extensions'                                   // Kotlin stuff with boilerplate sourcecode. Added manually.
+plugins {
+
+    // Android
+    id 'com.android.application'
+    id 'androidx.navigation.safeargs'
+
+    // Kotlin
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'                                   // Stuff with boilerplate sourcecode. Added manually.
+    id 'kotlin-kapt'
+
+    // Google
+    id 'com.google.gms.google-services'                              // Play services plugin.              Added manually.
+
+}
 
 android {
     compileSdkVersion 31
@@ -84,5 +90,5 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$version_google_firebase"           // Google Firebase dependency. Basics.  Added manually.
     implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth"      // Google Firebase dependency. Auth.    Added manually.
     implementation "com.google.android.gms:play-services-auth:$version_google_play"       // Google Play dependency. Auth. Added manually.
-    
+
 }
