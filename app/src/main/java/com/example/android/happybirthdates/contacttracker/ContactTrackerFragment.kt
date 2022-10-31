@@ -48,7 +48,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) isContactDeleted & (v) database  & (v) application.
         val  viewModelFactory = if (arguments != null){
-            ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(arguments!!).isContactDeleted, dbPerson, application)
+            ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(requireArguments()).isContactDeleted, dbPerson, application)
         } else{
             ContactTrackerViewModelFactory(false, dbPerson, application)
         }
@@ -77,7 +77,7 @@ class ContactTrackerFragment : Fragment() {
         //---------- Observer; Navigating.
         contactTrackerViewModel.navigateToContactBackup.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCloudFragment())
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactStorageFragment())
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactBackupFragment()
             }
@@ -107,7 +107,7 @@ class ContactTrackerFragment : Fragment() {
                     getString(R.string.alarm_off_toast)
                 }
                 // Show toast to say the alarm is turned on or off.
-                Toast.makeText(context!!, toastMsg, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
             }
         )
         //--------------------

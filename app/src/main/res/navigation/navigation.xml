@@ -25,8 +25,8 @@
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_contact_tracker_fragment_to_contact_cloud_fragment"
-            app:destination="@id/contact_cloud_fragment"
+            android:id="@+id/action_contact_tracker_fragment_to_contact_storage_fragment"
+            app:destination="@id/contact_storage_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
@@ -48,12 +48,12 @@
     </fragment>
 
     <fragment
-        android:id="@+id/contact_cloud_fragment"
-        android:name="com.example.android.happybirthdates.contactcloud.ContactCloudFragment"
-        android:label="@string/fragment_contact_backup"
-        tools:layout="@layout/fragment_contact_backup">
+        android:id="@+id/contact_storage_fragment"
+        android:name="com.example.android.happybirthdates.contactstorage.ContactStorageFragment"
+        android:label="@string/fragment_storage_backup"
+        tools:layout="@layout/fragment_contact_storage">
         <action
-            android:id="@+id/action_contact_cloud_fragment_to_contact_tracker_fragment"
+            android:id="@+id/action_contact_storage_fragment_to_contact_tracker_fragment"
             app:destination="@id/contact_tracker_fragment"
             app:launchSingleTop="false"
             app:popUpTo="@+id/contact_tracker_fragment"
