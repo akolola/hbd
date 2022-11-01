@@ -1,52 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contact_cloud_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textAlignment="center"
-    tools:context=".contactcloud.ContactCloudFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="contactBackupViewModel"
+            type="com.example.android.happybirthdates.contactcloud.ContactCloudViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".contactcloud.ContactCloudmFragment">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="65dp"
-            android:layout_height="57dp"
-            android:layout_marginStart="76dp"
-            android:src="@android:drawable/ic_menu_save"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
-            app:layout_constraintHorizontal_bias="0.74"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="74dp"
-            android:layout_height="43dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="132dp"
-            android:text="@string/backup"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.434" />
-
-        <Button
-            android:id="@+id/button3"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="556dp"
-            android:text="save"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:onClick="onGoogleSignInClicked"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.292"
+            tools:layout_editor_absoluteX="128dp" />
+
+        <Button
+            android:id="@+id/sign_out_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Out"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
+            app:layout_constraintVertical_bias="0.255" />
+
+        <Button
+            android:id="@+id/disconnect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign out and disconnect"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sign_out_button"
+            app:layout_constraintVertical_bias="0.362" />
+
+        <Button
+            android:id="@+id/navigate_to_backup_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Backup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/disconnect_button"
+            app:layout_constraintVertical_bias="0.524" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</layout>
