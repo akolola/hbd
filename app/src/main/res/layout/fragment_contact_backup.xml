@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contact_cloud_fragment"
+    android:id="@+id/contact_backup_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:textAlignment="center"
@@ -26,17 +26,17 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="74dp"
+            android:layout_width="89dp"
             android:layout_height="43dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="132dp"
+            android:layout_marginEnd="112dp"
             android:text="@string/backup"
             android:textAlignment="center"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/button3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.434" />
+            app:layout_constraintVertical_bias="0.416" />
 
         <Button
             android:id="@+id/button3"

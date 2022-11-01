@@ -20,11 +20,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 
-private val TAG = "ContactCloudmFragment"
+private val TAG = "ContactCloudFragment"
 
 
 
-class ContactCloudmFragment : Fragment() {
+class ContactCloudFragment : Fragment() {
 
 
    companion object {

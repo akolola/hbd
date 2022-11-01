@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.contactbackup.ContactBackupFragment
+import com.example.android.happybirthdates.contactcloud.ContactCloudFragment
 
 class ContactStorageFragment : Fragment() {
 
@@ -19,9 +20,10 @@ class ContactStorageFragment : Fragment() {
 
         val contactBackupFragment = ContactBackupFragment ()
         childFragmentManager.beginTransaction().apply {
-            add(R.id.contact_cloud_fragment, contactBackupFragment)
+            add(R.id.contact_backup_fragment, contactBackupFragment)
             commit()
         }
+
 
     }
 
