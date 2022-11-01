@@ -36,19 +36,19 @@
             android:layout_marginTop="24dp"
             android:textOff="@string/alarm_off"
             android:textOn="@string/alarm_on"
-            app:layout_constraintEnd_toStartOf="@+id/buttonBackup"
+            app:layout_constraintEnd_toStartOf="@+id/buttonStorage"
             app:layout_constraintHorizontal_bias="0.568"
             app:layout_constraintStart_toEndOf="@+id/buttonCreate"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/buttonBackup"
+            android:id="@+id/buttonStorage"
             style="@style/ContactButtons"
             android:layout_width="100dp"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
-            android:onClick="@{() -> contactTrackerViewModel.onBackupTracking()}"
-            android:text="@string/backup"
+            android:onClick="@{() -> contactTrackerViewModel.onStorageTracking()}"
+            android:text="@string/storage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.847"
             app:layout_constraintStart_toEndOf="@+id/buttonCreate"

@@ -19,11 +19,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
-import com.google.android.material.snackbar.Snackbar
 
 import android.widget.CompoundButton
-import androidx.annotation.NonNull
-import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -75,11 +72,11 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- 'buttonBackup' <Button>;
         //---------- Observer; Navigating.
-        contactTrackerViewModel.navigateToContactBackup.observe(viewLifecycleOwner, Observer {
+        contactTrackerViewModel.navigateToContactStorage.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactStorageFragment())
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
-                contactTrackerViewModel.doneNavigatingToContactBackupFragment()
+                contactTrackerViewModel.doneNavigatingToContactStorageFragment()
             }
         })
         //--------------------
