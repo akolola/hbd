@@ -18,13 +18,20 @@ class ContactStorageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val contactBackupFragment = ContactBackupFragment ()
         childFragmentManager.beginTransaction().apply {
             add(R.id.contact_backup_fragment, contactBackupFragment)
             commit()
         }
 
-
+/*
+        val contactCloudFragment = ContactCloudFragment ()
+        childFragmentManager.beginTransaction().apply {
+            add(R.id.contact_cloud_fragment, contactCloudFragment)
+            commit()
+        }
+*/
     }
 
 
