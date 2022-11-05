@@ -12,7 +12,7 @@ import com.example.android.happybirthdates.contactcloud.ContactCloudFragment
 class ContactStorageFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_contact_backup, container, false)
+        return inflater.inflate(R.layout.fragment_contact_storage, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -21,17 +21,11 @@ class ContactStorageFragment : Fragment() {
 
         val contactBackupFragment = ContactBackupFragment ()
         childFragmentManager.beginTransaction().apply {
-            add(R.id.contact_backup_fragment, contactBackupFragment)
+            add(R.id.contact_cloud_fragment, contactBackupFragment)
             commit()
         }
 
-/*
-        val contactCloudFragment = ContactCloudFragment ()
-        childFragmentManager.beginTransaction().apply {
-            add(R.id.contact_cloud_fragment, contactCloudFragment)
-            commit()
-        }
-*/
+
     }
 
 
