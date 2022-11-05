@@ -6,7 +6,7 @@
     tools:context=".contactstorage.ContactStorageFragment">
 
     <FrameLayout
-        android:id="@+id/contact_cloud_fragment"
+        android:id="@+id/contact_backup_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

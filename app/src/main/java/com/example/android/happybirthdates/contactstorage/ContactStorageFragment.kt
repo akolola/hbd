@@ -21,7 +21,7 @@ class ContactStorageFragment : Fragment() {
 
         val contactBackupFragment = ContactBackupFragment ()
         childFragmentManager.beginTransaction().apply {
-            add(R.id.contact_cloud_fragment, contactBackupFragment)
+            add(R.id.contact_backup_fragment, contactBackupFragment)
             commit()
         }
 
