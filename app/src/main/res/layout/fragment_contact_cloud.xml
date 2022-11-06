@@ -47,11 +47,13 @@
             android:padding="5dip">
             <Button
                 android:id="@+id/sign_out_button"
+                style="@style/ContactButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_out" />
             <Button
                 android:id="@+id/disconnect_button"
+                style="@style/ContactButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_out_disconnect" />
