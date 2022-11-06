@@ -17,16 +17,17 @@
             android:padding="5dip">
             <ImageView
                 android:id="@+id/imageViewSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
                 android:src="@android:drawable/ic_menu_save" />
             <TextView
                 android:id="@+id/textViewBackup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:text="@string/backup"
                 android:textAlignment="textStart"
-                android:textSize="24sp" />
+                android:textSize="50sp" />
         </TableRow>
         <TableRow
             android:id="@+id/tableRowBackup2"

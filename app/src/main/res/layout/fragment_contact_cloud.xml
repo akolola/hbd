@@ -17,18 +17,20 @@
         <TableRow
             android:id="@+id/tableRowCloud1"
             android:padding="5dip">
+
             <ImageView
                 android:id="@+id/imageViewCloud"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_cloud_download"/>
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_cloud_download" />
             <TextView
                 android:id="@+id/textViewCloud"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:text="@string/cloud"
                 android:textAlignment="textStart"
-                android:textSize="24sp" />
+                android:textSize="50sp" />
         </TableRow>
         <TableRow
             android:id="@+id/tableRowCloud2"
