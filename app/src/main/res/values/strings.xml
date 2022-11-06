@@ -5,7 +5,11 @@
     <!-- Button labels -->
     <string name="create">Create</string>
     <string name="backup">Backup</string>
+    <string name="cloud">Cloud</string>
     <string name="storage">Storage</string>
+    <string name="save">Save</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_out_disconnect">Sign out and disconnect</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="submit">Submit</string>
@@ -51,7 +55,5 @@
     <!-- Tech inner strings -->
     <string name="service_name">contact status</string>
     <string name="googleClientId">465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com</string>
-    <string name="cloud">Cloud</string>
-
 
 </resources>
