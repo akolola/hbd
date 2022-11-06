@@ -6,11 +6,13 @@
     tools:context=".contactstorage.ContactStorageFragment">
 
     <LinearLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="100">
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:showDividers="middle"
+        android:divider="?android:attr/listDivider"
+        android:dividerPadding="12dip">
             <FrameLayout
                 android:layout_weight="50"
                 android:id="@+id/contact_backup_fragment"
