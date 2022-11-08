@@ -96,6 +96,14 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth" // <) ver later
     implementation "com.google.android.gms:play-services-auth:$version_google_play" // <) ver later
 
+    implementation('com.google.api-client:google-api-client-android:1.23.0'){
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava' // For successful build the dublicate (c) in 2 libs should be checked
+
 
     //=== Old ====================================================================================
 
