@@ -1,44 +1,40 @@
 package com.example.android.happybirthdates.contactbackup
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.android.happybirthdates.R
-import com.example.android.happybirthdates.databinding.FragmentContactCloudBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.google.api.client.http.FileContent
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import kotlinx.android.synthetic.main.fragment_contact_backup.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+
+
+private const val TAG = "ContactBackupFragment"
+
+
 
 class ContactBackupFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ContactBackupFragment()
-        private val TAG = "BackupActivity"
-        private val RC_SELECT_FILE = 9111
-    }
 
     lateinit var mDrive: Drive
+    ///private lateinit var viewModel: ContactBackupViewModel
 
-    private lateinit var viewModel: ContactBackupViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -78,13 +74,12 @@ class ContactBackupFragment : Fragment() {
 
                try {
 
-                   val absolutePath = requireContext().getFileStreamPath(fileName).absolutePath
-                   val jpegFile = File(absolutePath)
+                   val dbFile = context?.getDatabasePath("special_day_database")
+                   val mimetype = "application/vnd.sqlite3"
                    val gfile = com.google.api.services.drive.model.File()
-                   gfile.name = "examplepic"
-                   val mimetype = "image/jpeg"
-                   val fileContent = FileContent(mimetype, jpegFile)
-                   ///var fileid = ""
+                   gfile.name = "special_day_database"
+
+                   val fileContent = FileContent(mimetype, dbFile)
 
                   withContext(Dispatchers.Main) {
                       withContext(Dispatchers.IO) {
