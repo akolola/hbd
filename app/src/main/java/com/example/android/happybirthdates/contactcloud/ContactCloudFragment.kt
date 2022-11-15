@@ -20,7 +20,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 
-private val TAG = "ContactCloudFragment"
+
+private const val TAG = "ContactCloudFragment"
 
 
 
@@ -30,6 +31,7 @@ class ContactCloudFragment : Fragment() {
    companion object {
         private val RC_SIGN_IN = 9001
     }
+
 
     private var mAuth: FirebaseAuth? = null
     internal lateinit var mGoogleSignInClient: GoogleSignInClient

@@ -20,13 +20,16 @@ import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list
 import java.io.File
 import java.io.FileInputStream
 
+
+
 private const val TAG = "ContactDetailsFragment"
+
+
 
 /**
  * (c) Fragment with detailed description of one Contact.
  */
 class ContactDetailsFragment : Fragment() {
-
 
 
     /**

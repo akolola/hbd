@@ -22,11 +22,18 @@ import com.example.android.happybirthdates.databinding.FragmentContactTrackerBin
 
 import android.widget.CompoundButton
 
+
+
+private const val TAG = "ContactTrackerFragment"
+
+
+
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
  * displayed in RecyclerView.
  */
 class ContactTrackerFragment : Fragment() {
+
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
