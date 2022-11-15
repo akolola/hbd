@@ -18,11 +18,11 @@ import com.google.api.client.http.FileContent
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
+import com.google.api.services.drive.model.File
 import kotlinx.android.synthetic.main.fragment_contact_backup.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 
 private const val TAG = "ContactBackupFragment"
@@ -74,20 +74,31 @@ class ContactBackupFragment : Fragment() {
 
                try {
 
+                   //---------- Folder
+                   val gfile1 = File()
+                   gfile1.name = "hbd"
+                   gfile1.mimeType = "application/vnd.google-apps.folder"
+                   withContext(Dispatchers.Main) {
+                       withContext(Dispatchers.IO) {
+                           launch {
+                               googleDriveService.Files().create(gfile1).setFields("id").execute()
+                           }
+                       }
+                   }
+
+                   //---------- File 1 of 3
                    val dbFile = context?.getDatabasePath("special_day_database")
                    val mimetype = "application/vnd.sqlite3"
-                   val gfile = com.google.api.services.drive.model.File()
-                   gfile.name = "special_day_database"
-
                    val fileContent = FileContent(mimetype, dbFile)
-
-                  withContext(Dispatchers.Main) {
-                      withContext(Dispatchers.IO) {
-                          launch {
-                              var mFile = googleDriveService.Files().create(gfile, fileContent).execute()
-                          }
-                      }
-                  }
+                   val gfile2 = File()
+                   gfile2.name = "special_day_database"
+                   withContext(Dispatchers.Main) {
+                       withContext(Dispatchers.IO) {
+                           launch {
+                               googleDriveService.Files().create(gfile2, fileContent).execute()
+                           }
+                       }
+                   }
 
                } catch (userAuthEx: UserRecoverableAuthIOException) {
                    startActivity(userAuthEx.intent)
