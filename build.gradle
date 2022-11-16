@@ -29,6 +29,7 @@ buildscript {
         version_google_firebase_auth = "21.0.6"
         version_google_play = "20.2.0"
         version_google_gms = "4.3.10"
+        version_google_client = "1.23.0"
 
     }
 

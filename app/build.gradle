@@ -95,8 +95,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:$version_google_firebase" // <) ver later
     implementation "com.google.firebase:firebase-auth:$version_google_firebase_auth" // <) ver later
     implementation "com.google.android.gms:play-services-auth:$version_google_play" // <) ver later
-
-    implementation('com.google.api-client:google-api-client-android:1.23.0'){
+    implementation("com.google.api-client:google-api-client-android:$version_google_client"){
         exclude group: 'org.apache.httpcomponents'
     }
     implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
