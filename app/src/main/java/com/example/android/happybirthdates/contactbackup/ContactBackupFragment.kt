@@ -19,7 +19,6 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
-import com.google.api.services.drive.model.FileList
 import kotlinx.android.synthetic.main.fragment_contact_backup.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +26,7 @@ import kotlinx.coroutines.withContext
 
 
 private const val TAG = "ContactBackupFragment"
-
+private const val BACKUP_DIR_NAME = "HBD"
 
 
 class ContactBackupFragment : Fragment() {
@@ -79,13 +78,14 @@ class ContactBackupFragment : Fragment() {
                    withContext(Dispatchers.Main) {
                        withContext(Dispatchers.IO) {
                            launch {
-                               var result  = googleDriveService.Files().list().execute()
+                               var result  = googleDriveService.Files().list().setQ("mimeType='application/vnd.google-apps.folder' and name ='$BACKUP_DIR_NAME'").execute()
                                for (file in result.files) {
                                    Log.d(TAG, "name=${file.name}, id=${file.id}")
                                }
                            }
                        }
                    }
+/*
 
                    //---------- Folder
                    val gfile1 = File()
@@ -112,6 +112,7 @@ class ContactBackupFragment : Fragment() {
                            }
                        }
                    }
+*/
 
                } catch (userAuthEx: UserRecoverableAuthIOException) {
                    startActivity(userAuthEx.intent)
