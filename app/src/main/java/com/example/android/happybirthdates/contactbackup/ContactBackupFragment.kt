@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.android.happybirthdates.R
@@ -26,9 +25,10 @@ import java.io.IOException
 
 
 private const val TAG = "ContactBackupFragment"
-private const val BACKUP_DIR_NAME = "appDataFolder"
+private const val BACKUP_DIR_NAME = "HBD_Backup"
 private const val BACKUP_FILE_NAME = "special_day_database"
-
+private const val BACKUP_FILE_NAME_SHM  = "special_day_database-shm"
+private const val BACKUP_FILE_NAME_WAL  = "special_day_database-wal"
 
 class ContactBackupFragment : Fragment() {
 
@@ -77,13 +77,23 @@ class ContactBackupFragment : Fragment() {
                folderMetadata.name = BACKUP_DIR_NAME
                folderMetadata.mimeType = "application/vnd.google-apps.folder"
 
-               val fileMetadata = File()
-               fileMetadata.name = BACKUP_FILE_NAME
+               val fileMetadata1 = File()
+               fileMetadata1.name = BACKUP_FILE_NAME
+
+                val fileMetadata2 = File()
+                fileMetadata2.name = BACKUP_FILE_NAME_SHM
+
+                val fileMetadata3 = File()
+                fileMetadata3.name = BACKUP_FILE_NAME_WAL
 
 
-               val content = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database")
-               val mediaContent = FileContent("application/x-sqlite3", content)
-               var fileIdList =  mutableListOf<String>()
+                val content1 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database")
+                val mediaContent1 = FileContent("application/x-sqlite3", content1)
+                val content2 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database-shm")
+                val mediaContent2 = FileContent("application/x-sqlite3", content2)
+                val content3 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database-wal")
+                val mediaContent3 = FileContent("application/x-sqlite3", content3)
+
 
 
                 //---------- Find & delete backup dir and its all possible copies
@@ -127,9 +137,17 @@ class ContactBackupFragment : Fragment() {
 
                             Log.d(TAG, "Created directory: name=${dir.name}, id=${dir.id}")
 
-                            fileMetadata.parents = listOf(dir.id)
-                            val file = googleDriveService.files().create(fileMetadata, mediaContent).setFields("id").execute()
-                            Log.d(TAG, "Uploaded file: name=${file.name}, id=${file.id}")
+                            fileMetadata1.parents = listOf(dir.id)
+                            val file1 = googleDriveService.files().create(fileMetadata1, mediaContent1).setFields("id").execute()
+                            Log.d(TAG, "Uploaded file: name=${file1.name}, id=${file1.id}")
+
+                            fileMetadata2.parents = listOf(dir.id)
+                            val file2 = googleDriveService.files().create(fileMetadata2, mediaContent2).setFields("id").execute()
+                            Log.d(TAG, "Uploaded file: name=${file2.name}, id=${file2.id}")
+
+                            fileMetadata3.parents = listOf(dir.id)
+                            val file3 = googleDriveService.files().create(fileMetadata3, mediaContent3).setFields("id").execute()
+                            Log.d(TAG, "Uploaded file: name=${file3.name}, id=${file3.id}")
 
                         }
                     }
