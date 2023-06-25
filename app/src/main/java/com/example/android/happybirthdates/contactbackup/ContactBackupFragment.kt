@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.fragment_contact_backup.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
+import java.io.*
+
+
 
 
 private const val TAG = "ContactBackupFragment"
@@ -51,7 +53,11 @@ class ContactBackupFragment : Fragment() {
             //----------
             mDrive = getDriveService(this.requireContext())
 
-            uploadFileToGoogleDrive(requireContext(),BACKUP_DIR_NAME)
+            // ****
+            uploadFileToGoogleDrive(requireContext(), BACKUP_DIR_NAME)
+            // ****
+            //downloadBackupFromGoogleDrive(requireContext())
+
         }
 
         return binding.rootView
@@ -65,6 +71,8 @@ class ContactBackupFragment : Fragment() {
         }
     }
 
+
+    // ****
     private fun uploadFileToGoogleDrive(context: Context, fileName: String) {
 
         Log.d(TAG,"In (m) setOnClickListener")
@@ -73,19 +81,18 @@ class ContactBackupFragment : Fragment() {
         mDrive.let { googleDriveService ->
             lifecycleScope.launch {
 
-               val folderMetadata = File()
-               folderMetadata.name = BACKUP_DIR_NAME
-               folderMetadata.mimeType = "application/vnd.google-apps.folder"
+                val folderMetadata = File()
+                folderMetadata.name = BACKUP_DIR_NAME
+                folderMetadata.mimeType = "application/vnd.google-apps.folder"
 
-               val fileMetadata1 = File()
-               fileMetadata1.name = BACKUP_FILE_NAME
+                val fileMetadata1 = File()
+                fileMetadata1.name = BACKUP_FILE_NAME
 
                 val fileMetadata2 = File()
                 fileMetadata2.name = BACKUP_FILE_NAME_SHM
 
                 val fileMetadata3 = File()
                 fileMetadata3.name = BACKUP_FILE_NAME_WAL
-
 
                 val content1 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database")
                 val mediaContent1 = FileContent("application/x-sqlite3", content1)
@@ -95,33 +102,13 @@ class ContactBackupFragment : Fragment() {
                 val mediaContent3 = FileContent("application/x-sqlite3", content3)
 
 
-
                 //---------- Find & delete backup dir and its all possible copies
                 withContext(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
                         launch {
 
-                            var dirIdListToDelete: MutableList<String> = mutableListOf()
-                            val result = googleDriveService.files().list().setQ("'root' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false").setFields("nextPageToken, files(id, name)").execute()
-                            val dirList : List<File> = result.files
-                            for (dir in dirList) {
-                                if (dir.name == BACKUP_DIR_NAME) {
-                                    dirIdListToDelete.add(dir.id)
-                                }
-                            }
-
-                            if (dirList.isNotEmpty()) {
-                                for (dirId in dirIdListToDelete) {
-                                    try {
-                                        googleDriveService.files().delete(dirId).execute()
-                                        Log.d(TAG,"Dir with id $dirId deleted successfully.")
-                                    } catch (e: IOException) {
-                                        Log.d(TAG,"An error occurred: $e")
-                                    }
-                                }
-                            } else {
-                                Log.d(TAG, "No directories found with name $BACKUP_DIR_NAME.")
-                            }
+                            var availableDirIdList: MutableList<String> = availableDirIdListInGoogleDrive(googleDriveService)
+                            deleteDirListByIdInGoogleDrive(availableDirIdList, googleDriveService)
 
                         }
                     }
@@ -154,12 +141,134 @@ class ContactBackupFragment : Fragment() {
                 }
 
 
-
            }
 
        }
 
     }
+
+    private fun availableDirIdListInGoogleDrive(googleDriveService: Drive): MutableList<String> {
+        var availableDirIdList: MutableList<String> = mutableListOf()
+        val result = googleDriveService.files().list()
+            .setQ("'root' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false")
+            .setFields("nextPageToken, files(id, name)").execute()
+        val dirList: List<File> = result.files
+        for (dir in dirList) {
+            if (dir.name == BACKUP_DIR_NAME) {
+                availableDirIdList.add(dir.id)
+            }
+        }
+        return availableDirIdList
+    }
+
+
+    private fun deleteDirListByIdInGoogleDrive(availableDirIdList: MutableList<String>, googleDriveService: Drive) {
+        if (availableDirIdList.isNotEmpty()) {
+            for (dirId in availableDirIdList) {
+                try {
+                    googleDriveService.files().delete(dirId).execute()
+                    Log.d(TAG, "Dir with id $dirId deleted successfully.")
+                } catch (e: IOException) {
+                    Log.d(TAG, "An error occurred: $e")
+                }
+            }
+        } else {
+            Log.d(TAG, "No directories found with name $BACKUP_DIR_NAME.")
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    // ****
+    private fun downloadBackupFromGoogleDrive(context: Context) {
+
+        mDrive.let { googleDriveService ->
+            lifecycleScope.launch {
+
+                //---------- Find backup dir
+                withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.IO) {
+                        launch {
+
+                            var files =  getFilesInFolder("1hWmO4KqynSLEE7JJMx9kHexrAX9rEgp3", googleDriveService)
+                            saveFileToLocalAppFolder(files.get(0), "/data/user/0/com.example.android.happybirthdates/databases/test", googleDriveService )
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    fun getFilesInFolder(folderId: String, service: Drive): List<File> {
+        var files: List<File> = emptyList()
+        val query = "mimeType != 'application/vnd.google-apps.folder' and '$folderId' in parents and trashed = false"
+        val request = service.files().list().setQ(query)
+        do {
+            val result = request.execute()
+            files = result.files
+            request.pageToken = result.nextPageToken
+        } while (request.pageToken != null && request.pageToken.isNotEmpty())
+        return files
+    }
+
+    fun saveFileToLocalAppFolder(file: File, localFilename: String, service: Drive) {
+        // Convert the Drive API file to a File object
+        val javaFile =  java.io.File(localFilename)
+        val outputStream = javaFile.outputStream()
+
+        // Download the file content and write it to the local file
+        service.files().get(file.id).executeMediaAndDownloadTo(outputStream)
+
+        // Close the output stream
+        outputStream.close()
+    }
+
+
+
+    
+
+
+
+/*    fun searchHbdBackupDirIdInGoogleDrive(service: Drive): List<File> {
+        val dirList: List<File> = availableDirIdListInGoogleDrive(service)
+        return dirList
+    }*/
+
+
+/*    fun saveDriveFilesToLocal(files: List<File>, context: Context) {
+        val databasesDir = context.getDatabasePath("").parentFile
+        for (file in files) {
+            val output: OutputStream = FileOutputStream(java.io.File(databasesDir, file.name))
+            val driveFileContent: InputStream = Drive.Files.get(file.id).executeMediaAsInputStream()
+            driveFileContent.copyTo(output)
+            output.close()
+            driveFileContent.close()
+        }
+        Log.d("Drive Files", "Files saved successfully.")
+    }*/
+
+/*    private fun createAndSaveFile(fileName: String, fileContents: String, context: Context) {
+        val path = context.getDatabasePath(fileName)
+        try {
+            val outputStreamWriter = OutputStreamWriter(FileOutputStream(path))
+            outputStreamWriter.write(fileContents)
+            outputStreamWriter.close()
+            Log.d("File", "File saved successfully.")
+        } catch (e: Exception) {
+            Log.e("Exception", "File write failed: $e")
+        }
+    }*/
+
 
 }
 
