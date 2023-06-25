@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.android.happybirthdates.R
@@ -54,9 +55,10 @@ class ContactBackupFragment : Fragment() {
             mDrive = getDriveService(this.requireContext())
 
             // ****
-            uploadFileToGoogleDrive(requireContext(), BACKUP_DIR_NAME)
+            //uploadFileToGoogleDrive(requireContext(), BACKUP_DIR_NAME)
+
             // ****
-            //downloadBackupFromGoogleDrive(requireContext())
+            downloadBackupFromGoogleDrive(requireContext())
 
         }
 
@@ -107,7 +109,7 @@ class ContactBackupFragment : Fragment() {
                     withContext(Dispatchers.IO) {
                         launch {
 
-                            var availableDirIdList: MutableList<String> = availableDirIdListInGoogleDrive(googleDriveService)
+                            var availableDirIdList: MutableList<String> = getBackupDBDirIdListInGoogleDrive(googleDriveService)
                             deleteDirListByIdInGoogleDrive(availableDirIdList, googleDriveService)
 
                         }
@@ -147,11 +149,9 @@ class ContactBackupFragment : Fragment() {
 
     }
 
-    private fun availableDirIdListInGoogleDrive(googleDriveService: Drive): MutableList<String> {
+    private fun getBackupDBDirIdListInGoogleDrive(googleDriveService: Drive): MutableList<String> {
         var availableDirIdList: MutableList<String> = mutableListOf()
-        val result = googleDriveService.files().list()
-            .setQ("'root' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false")
-            .setFields("nextPageToken, files(id, name)").execute()
+        val result = googleDriveService.files().list().setQ("'root' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false").setFields("nextPageToken, files(id, name)").execute()
         val dirList: List<File> = result.files
         for (dir in dirList) {
             if (dir.name == BACKUP_DIR_NAME) {
@@ -160,7 +160,6 @@ class ContactBackupFragment : Fragment() {
         }
         return availableDirIdList
     }
-
 
     private fun deleteDirListByIdInGoogleDrive(availableDirIdList: MutableList<String>, googleDriveService: Drive) {
         if (availableDirIdList.isNotEmpty()) {
@@ -192,13 +191,18 @@ class ContactBackupFragment : Fragment() {
         mDrive.let { googleDriveService ->
             lifecycleScope.launch {
 
-                //---------- Find backup dir
                 withContext(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
                         launch {
 
-                            var files =  getFilesInFolder("1hWmO4KqynSLEE7JJMx9kHexrAX9rEgp3", googleDriveService)
-                            saveFileToLocalAppFolder(files.get(0), "/data/user/0/com.example.android.happybirthdates/databases/test", googleDriveService )
+                            val availableDirIdList = getBackupDBDirIdListInGoogleDrive(googleDriveService)
+                            if(availableDirIdList.isEmpty()){
+                                Log.d(TAG, "No directories found with name $BACKUP_DIR_NAME.")
+                                Toast.makeText(context, "No directories found with name $BACKUP_DIR_NAME", Toast.LENGTH_LONG).show()
+                            } else{
+                                var dBFileList = getDBFileListFromBackupFolder(availableDirIdList.get(0) ,googleDriveService)
+                                saveFileToLocalAppFolder(dBFileList.get(0), "/data/user/0/com.example.android.happybirthdates/databases/test", googleDriveService)
+                            }
 
                         }
 
@@ -209,7 +213,7 @@ class ContactBackupFragment : Fragment() {
         }
     }
 
-    fun getFilesInFolder(folderId: String, service: Drive): List<File> {
+    fun getDBFileListFromBackupFolder(folderId: String, service: Drive): List<File> {
         var files: List<File> = emptyList()
         val query = "mimeType != 'application/vnd.google-apps.folder' and '$folderId' in parents and trashed = false"
         val request = service.files().list().setQ(query)
@@ -235,27 +239,7 @@ class ContactBackupFragment : Fragment() {
 
 
 
-    
 
-
-
-/*    fun searchHbdBackupDirIdInGoogleDrive(service: Drive): List<File> {
-        val dirList: List<File> = availableDirIdListInGoogleDrive(service)
-        return dirList
-    }*/
-
-
-/*    fun saveDriveFilesToLocal(files: List<File>, context: Context) {
-        val databasesDir = context.getDatabasePath("").parentFile
-        for (file in files) {
-            val output: OutputStream = FileOutputStream(java.io.File(databasesDir, file.name))
-            val driveFileContent: InputStream = Drive.Files.get(file.id).executeMediaAsInputStream()
-            driveFileContent.copyTo(output)
-            output.close()
-            driveFileContent.close()
-        }
-        Log.d("Drive Files", "Files saved successfully.")
-    }*/
 
 /*    private fun createAndSaveFile(fileName: String, fileContents: String, context: Context) {
         val path = context.getDatabasePath(fileName)
