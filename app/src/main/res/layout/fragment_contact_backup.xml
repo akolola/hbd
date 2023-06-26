@@ -29,6 +29,9 @@
                 android:textAlignment="textStart"
                 android:textSize="50sp" />
         </TableRow>
+
+
+
         <TableRow
             android:id="@+id/tableRowBackup2"
             android:padding="5dip"
@@ -39,6 +42,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save"/>
+            <Button
+                android:id="@+id/buttonLoad"
+                style="@style/ContactButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/load"/>
         </TableRow>
     </TableLayout>
 

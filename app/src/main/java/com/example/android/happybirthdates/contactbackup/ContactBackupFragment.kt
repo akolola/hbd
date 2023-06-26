@@ -51,13 +51,17 @@ class ContactBackupFragment : Fragment() {
         //-------------------- 'buttonSave' <Button>;
         //---------- Click listener; (c) ContactBackupFragment -[|DB| Contact]-> GoogleDrive.
         binding.buttonSave.setOnClickListener {
-            //----------
+
             mDrive = getDriveService(this.requireContext())
+            uploadFileToGoogleDrive(requireContext(), BACKUP_DIR_NAME)
 
-            // ****
-            //uploadFileToGoogleDrive(requireContext(), BACKUP_DIR_NAME)
+        }
 
-            // ****
+        //-------------------- 'buttonSave' <Button>;
+        //---------- Click listener; (c) ContactBackupFragment -[|DB| Contact]-> GoogleDrive.
+        binding.buttonLoad.setOnClickListener {
+
+            mDrive = getDriveService(this.requireContext())
             downloadBackupFromGoogleDrive(requireContext())
 
         }
@@ -201,9 +205,9 @@ class ContactBackupFragment : Fragment() {
                                     val dbFile2 = dBFileList.find { it.name == BACKUP_FILE_NAME_SHM }
                                     val dbFile3 = dBFileList.find { it.name == BACKUP_FILE_NAME_WAL }
 
-                                    saveFileToLocalAppFolder(dbFile1!!, BACKUP_FILE_NAME, googleDriveService)
-                                    saveFileToLocalAppFolder(dbFile2!!, BACKUP_FILE_NAME_SHM, googleDriveService)
-                                    saveFileToLocalAppFolder(dbFile3!!, BACKUP_FILE_NAME_WAL, googleDriveService)
+                                    saveFileToLocalDBFolder(dbFile1!!, BACKUP_FILE_NAME, googleDriveService)
+                                    saveFileToLocalDBFolder(dbFile2!!, BACKUP_FILE_NAME_SHM, googleDriveService)
+                                    saveFileToLocalDBFolder(dbFile3!!, BACKUP_FILE_NAME_WAL, googleDriveService)
                                 }
 
                             }
@@ -229,7 +233,7 @@ class ContactBackupFragment : Fragment() {
         return files
     }
 
-    fun saveFileToLocalAppFolder(file: File, localFilename: String, service: Drive) {
+    fun saveFileToLocalDBFolder(file: File, localFilename: String, service: Drive) {
 
         try {
 
@@ -247,7 +251,7 @@ class ContactBackupFragment : Fragment() {
             outputStream.close()
 
             Log.d("File", "File saved successfully.")
-            
+
         } catch (e: Exception) {
             Log.e("Exception", "File write failed: $e")
         }

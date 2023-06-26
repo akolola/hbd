@@ -8,6 +8,7 @@
     <string name="cloud">Cloud</string>
     <string name="storage">Storage</string>
     <string name="save">Save</string>
+    <string name="load">Load</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_out_disconnect">Sign out and disconnect</string>
     <string name="delete">Delete</string>
