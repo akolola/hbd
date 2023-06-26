@@ -177,14 +177,6 @@ class ContactBackupFragment : Fragment() {
     }
 
 
-
-
-
-
-
-
-
-
     // ****
     private fun downloadBackupFromGoogleDrive(context: Context) {
 
@@ -209,10 +201,9 @@ class ContactBackupFragment : Fragment() {
                                     val dbFile2 = dBFileList.find { it.name == BACKUP_FILE_NAME_SHM }
                                     val dbFile3 = dBFileList.find { it.name == BACKUP_FILE_NAME_WAL }
 
-                                    saveFileToLocalAppFolder(dbFile1!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME", googleDriveService)
-                                    saveFileToLocalAppFolder(dbFile2!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME_SHM", googleDriveService)
-                                    saveFileToLocalAppFolder(dbFile3!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME_WAL", googleDriveService)
-
+                                    saveFileToLocalAppFolder(dbFile1!!, BACKUP_FILE_NAME, googleDriveService)
+                                    saveFileToLocalAppFolder(dbFile2!!, BACKUP_FILE_NAME_SHM, googleDriveService)
+                                    saveFileToLocalAppFolder(dbFile3!!, BACKUP_FILE_NAME_WAL, googleDriveService)
                                 }
 
                             }
@@ -239,32 +230,28 @@ class ContactBackupFragment : Fragment() {
     }
 
     fun saveFileToLocalAppFolder(file: File, localFilename: String, service: Drive) {
-        // Convert the Drive API file to a File object
-        val javaFile =  java.io.File(localFilename)
-        val outputStream = javaFile.outputStream()
 
-        // Download the file content and write it to the local file
-        service.files().get(file.id).executeMediaAndDownloadTo(outputStream)
-
-        // Close the output stream
-        outputStream.close()
-    }
-
-
-
-
-
-/*    private fun createAndSaveFile(fileName: String, fileContents: String, context: Context) {
-        val path = context.getDatabasePath(fileName)
         try {
-            val outputStreamWriter = OutputStreamWriter(FileOutputStream(path))
-            outputStreamWriter.write(fileContents)
-            outputStreamWriter.close()
+
+            // Determine correct path to dir for DB file, e.g. data/user/0/com.example.android.happybirthdates/databases
+            val path = context?.getDatabasePath(localFilename)?.path
+
+            // Convert the Drive API file to a File object
+            val javaFile = java.io.File(path)
+            val outputStream = javaFile.outputStream()
+
+            // Download the file content and write it to the local file
+            service.files().get(file.id).executeMediaAndDownloadTo(outputStream)
+
+            // Close the output stream
+            outputStream.close()
+
             Log.d("File", "File saved successfully.")
+            
         } catch (e: Exception) {
             Log.e("Exception", "File write failed: $e")
         }
-    }*/
+    }
 
 
 }
