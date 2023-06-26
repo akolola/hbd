@@ -196,12 +196,25 @@ class ContactBackupFragment : Fragment() {
                         launch {
 
                             val availableDirIdList = getBackupDBDirIdListInGoogleDrive(googleDriveService)
+
                             if(availableDirIdList.isEmpty()){
                                 Log.d(TAG, "No directories found with name $BACKUP_DIR_NAME.")
                                 Toast.makeText(context, "No directories found with name $BACKUP_DIR_NAME", Toast.LENGTH_LONG).show()
                             } else{
+
                                 var dBFileList = getDBFileListFromBackupFolder(availableDirIdList.get(0) ,googleDriveService)
-                                saveFileToLocalAppFolder(dBFileList.get(0), "/data/user/0/com.example.android.happybirthdates/databases/test", googleDriveService)
+
+                                if (dBFileList.size == 3){
+                                    val dbFile1 = dBFileList.find { it.name == BACKUP_FILE_NAME }
+                                    val dbFile2 = dBFileList.find { it.name == BACKUP_FILE_NAME_SHM }
+                                    val dbFile3 = dBFileList.find { it.name == BACKUP_FILE_NAME_WAL }
+
+                                    saveFileToLocalAppFolder(dbFile1!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME", googleDriveService)
+                                    saveFileToLocalAppFolder(dbFile2!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME_SHM", googleDriveService)
+                                    saveFileToLocalAppFolder(dbFile3!!, "/data/user/0/com.example.android.happybirthdates/databases/$BACKUP_FILE_NAME_WAL", googleDriveService)
+
+                                }
+
                             }
 
                         }
