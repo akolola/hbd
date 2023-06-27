@@ -14,12 +14,13 @@
         android:stretchColumns="1"> <!-- stretch the second column of the layout-->
         <TableRow
             android:id="@+id/tableRowBackup1"
-            android:padding="5dip">
+            android:padding="20dp">
+
             <ImageView
                 android:id="@+id/imageViewSave"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="fitCenter"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitStart"
                 android:src="@android:drawable/ic_menu_save" />
             <TextView
                 android:id="@+id/textViewBackup"
@@ -29,9 +30,13 @@
                 android:textAlignment="textStart"
                 android:textSize="50sp" />
         </TableRow>
+    </TableLayout>
 
-
-
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100sp"
+        android:stretchColumns="0,1"> <!-- stretch 2 columns of the layout-->
         <TableRow
             android:id="@+id/tableRowBackup2"
             android:padding="5dip"

@@ -17,7 +17,6 @@
         <TableRow
             android:id="@+id/tableRowCloud1"
             android:padding="5dip">
-
             <ImageView
                 android:id="@+id/imageViewCloud"
                 android:layout_width="fill_parent"

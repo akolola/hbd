@@ -25,8 +25,6 @@ import kotlinx.coroutines.withContext
 import java.io.*
 
 
-
-
 private const val TAG = "ContactBackupFragment"
 private const val BACKUP_DIR_NAME = "HBD_Backup"
 private const val BACKUP_FILE_NAME = "special_day_database"
@@ -80,9 +78,6 @@ class ContactBackupFragment : Fragment() {
 
     // ****
     private fun uploadFileToGoogleDrive(context: Context, fileName: String) {
-
-        Log.d(TAG,"In (m) setOnClickListener")
-        ///Toast.makeText(context, "In (m) setOnClickListener", Toast.LENGTH_LONG).show()
 
         mDrive.let { googleDriveService ->
             lifecycleScope.launch {
@@ -208,6 +203,7 @@ class ContactBackupFragment : Fragment() {
                                     saveFileToLocalDBFolder(dbFile1!!, BACKUP_FILE_NAME, googleDriveService)
                                     saveFileToLocalDBFolder(dbFile2!!, BACKUP_FILE_NAME_SHM, googleDriveService)
                                     saveFileToLocalDBFolder(dbFile3!!, BACKUP_FILE_NAME_WAL, googleDriveService)
+
                                 }
 
                             }
