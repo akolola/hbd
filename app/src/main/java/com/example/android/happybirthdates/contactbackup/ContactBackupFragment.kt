@@ -40,6 +40,8 @@ class ContactBackupFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+
+
         //--------------------------- Declaration --------------------------------------------------
         //---------- (c) ContactBackupFragment <- |fragment layout| fragment_contact_backup.
         val binding = inflater.inflate(R.layout.fragment_contact_backup, container, false)
@@ -94,13 +96,17 @@ class ContactBackupFragment : Fragment() {
                 val fileMetadata3 = File()
                 fileMetadata3.name = BACKUP_FILE_NAME_WAL
 
-                val content1 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database")
+                // Determine correct path to dir for DB file, e.g. data/user/0/com.example.android.happybirthdates/databases
+                // Convert the Drive API file to a File object
+                val path1 = context?.getDatabasePath(BACKUP_FILE_NAME)?.path
+                val content1 = java.io.File(path1)
                 val mediaContent1 = FileContent("application/x-sqlite3", content1)
-                val content2 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database-shm")
+                val path2 = context?.getDatabasePath(BACKUP_FILE_NAME_SHM)?.path
+                val content2 = java.io.File(path2)
                 val mediaContent2 = FileContent("application/x-sqlite3", content2)
-                val content3 = java.io.File("/data/user/0/com.example.android.happybirthdates/databases/special_day_database-wal")
+                val path3 = context?.getDatabasePath(BACKUP_FILE_NAME_WAL)?.path
+                val content3= java.io.File(path3)
                 val mediaContent3 = FileContent("application/x-sqlite3", content3)
-
 
                 //---------- Find & delete backup dir and its all possible copies
                 withContext(Dispatchers.Main) {
@@ -176,8 +182,6 @@ class ContactBackupFragment : Fragment() {
         }
     }
 
-
-
     private fun downloadBackupFromGoogleDrive(context: Context) {
 
         mDrive.let { googleDriveService ->
@@ -219,7 +223,7 @@ class ContactBackupFragment : Fragment() {
         }
     }
 
-    fun getDBFileListFromBackupFolder(folderId: String, service: Drive): List<File> {
+    private fun getDBFileListFromBackupFolder(folderId: String, service: Drive): List<File> {
         var files: List<File> = emptyList()
         val query = "mimeType != 'application/vnd.google-apps.folder' and '$folderId' in parents and trashed = false"
         val request = service.files().list().setQ(query)
@@ -231,7 +235,7 @@ class ContactBackupFragment : Fragment() {
         return files
     }
 
-    fun saveFileToLocalDBFolder(file: File, localFilename: String, service: Drive) {
+    private fun saveFileToLocalDBFolder(file: File, localFilename: String, service: Drive) {
 
         try {
 
