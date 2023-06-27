@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_contact_backup.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.*
+import java.io.IOException
 
 
 private const val TAG = "ContactBackupFragment"
@@ -76,7 +76,6 @@ class ContactBackupFragment : Fragment() {
     }
 
 
-    // ****
     private fun uploadFileToGoogleDrive(context: Context, fileName: String) {
 
         mDrive.let { googleDriveService ->
@@ -137,6 +136,8 @@ class ContactBackupFragment : Fragment() {
                             val file3 = googleDriveService.files().create(fileMetadata3, mediaContent3).setFields("id").execute()
                             Log.d(TAG, "Uploaded file: name=${file3.name}, id=${file3.id}")
 
+                            activity!!.runOnUiThread { Toast.makeText(context, "Backup loaded in $BACKUP_DIR_NAME folder", Toast.LENGTH_LONG).show() }
+
                         }
                     }
                 }
@@ -176,7 +177,7 @@ class ContactBackupFragment : Fragment() {
     }
 
 
-    // ****
+
     private fun downloadBackupFromGoogleDrive(context: Context) {
 
         mDrive.let { googleDriveService ->
@@ -187,10 +188,9 @@ class ContactBackupFragment : Fragment() {
                         launch {
 
                             val availableDirIdList = getBackupDBDirIdListInGoogleDrive(googleDriveService)
-
                             if(availableDirIdList.isEmpty()){
                                 Log.d(TAG, "No directories found with name $BACKUP_DIR_NAME.")
-                                Toast.makeText(context, "No directories found with name $BACKUP_DIR_NAME", Toast.LENGTH_LONG).show()
+                                activity!!.runOnUiThread { Toast.makeText(context, "No directories found with name $BACKUP_DIR_NAME", Toast.LENGTH_LONG).show() }
                             } else{
 
                                 var dBFileList = getDBFileListFromBackupFolder(availableDirIdList.get(0) ,googleDriveService)
@@ -203,6 +203,8 @@ class ContactBackupFragment : Fragment() {
                                     saveFileToLocalDBFolder(dbFile1!!, BACKUP_FILE_NAME, googleDriveService)
                                     saveFileToLocalDBFolder(dbFile2!!, BACKUP_FILE_NAME_SHM, googleDriveService)
                                     saveFileToLocalDBFolder(dbFile3!!, BACKUP_FILE_NAME_WAL, googleDriveService)
+
+                                    activity!!.runOnUiThread { Toast.makeText(context, "Backup saved locally", Toast.LENGTH_LONG).show() }
 
                                 }
 
