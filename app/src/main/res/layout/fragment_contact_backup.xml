@@ -15,20 +15,19 @@
         <TableRow
             android:id="@+id/tableRowBackup1"
             android:padding="20dp">
-
             <ImageView
                 android:id="@+id/imageViewSave"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:scaleType="fitStart"
-                android:src="@android:drawable/ic_menu_save" />
+                android:src="@android:drawable/ic_menu_save"/>
             <TextView
                 android:id="@+id/textViewBackup"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="@string/backup"
                 android:textAlignment="textStart"
-                android:textSize="50sp" />
+                android:textSize="50sp"/>
         </TableRow>
     </TableLayout>
 
@@ -55,5 +54,16 @@
                 android:text="@string/load"/>
         </TableRow>
     </TableLayout>
+
+    <TextView
+        android:layout_marginTop="150sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_restart"
+        android:textColor="#009688"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:padding="3dp"/>
+
 
 </FrameLayout>

@@ -17,6 +17,7 @@
     <string name="close">Close</string>
     <string name="alarm_off">Alarm off</string>
     <string name="alarm_on">Alarm on</string>
+    <string name="text_restart">Restart the app after the backup is loaded</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="show_date_picker">SET DATA</string> <!-- <= There's bug in text rendering, no capitalisation, thus here are capitals -->
