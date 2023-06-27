@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contact_cloud_fragment">
+
+    <data>
+        <variable
+            name="contactBackupViewModel"
+            type="com.example.android.happybirthdates.contactcloud.ContactCloudViewModel" />
+    </data>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1"> <!-- stretch the second column of the layout-->
+        <TableRow
+            android:id="@+id/tableRowCloud1"
+            android:padding="5dip">
+            <ImageView
+                android:id="@+id/imageViewCloud"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_cloud_download" />
+            <TextView
+                android:id="@+id/textViewCloud"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/cloud"
+                android:textAlignment="textStart"
+                android:textSize="50sp" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRowCloud2"
+            android:padding="5dip"
+            android:gravity="center">
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onGoogleSignInClicked" />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableRowCloud3"
+            android:padding="5dip">
+            <Button
+                android:id="@+id/sign_out_button"
+                style="@style/ContactButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out" />
+            <Button
+                android:id="@+id/disconnect_button"
+                style="@style/ContactButtons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out_disconnect" />
+        </TableRow>
+    </TableLayout>
+
+</layout>

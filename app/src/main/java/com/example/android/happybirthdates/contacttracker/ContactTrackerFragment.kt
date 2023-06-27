@@ -19,17 +19,21 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
-import com.google.android.material.snackbar.Snackbar
 
 import android.widget.CompoundButton
-import androidx.annotation.NonNull
-import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
+
+
+
+private const val TAG = "ContactTrackerFragment"
+
+
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
  * displayed in RecyclerView.
  */
 class ContactTrackerFragment : Fragment() {
+
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
@@ -48,7 +52,7 @@ class ContactTrackerFragment : Fragment() {
 
         //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) isContactDeleted & (v) database  & (v) application.
         val  viewModelFactory = if (arguments != null){
-            ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(arguments!!).isContactDeleted, dbPerson, application)
+            ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(requireArguments()).isContactDeleted, dbPerson, application)
         } else{
             ContactTrackerViewModelFactory(false, dbPerson, application)
         }
@@ -69,6 +73,17 @@ class ContactTrackerFragment : Fragment() {
                 this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment(0))
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
+            }
+        })
+        //--------------------
+
+        //-------------------- 'buttonBackup' <Button>;
+        //---------- Observer; Navigating.
+        contactTrackerViewModel.navigateToContactStorage.observe(viewLifecycleOwner, Observer {
+            if (it == true) {
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactStorageFragment())
+                // Reset state to make sure we only navigate once, even if the device has a configuration change.
+                contactTrackerViewModel.doneNavigatingToContactStorageFragment()
             }
         })
         //--------------------
@@ -96,7 +111,7 @@ class ContactTrackerFragment : Fragment() {
                     getString(R.string.alarm_off_toast)
                 }
                 // Show toast to say the alarm is turned on or off.
-                Toast.makeText(context!!, toastMsg, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
             }
         )
         //--------------------

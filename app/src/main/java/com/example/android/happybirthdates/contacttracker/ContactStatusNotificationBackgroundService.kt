@@ -44,7 +44,7 @@ class ContactStatusNotificationBackgroundService : Service() {
 
         //---------- (c) AlarmManager <- (c) AlarmReceiver, i.e. ((v) notifyPendingIntent <- (v) notifyIntent).
         val notifyIntent = Intent(this, AlarmReceiver::class.java) // IMPORTANT! Here's connection between (c) AlarmManager & (c) AlarmReceiver.
-        notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_IMMUTABLE)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HALF_DAY, notifyPendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000

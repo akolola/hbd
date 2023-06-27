@@ -31,13 +31,20 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
             _navigateToContactCreator.value = true
         }
     }
-
+    //--------------------
     //---------- <ImageView> 'imageViewContactPicture' is clicked.
     fun onContactClicked(contactId: Long) {
         _navigateToContactDetails.value = contactId
     }
     //--------------------
 
+    //----------  <Button> 'buttonStorage' is clicked.
+    fun onStorageTracking() {
+        viewModelScope.launch {
+            _navigateToContactStorage.value = true
+        }
+    }
+    //--------------------
 
 
     //--------------------------- Navigation -------------------------------------------------------
@@ -51,6 +58,7 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
 
     //---------- (c) ContactTrackerFragment => (c) ContactDetailsFragment.
     private val _navigateToContactDetails = MutableLiveData<Long>()
+
     val navigateToContactDetails
         get() = _navigateToContactDetails
     fun doneNavigatingToContactDetailsFragment() {
@@ -58,6 +66,12 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     }
     //--------------------
 
-
+    //---------- (c) ContactTrackerFragment => (c) ContactStorageFragment.
+    private val _navigateToContactStorage = MutableLiveData<Boolean?>()
+    val navigateToContactStorage: LiveData<Boolean?>
+        get() = _navigateToContactStorage
+    fun doneNavigatingToContactStorageFragment() {
+        _navigateToContactStorage.value = null
+    }
 
 }

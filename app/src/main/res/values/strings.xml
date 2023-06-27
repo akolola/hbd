@@ -4,12 +4,20 @@
 
     <!-- Button labels -->
     <string name="create">Create</string>
+    <string name="backup">Backup</string>
+    <string name="cloud">Cloud</string>
+    <string name="storage">Storage</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="sign_out">Sign out</string>
+    <string name="sign_out_disconnect">Sign out and disconnect</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
     <string name="submit">Submit</string>
     <string name="close">Close</string>
     <string name="alarm_off">Alarm off</string>
     <string name="alarm_on">Alarm on</string>
+    <string name="text_restart">Restart the app after the backup is loaded</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="show_date_picker">SET DATA</string> <!-- <= There's bug in text rendering, no capitalisation, thus here are capitals -->
@@ -36,13 +44,18 @@
     <string name="today">today</string>
     <string name="soon">soon</string>
 
+
     <!-- App title and fragment titles -->
     <string name="app_name">Happy Birthdates</string>
     <string name="fragment_contact_tracker">ContactTrackerFragment</string>
     <string name="fragment_contact_creator">ContactCreatorFragment</string>
+    <string name="fragment_contact_backup">ContactBackupFragment</string>
     <string name="fragment_contact_details">ContactDetailsFragment</string>
+    <string name="fragment_storage_backup">ContactStorageFragment</string>
+
 
     <!-- Tech inner strings -->
     <string name="service_name">contact status</string>
+    <string name="googleClientId">465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com</string>
 
 </resources>

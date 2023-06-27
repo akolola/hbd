@@ -37,11 +37,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+
 private const val TAG = "ContactCreatorFragment"
+
 
 
 class ContactCreatorFragment : Fragment(), DateSelected {
 
+
+    companion object {
+        private const val PERMISSION_CODE = 1001
+    }
 
 
     /**
@@ -155,8 +161,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     //--------------------------- Image Picker -----------------------------------------------------
-    companion object {private const val PERMISSION_CODE = 1001}
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode) {
             PERMISSION_CODE -> {
@@ -219,7 +223,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
      *
      * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
      */
-    private fun loadImageFromInternalStorage(imageFileName: String) {
+    private fun loadImageFromInternalStorage(imageFileName: String)   {
         try {
             val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
             val fin = FileInputStream(absolutePath)

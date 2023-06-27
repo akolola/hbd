@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "465961236651",
+    "project_id": "happybirthdates-155bc",
+    "storage_bucket": "happybirthdates-155bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465961236651:android:13a463472b73457950dfee",
+        "android_client_info": {
+          "package_name": "com.example.android.happybirthdates"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465961236651-vdd0ohnn5dqourtefrhiacpej1mfs724.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.happybirthdates",
+            "certificate_hash": "baf0351d9498620bee22a63ea8ddfeecf24245cc"
+          }
+        },
+        {
+          "client_id": "465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3wBLl4aOo5OD9p6h16TTKycFjv7omd1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
