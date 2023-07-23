@@ -7,8 +7,11 @@ import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 
 import androidx.core.content.ContextCompat
+import com.example.android.happybirthdates.R
 
 
 private const val TAG = "ConStatNotfnBkgrndServ"
@@ -30,7 +33,6 @@ class ContactStatusNotificationBackgroundService : Service() {
 
         Log.i(TAG, "(m) onStartCommand.  Service started by user. Received start id $startId: $intent") ///<-> Toast.makeText(this, "(m) onStartCommand. Service started by user.", Toast.LENGTH_LONG).show()
 
-
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
         var mContext = applicationContext
 
@@ -47,15 +49,23 @@ class ContactStatusNotificationBackgroundService : Service() {
         notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_IMMUTABLE)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HALF_DAY, notifyPendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
+        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, notifyPendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
 
-        return START_NOT_STICKY
-        //--------------------
+
+        //-------------------- (v) START_STICKY to ensure the service keeps running even if the system destroys and recreates it
+        return START_STICKY
+
     }
 
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        Log.i(TAG, "(m) onCreate. Service created")
+    }
+
 
     override fun onDestroy() {
 
@@ -63,12 +73,12 @@ class ContactStatusNotificationBackgroundService : Service() {
 
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
-        alarmManager?.cancel(notifyPendingIntent)
+        //alarmManager?.cancel(notifyPendingIntent)
         //--------------------
 
         //-------------------- Notification.
         //---------- (c) NotificationManager Service. Turn off.
-        mNotificationManager!!.cancelAll()
+        //mNotificationManager!!.cancelAll()
         //--------------------
     }
 
