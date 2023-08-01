@@ -18,6 +18,13 @@
 
 
         <!--                                  Service List                                       -->
+
+        <service
+            android:name=".contacttracker.RestartingService"
+            android:enabled="true"
+            android:exported="false" />
+
+
         <service
             android:name=".contacttracker.ContactStatusNotificationBackgroundService"
             android:enabled="true"
