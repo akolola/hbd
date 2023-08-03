@@ -2,6 +2,7 @@ package com.example.android.happybirthdates.contacttracker
 
 
 import android.content.Intent
+import android.os.Build
 
 import android.os.Bundle
 
@@ -95,9 +96,13 @@ class ContactTrackerFragment : Fragment() {
                 //--- A. 'alarmToggle' <ToggleButton> is on.
                 val toastMsg: String = if (isChecked) {
 
-                    //- (c) ContactStatusService for Push Notifications on.
-                    requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
-
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        //- (c) ContactStatusService for Push Notifications on.
+                        requireActivity().startForegroundService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+                    } else {
+                        //- (c) ContactStatusService for Push Notifications on.
+                        requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+                    }
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
                 }
