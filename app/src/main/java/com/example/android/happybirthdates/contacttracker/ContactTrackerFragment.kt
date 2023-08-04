@@ -1,16 +1,15 @@
 package com.example.android.happybirthdates.contacttracker
 
-
+import android.content.Context
+import android.app.ActivityManager
 import android.content.Intent
-import android.os.Build
-
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -20,9 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
-
-import android.widget.CompoundButton
-
+import kotlinx.android.synthetic.main.fragment_contact_tracker.*
 
 
 private const val TAG = "ContactTrackerFragment"
@@ -36,10 +33,12 @@ private const val TAG = "ContactTrackerFragment"
 class ContactTrackerFragment : Fragment() {
 
 
+
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
@@ -91,18 +90,19 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
+
+
+        //binding.alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
+
         binding.alarmToggle.setOnCheckedChangeListener(
+
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 //--- A. 'alarmToggle' <ToggleButton> is on.
                 val toastMsg: String = if (isChecked) {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        //- (c) ContactStatusService for Push Notifications on.
-                        requireActivity().startForegroundService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
-                    } else {
-                        //- (c) ContactStatusService for Push Notifications on.
-                        requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
-                    }
+                    //- (c) ContactStatusService for Push Notifications on.
+                    requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
                 }
@@ -159,6 +159,24 @@ class ContactTrackerFragment : Fragment() {
         return binding.root
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
+    }
+
+
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val activityManager = requireActivity().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningServices = activityManager.getRunningServices(Integer.MAX_VALUE)
+
+        for (serviceInfo in runningServices) {
+            if (serviceInfo.service.className == serviceClass.name) {
+                return true
+            }
+        }
+        return false
+    }
 
 
 }

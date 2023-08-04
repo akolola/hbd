@@ -101,16 +101,16 @@ class ContactStatusNotificationBackgroundService : Service() {
 
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
-        ///alarmManager?.cancel(notifyPendingIntent)
+        alarmManager?.cancel(notifyPendingIntent)
         //--------------------
 
         //-------------------- Notification.
         //---------- (c) NotificationManager Service. Turn off.
-        ///mNotificationManager!!.cancelAll()
+        mNotificationManager!!.cancelAll()
         //--------------------
 
         // Restart the service after a delay
-        handler.postDelayed(runnable, restartDelay)
+       handler.postDelayed(runnable, restartDelay)
     }
 
 
