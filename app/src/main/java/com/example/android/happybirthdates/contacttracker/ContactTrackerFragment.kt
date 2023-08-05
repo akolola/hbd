@@ -3,12 +3,14 @@ package com.example.android.happybirthdates.contacttracker
 import android.content.Context
 import android.app.ActivityManager
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -37,6 +39,7 @@ class ContactTrackerFragment : Fragment() {
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
 
@@ -101,7 +104,7 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService for Push Notifications on.
-                    requireActivity().startService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+                    requireActivity().startForegroundService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
 
                     //- (v) toastMsg -"on"->.
                     getString(R.string.alarm_on_toast)
