@@ -2,9 +2,13 @@ package com.example.android.happybirthdates.contacttracker
 
 import android.content.Context
 import android.app.ActivityManager
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +38,7 @@ private const val TAG = "ContactTrackerFragment"
  */
 class ContactTrackerFragment : Fragment() {
 
-
+    private val JOB_ID = 123 // Unique job ID
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
@@ -94,6 +98,7 @@ class ContactTrackerFragment : Fragment() {
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
 
+        val foregroundServiceIntent = Intent(context, ContactStatusNotificationBackgroundService()::class.java)
 
         //binding.alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
 
@@ -104,19 +109,20 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService for Push Notifications on.
-                    requireActivity().startForegroundService(Intent(context, ContactStatusNotificationBackgroundService()::class.java))
+                    startService() //requireActivity().startForegroundService(foregroundServiceIntent)
 
                     //- (v) toastMsg -"on"->.
-                    getString(R.string.alarm_on_toast)
+                    "Service started"//getString(R.string.alarm_on_toast)
                 }
                 //--- B. 'alarmToggle' <ToggleButton> is off.
                 else {
 
                     //- (c) ContactStatusService for Push Notifications off.
-                    requireActivity().stopService(Intent(context, ContactStatusNotificationBackgroundService::class.java))
+                    stopService()//requireActivity().stopService(foregroundServiceIntent)
+
 
                     //- (v) toastMsg -"off"->.
-                    getString(R.string.alarm_off_toast)
+                    "Service stoped"//getString(R.string.alarm_off_toast)
                 }
                 // Show toast to say the alarm is turned on or off.
                 Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
@@ -162,6 +168,31 @@ class ContactTrackerFragment : Fragment() {
         return binding.root
     }
 
+
+
+//==============================================================================================================================================
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun startService() {
+        val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val componentName = ComponentName(requireContext(), CustomJobService::class.java)
+        val jobInfo = JobInfo.Builder(JOB_ID, componentName)
+            .setRequiresCharging(true)
+            .setPersisted(true)
+            .build()
+
+        jobScheduler.schedule(jobInfo)
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun stopService() {
+        val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.cancel(JOB_ID)
+    }
+
+//==============================================================================================================================================
 
     override fun onResume() {
         super.onResume()

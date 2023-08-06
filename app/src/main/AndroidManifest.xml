@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.android.happybirthdates">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BIND_JOB_SERVICE"
+        tools:ignore="ProtectedPermissions" />
+
 
     <application
         android:allowBackup="true"
@@ -18,20 +25,17 @@
 
 
         <!--                                  Service List                                       -->
-
-        <service
-            android:name=".contacttracker.RestartingService"
-            android:enabled="true"
-            android:exported="false" />
-
-
         <service
             android:name=".contacttracker.ContactStatusNotificationBackgroundService"
             android:enabled="true"
-            android:exported="false"
             android:stopWithTask="false"
-            android:icon="@drawable/ic_contact_status_foreground"
-            android:label="@string/service_name"/>
+            android:label="@string/service_name"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
+
+        <service android:name=".contacttracker.CustomJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
 
         <activity android:name=".MainActivity"
             android:exported="true">

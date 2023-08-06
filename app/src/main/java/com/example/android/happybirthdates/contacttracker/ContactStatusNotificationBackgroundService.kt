@@ -9,17 +9,19 @@ import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
+
+
 
 import androidx.core.content.ContextCompat
-import com.example.android.happybirthdates.R
 
 
 private const val TAG = "ConStatNotfnBkgrndServ"
 
 class ContactStatusNotificationBackgroundService : Service() {
 
+    companion object {
+        private const val CHANNEL_ID = "ForegroundServiceChannel"
+    }
 
     private val restartDelay = 1000L // Delay in milliseconds before the service restarts
     private val handler = Handler()
@@ -31,13 +33,10 @@ class ContactStatusNotificationBackgroundService : Service() {
     //---------- Technical (v)s for Notifications.
     private val REQUEST_CODE = 0
     private var alarmManager : AlarmManager? = null
-    var notifyPendingIntent: PendingIntent? = null
+    var pendingIntent: PendingIntent? = null
 
     //---------- (v) for Push Notifications.
     private var mNotificationManager: NotificationManager? = null
-
-
-
 
 
 
@@ -53,6 +52,8 @@ class ContactStatusNotificationBackgroundService : Service() {
             val intent = Intent(applicationContext, ContactStatusNotificationBackgroundService::class.java)
             startService(intent)
         }
+
+
     }
 
 
@@ -78,15 +79,16 @@ class ContactStatusNotificationBackgroundService : Service() {
         alarmManager = ContextCompat.getSystemService(this, AlarmManager::class.java)
 
         //---------- (c) AlarmManager <- (c) AlarmReceiver, i.e. ((v) notifyPendingIntent <- (v) notifyIntent).
-        val notifyIntent = Intent(this, AlarmReceiver::class.java) // IMPORTANT! Here's connection between (c) AlarmManager & (c) AlarmReceiver.
-        notifyPendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, notifyIntent, PendingIntent.FLAG_IMMUTABLE)
+        val intent = Intent(this, AlarmReceiver::class.java) // IMPORTANT! Here's connection between (c) AlarmManager & (c) AlarmReceiver.
+        pendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, notifyPendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
+        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, pendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
 
 
         //-------------------- (v) START_STICKY to ensure the service keeps running even if the system destroys and recreates it
         return START_STICKY
+
 
     }
 
@@ -99,18 +101,25 @@ class ContactStatusNotificationBackgroundService : Service() {
         Log.d(TAG, "(m) onDestroy. Service destroyed.")
         Toast.makeText(this, "(m) onDestroy. Service destroyed.", Toast.LENGTH_LONG).show()
 
+
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
-        alarmManager?.cancel(notifyPendingIntent)
+        //alarmManager?.cancel(pendingIntent)
         //--------------------
-
         //-------------------- Notification.
         //---------- (c) NotificationManager Service. Turn off.
-        mNotificationManager!!.cancelAll()
-        //--------------------
+        //mNotificationManager!!.cancelAll()
 
+
+        //--------------------
         // Restart the service after a delay
-       handler.postDelayed(runnable, restartDelay)
+        handler.postDelayed(runnable, restartDelay)
+
+
+        // Stop the service and remove the notification
+        stopForeground(true)
+        stopSelf()
+
     }
 
 

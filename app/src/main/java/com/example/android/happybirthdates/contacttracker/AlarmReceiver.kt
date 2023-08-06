@@ -37,7 +37,7 @@ class AlarmReceiver : BroadcastReceiver() {
     //--------------------------- Notification -----------------------------------------------------
     companion object {
         //---------- (v)s for Notification.
-        private const val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+        private const val CHANNEL_ID = "ForegroundServiceChannel"
         //---------- (v)s for |resource|.
         private const val RESOURCE_GIFT_PACKAGE_NAME = "ic_gift_box_foreground"
         private const val RESOURCE_TYPE = "mipmap"
@@ -136,7 +136,7 @@ class AlarmReceiver : BroadcastReceiver() {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun buildNotificationChannel(): NotificationChannel {
-        val notificationChannel = NotificationChannel(PRIMARY_CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
+        val notificationChannel = NotificationChannel(CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.enableLights(true)
         notificationChannel.lightColor = Color.BLUE
         notificationChannel.enableVibration(true)
@@ -159,7 +159,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val bitmapGiftBox = convertDrawableToBitmap(drawableGiftBox) // Alternative to not working line: val bitmap = BitmapFactory.decodeResource(context.resources, frame1Id);
 
         //---- (c) [Notification]Builder.
-        var notificationBuilder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+        var notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_gift_box)
             .setContentTitle(context.getString(R.string.notification_title))
             .setContentText(contentText)
