@@ -26,7 +26,8 @@ import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import kotlinx.android.synthetic.main.fragment_contact_tracker.*
-
+import android.app.NotificationManager
+import androidx.core.content.ContextCompat
 
 private const val TAG = "ContactTrackerFragment"
 
@@ -37,6 +38,10 @@ private const val TAG = "ContactTrackerFragment"
  * displayed in RecyclerView.
  */
 class ContactTrackerFragment : Fragment() {
+
+    //---------- (v) for Push Notifications.
+
+    //private var mNotificationManager = ContextCompat.getSystemService(requireActivity(), NotificationManager::class.java)
 
     private val JOB_ID = 123 // Unique job ID
 
@@ -98,9 +103,10 @@ class ContactTrackerFragment : Fragment() {
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
 
-        val foregroundServiceIntent = Intent(context, ContactStatusNotificationBackgroundService()::class.java)
-
+        //val activeNotifications = mNotificationManager?.getActiveNotifications()
         //binding.alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
+
+
 
         binding.alarmToggle.setOnCheckedChangeListener(
 
@@ -109,7 +115,7 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService for Push Notifications on.
-                    startService() //requireActivity().startForegroundService(foregroundServiceIntent)
+                    startService()
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -118,11 +124,10 @@ class ContactTrackerFragment : Fragment() {
                 else {
 
                     //- (c) ContactStatusService for Push Notifications off.
-                    stopService()//requireActivity().stopService(foregroundServiceIntent)
-
+                    stopService()
 
                     //- (v) toastMsg -"off"->.
-                    "Service stoped"//getString(R.string.alarm_off_toast)
+                    "Service stopped"//getString(R.string.alarm_off_toast)
                 }
                 // Show toast to say the alarm is turned on or off.
                 Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
@@ -193,10 +198,17 @@ class ContactTrackerFragment : Fragment() {
     }
 
 //==============================================================================================================================================
+/*
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {
         super.onResume()
-        alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
+            mNotificationManager?.getActiveNotifications()
+        } else {
+            TODO("VERSION.SDK_INT < M")
+        }
+        alarmToggle.isChecked = isServiceRunning(CustomJobService::class.java)
+
     }
 
 
@@ -212,5 +224,6 @@ class ContactTrackerFragment : Fragment() {
         return false
     }
 
+*/
 
 }

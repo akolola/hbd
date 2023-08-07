@@ -13,6 +13,10 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
+private const val TAG = "CustomJobService"
+
+
+
 @SuppressLint("SpecifyJobSchedulerIdRange")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class CustomJobService : JobService() {
@@ -25,22 +29,12 @@ class CustomJobService : JobService() {
     private var alarmManager : AlarmManager? = null
     var pendingIntent: PendingIntent? = null
 
-    //---------- (v) for Push Notifications.
-    private var mNotificationManager: NotificationManager? = null
-
+    // Start background task here
     override fun onStartJob(params: JobParameters): Boolean {
         Log.d(TAG, "CustomJobService onStartJob")
-        // Start your background task here
-
-
 
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
         var mContext = applicationContext
-
-
-        //-------------------- Notification.
-        //---------- (c) NotificationManager.
-        mNotificationManager = ContextCompat.getSystemService(mContext!!, NotificationManager::class.java)
 
         //-------------------- Alarm.
         //---------- (c) AlarmManager.
@@ -53,37 +47,21 @@ class CustomJobService : JobService() {
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, pendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
 
-
-
-
-
-
-
-
-
         // Return true if the job needs to continue running in the background
         return true
     }
 
+    // Stop any ongoing tasks or clean up resources
     override fun onStopJob(params: JobParameters): Boolean {
         Log.d(TAG, "CustomJobService onStopJob")
-        // Stop any ongoing tasks or clean up resources here
-
 
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
         alarmManager?.cancel(pendingIntent)
-        //--------------------
-        //-------------------- Notification.
-        //---------- (c) NotificationManager Service. Turn off.
-        mNotificationManager!!.cancelAll()
-
 
         // Return true to reschedule the job if it needs to be run again
         return true
     }
 
-    companion object {
-        private const val TAG = "CustomJobService"
-    }
+
 }
