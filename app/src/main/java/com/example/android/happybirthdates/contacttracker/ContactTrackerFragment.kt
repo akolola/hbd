@@ -2,6 +2,7 @@ package com.example.android.happybirthdates.contacttracker
 
 import android.content.Context
 import android.app.ActivityManager
+import android.app.AlarmManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -27,10 +28,12 @@ import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import kotlinx.android.synthetic.main.fragment_contact_tracker.*
 import android.app.NotificationManager
+import android.app.PendingIntent
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 
 private const val TAG = "ContactTrackerFragment"
-
 
 
 /**
@@ -39,11 +42,37 @@ private const val TAG = "ContactTrackerFragment"
  */
 class ContactTrackerFragment : Fragment() {
 
+    // Initialize the AlarmManager
+    private var alarmManager : AlarmManager? = null
+
+
+
+
+
+    // This method will return a list of currently active PendingIntent objects associated with your application alarms
+    fun getActiveAlarms(): List<PendingIntent> {
+        val activeAlarms = mutableListOf<PendingIntent>()
+
+        // Create an empty intent with a unique action as the basis for comparing pending intents
+        val comparisonIntent = Intent(activity, AlarmReceiver::class.java) /// Intent("com.example.android.yourapp.ALARM_COMPARE_ACTION")
+
+        for (requestCode in 0 until 10) {
+            val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, comparisonIntent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)
+
+            if (pendingIntent != null) {
+                // The pendingIntent is not null, meaning the alarm is currently active
+                activeAlarms.add(pendingIntent)
+            }
+        }
+
+        return activeAlarms
+    }
+
     //---------- (v) for Push Notifications.
 
     //private var mNotificationManager = ContextCompat.getSystemService(requireActivity(), NotificationManager::class.java)
 
-    private val JOB_ID = 123 // Unique job ID
+    private val JOB_ID = 2222 // Unique job ID
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
@@ -51,6 +80,7 @@ class ContactTrackerFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
@@ -114,8 +144,13 @@ class ContactTrackerFragment : Fragment() {
                 //--- A. 'alarmToggle' <ToggleButton> is on.
                 val toastMsg: String = if (isChecked) {
 
+                    val alarmList1= getActiveAlarms()
+
                     //- (c) ContactStatusService for Push Notifications on.
                     startService()
+
+
+                    val alarmList2= getActiveAlarms()
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -123,8 +158,16 @@ class ContactTrackerFragment : Fragment() {
                 //--- B. 'alarmToggle' <ToggleButton> is off.
                 else {
 
+
+                    val alarmList1= getActiveAlarms()
+
                     //- (c) ContactStatusService for Push Notifications off.
                     stopService()
+
+                    alarmManager?.cancel(alarmList1.get(0))
+                    alarmList1.get(0).cancel()
+
+                    val alarmList2= getActiveAlarms()
 
                     //- (v) toastMsg -"off"->.
                     "Service stopped"//getString(R.string.alarm_off_toast)
@@ -198,6 +241,14 @@ class ContactTrackerFragment : Fragment() {
     }
 
 //==============================================================================================================================================
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onResume() {
+        super.onResume()
+        val alarmList= getActiveAlarms()
+        "Service resumed"//getString(R.string.alarm_off_toast)
+    }
+
 /*
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

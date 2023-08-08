@@ -25,7 +25,7 @@ class CustomJobService : JobService() {
     //--------------------------- Notification -----------------------------------------------------
     //-------------------- (c) AlarmManager.
     //---------- Technical (v)s for Notifications.
-    private val REQUEST_CODE = 0
+    private val REQUEST_CODE = 2
     private var alarmManager : AlarmManager? = null
     var pendingIntent: PendingIntent? = null
 
