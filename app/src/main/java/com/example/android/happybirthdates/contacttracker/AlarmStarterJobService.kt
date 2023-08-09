@@ -12,12 +12,12 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
-private const val TAG = "CustomJobService"
+private const val TAG = "AlarmStarterJobService"
 private const val ALARM_REQUEST_CODE = 1111
 
 @SuppressLint("SpecifyJobSchedulerIdRange")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class CustomJobService : JobService() {
+class AlarmStarterJobService : JobService() {
 
 
     //--------------------------- Notification -----------------------------------------------------

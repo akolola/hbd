@@ -186,7 +186,7 @@ class ContactTrackerFragment : Fragment() {
 
     private fun startService() {
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-        val componentName = ComponentName(requireContext(), CustomJobService::class.java)
+        val componentName = ComponentName(requireContext(), AlarmStarterJobService::class.java)
         val jobInfo = JobInfo.Builder(JOB_ID, componentName)
             .setRequiresCharging(true)
             .setPersisted(true)
