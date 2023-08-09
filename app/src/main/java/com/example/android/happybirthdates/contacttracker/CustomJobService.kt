@@ -2,7 +2,6 @@ package com.example.android.happybirthdates.contacttracker
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobParameters
 import android.app.job.JobService
@@ -14,8 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
 private const val TAG = "CustomJobService"
-
-
+private const val ALARM_REQUEST_CODE = 1111
 
 @SuppressLint("SpecifyJobSchedulerIdRange")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -25,7 +23,7 @@ class CustomJobService : JobService() {
     //--------------------------- Notification -----------------------------------------------------
     //-------------------- (c) AlarmManager.
     //---------- Technical (v)s for Notifications.
-    private val REQUEST_CODE = 2
+
     private var alarmManager : AlarmManager? = null
     var pendingIntent: PendingIntent? = null
 
@@ -42,7 +40,7 @@ class CustomJobService : JobService() {
 
         //---------- (c) AlarmManager <- (c) AlarmReceiver, i.e. ((v) notifyPendingIntent <- (v) notifyIntent).
         val intent = Intent(this, AlarmReceiver::class.java) // IMPORTANT! Here's connection between (c) AlarmManager & (c) AlarmReceiver.
-        pendingIntent = PendingIntent.getBroadcast(mContext, REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE)
+        pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
         alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, pendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
@@ -58,6 +56,7 @@ class CustomJobService : JobService() {
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
         alarmManager?.cancel(pendingIntent)
+        pendingIntent!!.cancel()
 
         // Return true to reschedule the job if it needs to be run again
         return true

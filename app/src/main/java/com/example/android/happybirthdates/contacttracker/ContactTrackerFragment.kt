@@ -1,7 +1,6 @@
 package com.example.android.happybirthdates.contacttracker
 
 import android.content.Context
-import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -9,14 +8,12 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,65 +23,40 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
-import kotlinx.android.synthetic.main.fragment_contact_tracker.*
-import android.app.NotificationManager
 import android.app.PendingIntent
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 
 private const val TAG = "ContactTrackerFragment"
+private const val ALARM_REQUEST_CODE = 1111
 
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
  * displayed in RecyclerView.
  */
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class ContactTrackerFragment : Fragment() {
 
     // Initialize the AlarmManager
-    private var alarmManager : AlarmManager? = null
+    private var mAlarmManager : AlarmManager? = null
 
-
-
-
-
-    // This method will return a list of currently active PendingIntent objects associated with your application alarms
-    fun getActiveAlarms(): List<PendingIntent> {
-        val activeAlarms = mutableListOf<PendingIntent>()
-
-        // Create an empty intent with a unique action as the basis for comparing pending intents
-        val comparisonIntent = Intent(activity, AlarmReceiver::class.java) /// Intent("com.example.android.yourapp.ALARM_COMPARE_ACTION")
-
-        for (requestCode in 0 until 10) {
-            val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, comparisonIntent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)
-
-            if (pendingIntent != null) {
-                // The pendingIntent is not null, meaning the alarm is currently active
-                activeAlarms.add(pendingIntent)
-            }
-        }
-
-        return activeAlarms
-    }
 
     //---------- (v) for Push Notifications.
+    private val JOB_ID = 2222
 
-    //private var mNotificationManager = ContextCompat.getSystemService(requireActivity(), NotificationManager::class.java)
-
-    private val JOB_ID = 2222 // Unique job ID
+    private lateinit var binding: FragmentContactTrackerBinding
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
+
+        mAlarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         //--------------------------- Preparation --------------------------------------------------
-        //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
-        val binding: FragmentContactTrackerBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
+
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
@@ -132,25 +104,14 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
-
-        //val activeNotifications = mNotificationManager?.getActiveNotifications()
-        //binding.alarmToggle.isChecked = isServiceRunning(ContactStatusNotificationBackgroundService::class.java)
-
-
-
         binding.alarmToggle.setOnCheckedChangeListener(
 
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 //--- A. 'alarmToggle' <ToggleButton> is on.
                 val toastMsg: String = if (isChecked) {
 
-                    val alarmList1= getActiveAlarms()
-
                     //- (c) ContactStatusService for Push Notifications on.
                     startService()
-
-
-                    val alarmList2= getActiveAlarms()
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -158,16 +119,8 @@ class ContactTrackerFragment : Fragment() {
                 //--- B. 'alarmToggle' <ToggleButton> is off.
                 else {
 
-
-                    val alarmList1= getActiveAlarms()
-
                     //- (c) ContactStatusService for Push Notifications off.
                     stopService()
-
-                    alarmManager?.cancel(alarmList1.get(0))
-                    alarmList1.get(0).cancel()
-
-                    val alarmList2= getActiveAlarms()
 
                     //- (v) toastMsg -"off"->.
                     "Service stopped"//getString(R.string.alarm_off_toast)
@@ -176,6 +129,11 @@ class ContactTrackerFragment : Fragment() {
                 Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
             }
         )
+
+        getActiveAlarm()?.let {
+            binding.alarmToggle.isChecked = true
+        }
+
         //--------------------
 
         //-------------------- 'recyclerContactListGrid' <RecyclerView>;
@@ -216,11 +174,16 @@ class ContactTrackerFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        getActiveAlarm()?.let {
+            binding.alarmToggle.isChecked = true
+        }
+        "Service resumed"//getString(R.string.alarm_off_toast)
+    }
 
 
-//==============================================================================================================================================
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun startService() {
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val componentName = ComponentName(requireContext(), CustomJobService::class.java)
@@ -233,48 +196,22 @@ class ContactTrackerFragment : Fragment() {
     }
 
 
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun stopService() {
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         jobScheduler.cancel(JOB_ID)
     }
 
-//==============================================================================================================================================
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onResume() {
-        super.onResume()
-        val alarmList= getActiveAlarms()
-        "Service resumed"//getString(R.string.alarm_off_toast)
+    // This method will return a list of currently active PendingIntent objects associated with your application alarms
+    fun getActiveAlarm(): PendingIntent? {
+
+        // Create an empty intent with a unique action as the basis for comparing pending intents
+        val comparisonIntent = Intent(activity, AlarmReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(activity, ALARM_REQUEST_CODE, comparisonIntent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)
+
+        return pendingIntent
     }
 
-/*
-
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onResume() {
-        super.onResume()
-            mNotificationManager?.getActiveNotifications()
-        } else {
-            TODO("VERSION.SDK_INT < M")
-        }
-        alarmToggle.isChecked = isServiceRunning(CustomJobService::class.java)
-
-    }
-
-
-    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        val activityManager = requireActivity().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val runningServices = activityManager.getRunningServices(Integer.MAX_VALUE)
-
-        for (serviceInfo in runningServices) {
-            if (serviceInfo.service.className == serviceClass.name) {
-                return true
-            }
-        }
-        return false
-    }
-
-*/
 
 }
