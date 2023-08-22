@@ -34,10 +34,11 @@ class AlarmStarterJobService : JobService() {
         Log.d(TAG, "CustomJobService onStartJob")
 
 
-        val parameter = params?.extras?.getString(PARAMETER_KEY)
-        if (parameter != null) {
+        val intervalMillis = params?.extras?.getString(PARAMETER_KEY)
+        if (intervalMillis != null) {
             // Perform your desired operation with the parameter
-            Toast.makeText(applicationContext, "Parameter: $parameter", Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(applicationContext, "Parameter: $intervalMillis", Toast.LENGTH_SHORT).show()
         }
 
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
@@ -52,7 +53,9 @@ class AlarmStarterJobService : JobService() {
         pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_IMMUTABLE)
 
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
-        alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30000, pendingIntent) //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
+        if (intervalMillis != null) {
+            alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), intervalMillis.toLong(), pendingIntent)
+        } //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
 
         // Return true if the job needs to continue running in the background
         return true
