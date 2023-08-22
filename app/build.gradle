@@ -85,6 +85,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$version_android_test" // Leave ver
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_android_espresso" // Leave ver
 
+    // required to avoid crash on Android 12 API 31
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
 
     //=== External =================================================================================
 
