@@ -25,6 +25,7 @@ import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import android.app.PendingIntent
 import android.os.PersistableBundle
+import android.widget.SeekBar
 
 private const val TAG = "ContactTrackerFragment"
 private const val ALARM_REQUEST_CODE = 1111
@@ -76,6 +77,9 @@ class ContactTrackerFragment : Fragment() {
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
 
+        //---------- (v) arg: (v) millisecondsBetweenNotifications -> (c) AlarmStarterJobService
+        var millisecondsBetweenNotifications : String = "3600000"
+
 
         //--------------------------- Processing ---------------------------------------------------
         binding.contactTrackerViewModel = contactTrackerViewModel
@@ -112,7 +116,7 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService for Push Notifications on.
-                    startService("30000")
+                    startService(millisecondsBetweenNotifications)
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -134,6 +138,38 @@ class ContactTrackerFragment : Fragment() {
         getActiveAlarm()?.let {
             binding.alarmToggle.isChecked = true
         }
+
+        //-------------------- 'seekBarNotificationFrequency' <SeekBar>;
+        binding.seekBarNotificationFrequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                when (progress) {
+                    0 -> { millisecondsBetweenNotifications = "60000"
+                        binding.textViewNotificationFrequency.text = "Notification frequency 1 min"
+                    }
+                    1 -> { millisecondsBetweenNotifications = "3600000"
+                        binding.textViewNotificationFrequency.text = "Notification frequency 1 hr"
+                    }
+                    2 -> { millisecondsBetweenNotifications = "21600000"
+                        binding.textViewNotificationFrequency.text = "Notification frequency 6 hrs"
+                    }
+                    3 -> { millisecondsBetweenNotifications = "43200000"
+                        binding.textViewNotificationFrequency.text = "Notification frequency 12 hrs"
+                    }
+                    else -> {
+                        binding.textViewNotificationFrequency.text = "Notification frequency N/A"
+                    }
+                }
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // empty
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // empty
+            }
+        })
 
         //--------------------
 
