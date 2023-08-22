@@ -35,10 +35,11 @@ class AlarmStarterJobService : JobService() {
 
 
         val intervalMillis = params?.extras?.getString(PARAMETER_KEY)
+        /*
         intervalMillis?.let {
             Toast.makeText(applicationContext, "Notification service (re)started", Toast.LENGTH_SHORT).show()
         }
-
+        */
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
         var mContext = applicationContext
 

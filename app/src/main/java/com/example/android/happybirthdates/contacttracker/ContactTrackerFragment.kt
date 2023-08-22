@@ -121,7 +121,6 @@ class ContactTrackerFragment : Fragment() {
                     // Disable 'seekBarNotificationFrequency' <SeekBar>
                     binding.seekBarNotificationFrequency.isEnabled = false
                     binding.seekBarNotificationFrequency.alpha = 0.5f
-                    binding.seekBarNotificationFrequency.thumb.mutate().alpha = 0
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -136,7 +135,6 @@ class ContactTrackerFragment : Fragment() {
                     // Enable 'seekBarNotificationFrequency' <SeekBar>
                     binding.seekBarNotificationFrequency.isEnabled = true
                     binding.seekBarNotificationFrequency.alpha = 1F
-                    binding.seekBarNotificationFrequency.thumb.mutate().alpha = 1
 
                     //- (v) toastMsg -"off"->.
                     "Service stopped"//getString(R.string.alarm_off_toast)

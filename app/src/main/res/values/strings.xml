@@ -57,5 +57,6 @@
     <!-- Tech inner strings -->
     <string name="service_name">contact status</string>
     <string name="googleClientId">465961236651-soqlh8n5fkqt0c2ufrvel5j5178vkchu.apps.googleusercontent.com</string>
+    <string name="notification_frequency">Notification frequency: 1 hr</string>
 
 </resources>
