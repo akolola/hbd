@@ -9,11 +9,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
 private const val TAG = "AlarmStarterJobService"
 private const val ALARM_REQUEST_CODE = 1111
+private const val PARAMETER_KEY = "notificationFrequency"
 
 @SuppressLint("SpecifyJobSchedulerIdRange")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -30,6 +32,13 @@ class AlarmStarterJobService : JobService() {
     // Start background task here
     override fun onStartJob(params: JobParameters): Boolean {
         Log.d(TAG, "CustomJobService onStartJob")
+
+
+        val parameter = params?.extras?.getString(PARAMETER_KEY)
+        if (parameter != null) {
+            // Perform your desired operation with the parameter
+            Toast.makeText(applicationContext, "Parameter: $parameter", Toast.LENGTH_SHORT).show()
+        }
 
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
         var mContext = applicationContext

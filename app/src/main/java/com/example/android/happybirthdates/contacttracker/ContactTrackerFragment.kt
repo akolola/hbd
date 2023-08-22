@@ -24,10 +24,11 @@ import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import android.app.PendingIntent
+import android.os.PersistableBundle
 
 private const val TAG = "ContactTrackerFragment"
 private const val ALARM_REQUEST_CODE = 1111
-
+private const val PARAMETER_KEY = "notificationFrequency"
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -111,7 +112,7 @@ class ContactTrackerFragment : Fragment() {
                 val toastMsg: String = if (isChecked) {
 
                     //- (c) ContactStatusService for Push Notifications on.
-                    startService()
+                    startService("30000")
 
                     //- (v) toastMsg -"on"->.
                     "Service started"//getString(R.string.alarm_on_toast)
@@ -184,12 +185,18 @@ class ContactTrackerFragment : Fragment() {
     }
 
 
-    private fun startService() {
+    private fun startService(milliseconds : String) {
+
+        val extras = PersistableBundle().apply {
+            putString(PARAMETER_KEY, milliseconds)
+        }
+
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val componentName = ComponentName(requireContext(), AlarmStarterJobService::class.java)
         val jobInfo = JobInfo.Builder(JOB_ID, componentName)
             .setRequiresCharging(true)
             .setPersisted(true)
+            .setExtras(extras)
             .build()
 
         jobScheduler.schedule(jobInfo)
