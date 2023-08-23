@@ -13,14 +13,17 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
-private const val TAG = "AlarmStarterJobService"
-private const val ALARM_REQUEST_CODE = 1111
-private const val PARAMETER_KEY = "notificationFrequency"
+
 
 @SuppressLint("SpecifyJobSchedulerIdRange")
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class AlarmStarterJobService : JobService() {
 
+    companion object {
+        private const val TAG = "AlarmStarterJobService"
+        private const val ALARM_REQUEST_CODE = 1111
+        private const val PARAMETER_KEY = "notificationFrequency"
+    }
 
     //--------------------------- Notification -----------------------------------------------------
     //-------------------- (c) AlarmManager.

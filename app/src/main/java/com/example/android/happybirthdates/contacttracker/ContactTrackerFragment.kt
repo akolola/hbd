@@ -27,9 +27,7 @@ import android.app.PendingIntent
 import android.os.PersistableBundle
 import android.widget.SeekBar
 
-private const val TAG = "ContactTrackerFragment"
-private const val ALARM_REQUEST_CODE = 1111
-private const val PARAMETER_KEY = "notificationFrequency"
+
 
 /**
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
@@ -38,13 +36,22 @@ private const val PARAMETER_KEY = "notificationFrequency"
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class ContactTrackerFragment : Fragment() {
 
+    companion object {
+        private const val TAG = "ContactTrackerFragment"
+        private const val ALARM_REQUEST_CODE = 1111
+        private const val JOB_ID = 2222
+        private const val PARAMETER_KEY = "notificationFrequency"
+        private const val INTERVAL_1_MIN = "60000"
+        private const val INTERVAL_1_HOUR = "3600000"
+        private const val INTERVAL_6_HOURS = "21600000"
+        private const val INTERVAL_12_HOURS = "43200000"
+    }
+
     // Initialize the AlarmManager
     private var mAlarmManager : AlarmManager? = null
 
 
     //---------- (v) for Push Notifications.
-    private val JOB_ID = 2222
-
     private lateinit var binding: FragmentContactTrackerBinding
 
     /**
@@ -58,8 +65,6 @@ class ContactTrackerFragment : Fragment() {
         mAlarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         //--------------------------- Preparation --------------------------------------------------
-
-
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
@@ -78,7 +83,7 @@ class ContactTrackerFragment : Fragment() {
 
 
         //---------- (v) arg: (v) millisecondsBetweenNotifications -> (c) AlarmStarterJobService
-        var millisecondsBetweenNotifications : String = "3600000"
+        var millisecondsBetweenNotifications : String = INTERVAL_1_HOUR
 
 
         //--------------------------- Processing ---------------------------------------------------
@@ -118,12 +123,12 @@ class ContactTrackerFragment : Fragment() {
                     //- (c) ContactStatusService for Push Notifications on.
                     startService(millisecondsBetweenNotifications)
 
-                    // Disable 'seekBarNotificationFrequency' <SeekBar>
+                    //- Disable 'seekBarNotificationFrequency' <SeekBar>
                     binding.seekBarNotificationFrequency.isEnabled = false
                     binding.seekBarNotificationFrequency.alpha = 0.5f
 
                     //- (v) toastMsg -"on"->.
-                    "Service started"//getString(R.string.alarm_on_toast)
+                    "Service started"
 
                 }
                 //--- B. 'alarmToggle' <ToggleButton> is off.
@@ -132,12 +137,12 @@ class ContactTrackerFragment : Fragment() {
                     //- (c) ContactStatusService for Push Notifications off.
                     stopService()
 
-                    // Enable 'seekBarNotificationFrequency' <SeekBar>
+                    //- Enable 'seekBarNotificationFrequency' <SeekBar>
                     binding.seekBarNotificationFrequency.isEnabled = true
                     binding.seekBarNotificationFrequency.alpha = 1F
 
                     //- (v) toastMsg -"off"->.
-                    "Service stopped"//getString(R.string.alarm_off_toast)
+                    "Service stopped"
                 }
                 // Show toast to say the alarm is turned on or off.
                 Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
@@ -152,32 +157,28 @@ class ContactTrackerFragment : Fragment() {
         binding.seekBarNotificationFrequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 when (progress) {
-                    0 -> { millisecondsBetweenNotifications = "60000"
-                        binding.textViewNotificationFrequency.text = "Notification frequency 1 min"
+                    0 -> { millisecondsBetweenNotifications =  INTERVAL_1_MIN
+                        binding.textViewNotificationFrequency.text = getString(R.string.notification_1_min)
                     }
-                    1 -> { millisecondsBetweenNotifications = "3600000"
-                        binding.textViewNotificationFrequency.text = "Notification frequency 1 hr"
+                    1 -> { millisecondsBetweenNotifications = INTERVAL_1_HOUR
+                        binding.textViewNotificationFrequency.text = getString(R.string.notification_1_hr)
                     }
-                    2 -> { millisecondsBetweenNotifications = "21600000"
-                        binding.textViewNotificationFrequency.text = "Notification frequency 6 hrs"
+                    2 -> { millisecondsBetweenNotifications = INTERVAL_6_HOURS
+                        binding.textViewNotificationFrequency.text = getString(R.string.notification_6_hrs)
                     }
-                    3 -> { millisecondsBetweenNotifications = "43200000"
-                        binding.textViewNotificationFrequency.text = "Notification frequency 12 hrs"
+                    3 -> { millisecondsBetweenNotifications = INTERVAL_12_HOURS
+                        binding.textViewNotificationFrequency.text = getString(R.string.notification_12_hrs)
                     }
                     else -> {
-                        binding.textViewNotificationFrequency.text = "Notification frequency N/A"
+                        binding.textViewNotificationFrequency.text = getString(R.string.notification_na)
                     }
                 }
 
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                // empty
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) { }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                // empty
-            }
+            override fun onStopTrackingTouch(seekBar: SeekBar) { }
         })
 
         //--------------------

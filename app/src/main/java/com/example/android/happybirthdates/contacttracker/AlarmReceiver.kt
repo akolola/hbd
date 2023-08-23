@@ -27,7 +27,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.util.*
 
-private const val TAG = "AlarmReceiver"
+
 
 /**
  * Broadcast receiver for the alarm, which delivers Notification. For Android ver > 'Oreo'.
@@ -36,6 +36,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     //--------------------------- Notification -----------------------------------------------------
     companion object {
+        private const val TAG = "AlarmReceiver"
         //---------- (v)s for Notification.
         private const val CHANNEL_ID = "ForegroundServiceChannel"
         //---------- (v)s for |resource|.
