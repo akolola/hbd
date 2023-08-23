@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <size android:width="22sp" android:height="22sp"/>
+    <solid android:color="#B3CCC9"/> <!-- Replace with desired color -->
+    <!-- You can add other attributes like a stroke or corner radius if desired -->
+</shape>
