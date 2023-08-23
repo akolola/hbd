@@ -32,9 +32,9 @@ import java.util.*
 /**
  * Broadcast receiver for the alarm, which delivers Notification. For Android ver > 'Oreo'.
  */
+@RequiresApi(Build.VERSION_CODES.O)
 class AlarmReceiver : BroadcastReceiver() {
 
-    //--------------------------- Notification -----------------------------------------------------
     companion object {
         private const val TAG = "AlarmReceiver"
         //---------- (v)s for Notification.
@@ -44,6 +44,9 @@ class AlarmReceiver : BroadcastReceiver() {
         private const val RESOURCE_TYPE = "mipmap"
     }
 
+    //--------------------------- Notification -----------------------------------------------------
+    //-------------------- (c) NotificationManager.
+    //----------  Initialize (c') NotificationManager.
     var mNotificationManager: NotificationManager? = null
 
 
@@ -53,7 +56,6 @@ class AlarmReceiver : BroadcastReceiver() {
      * @param context Context in which the receiver is running.
      * @param intent Intent being received.
      */
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onReceive(context: Context, intent: Intent) {
 
         Log.i(TAG, "(m) onReceive. Received intent: $intent")
@@ -95,7 +97,9 @@ class AlarmReceiver : BroadcastReceiver() {
     /**
      * Write readable message for app users about (c) Contacts with incoming Birthdays.
      *
-     * @param birthdayContactList List of names of contacts (persones or companies) which have birthdays soon.
+     * @param context Context in which the receiver is running..
+     * @param birthdayPersonListFromDatabase List of names of contact which have birthdays soon.
+     * @param isToday Flag to determining if contact has birthdays or in future, to from correct message
      * @return contentText Readable text for notification message.
      */
     private fun formContentText(context: Context, birthdayPersonListFromDatabase: List<Contact>?, isToday : Boolean): String {
@@ -118,7 +122,6 @@ class AlarmReceiver : BroadcastReceiver() {
             return contentText
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun prepareBirthDateForContactListSelect(addedDaysFromToday: Int): String {
         var date = Date()
         val calendar = Calendar.getInstance()
@@ -135,7 +138,6 @@ class AlarmReceiver : BroadcastReceiver() {
      *
      * @return notificationChannel with specific attributes.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun buildNotificationChannel(): NotificationChannel {
         val notificationChannel = NotificationChannel(CHANNEL_ID,"Birthdays notification", NotificationManager.IMPORTANCE_HIGH)
         notificationChannel.enableLights(true)

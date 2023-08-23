@@ -10,7 +10,7 @@ import com.example.android.happybirthdates.database.ContactDatabaseDao
  *
  * Contact status (v), ContactDatabaseDao and context -> ViewModel.
  */
-class ContactTrackerViewModelFactory(private val isContactDeleted : Boolean, private val dataSource: ContactDatabaseDao, private val application: Application) : ViewModelProvider.Factory {
+class ContactTrackerViewModelFactory constructor(private val isContactDeleted : Boolean, private val dataSource: ContactDatabaseDao, private val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactTrackerViewModel::class.java)) {

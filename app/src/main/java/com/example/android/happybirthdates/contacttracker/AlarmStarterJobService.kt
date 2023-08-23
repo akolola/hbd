@@ -9,14 +9,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
 
 
+/**
+ * (c) JobService connecting (c') AlarmManager & (c) AlarmReceiver adn creating a broadcast.
+ * This job defines repeatable background task, triggered by Android independently from app.
+ */
 @SuppressLint("SpecifyJobSchedulerIdRange")
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+@RequiresApi(Build.VERSION_CODES.O)
 class AlarmStarterJobService : JobService() {
 
     companion object {
@@ -28,21 +31,20 @@ class AlarmStarterJobService : JobService() {
     //--------------------------- Notification -----------------------------------------------------
     //-------------------- (c) AlarmManager.
     //---------- Technical (v)s for Notifications.
-
     private var alarmManager : AlarmManager? = null
     var pendingIntent: PendingIntent? = null
 
-    // Start background task here
+
+    /**
+     * Overridden (m) starting background task.
+     */
     override fun onStartJob(params: JobParameters): Boolean {
-        Log.d(TAG, "CustomJobService onStartJob")
 
+        Log.d(TAG, "(c) AlarmStarterJobService, (m) onStartJob getting (c') AlarmManager,creating broadcast for repeating action")
 
+        //---------- (v) intervalMillis parameter to define alarm frequency and push notifications display respectively
         val intervalMillis = params?.extras?.getString(PARAMETER_KEY)
-        /*
-        intervalMillis?.let {
-            Toast.makeText(applicationContext, "Notification service (re)started", Toast.LENGTH_SHORT).show()
-        }
-        */
+
         //---------- Technical (v) mContext of app.( (c) Intent & (c) NotificationManager ) <- (c) Context.
         var mContext = applicationContext
 
@@ -57,15 +59,20 @@ class AlarmStarterJobService : JobService() {
         //---------- Technical (v) alarmManager Service. Start (c) AlarmManager Service.
         if (intervalMillis != null) {
             alarmManager?.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), intervalMillis.toLong(), pendingIntent)
-        } //BY TESTING. AlarmManager.INTERVAL_HALF_DAY <-> 5000
+        }
 
         // Return true if the job needs to continue running in the background
         return true
+
     }
 
-    // Stop any ongoing tasks or clean up resources
+
+    /**
+     * Overridden (m) stopping any ongoing tasks or clean up resources
+     */
     override fun onStopJob(params: JobParameters): Boolean {
-        Log.d(TAG, "CustomJobService onStopJob")
+
+        Log.d(TAG, "(c) AlarmStarterJobService, (m) onStopJob stopping (c') AlarmManager related to (c) AlarmStarterJobService")
 
         //-------------------- Alarm.
         //---------- (c) AlarmManager Service. Turn off.
@@ -74,6 +81,7 @@ class AlarmStarterJobService : JobService() {
 
         // Return true to reschedule the job if it needs to be run again
         return true
+
     }
 
 

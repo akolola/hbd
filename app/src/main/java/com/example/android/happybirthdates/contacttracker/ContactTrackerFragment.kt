@@ -25,6 +25,7 @@ import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactTrackerBinding
 import android.app.PendingIntent
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.SeekBar
 
 
@@ -33,8 +34,9 @@ import android.widget.SeekBar
  * (c) Fragment with buttons for Contacts, which are saved in DB. Cumulative data are
  * displayed in RecyclerView.
  */
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+@RequiresApi(Build.VERSION_CODES.O)
 class ContactTrackerFragment : Fragment() {
+
 
     companion object {
         private const val TAG = "ContactTrackerFragment"
@@ -47,31 +49,33 @@ class ContactTrackerFragment : Fragment() {
         private const val INTERVAL_12_HOURS = "43200000"
     }
 
-    // Initialize the AlarmManager
+
+    //---------- Initialize (c') AlarmManager.
     private var mAlarmManager : AlarmManager? = null
 
+    //---------- Initialize (c) ContactTrackerFragment.
+    private lateinit var mBinding: FragmentContactTrackerBinding
 
-    //---------- (v) for Push Notifications.
-    private lateinit var binding: FragmentContactTrackerBinding
 
     /**
      * The (m) is called when (c) ContactTrackerFragment is ready to display content to screen.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        //--------------------------- Preparation --------------------------------------------------
         //---------- (c) ContactTrackerFragment <- |fragment layout| fragment_contact_tracker.
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_tracker, container, false)
 
+        //---------- (c') AlarmManager.
         mAlarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        //--------------------------- Preparation --------------------------------------------------
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
 
         //---------- (c) ContactTrackerFragment <- |DB| ContactDatabase.
         val dbPerson = ContactDatabase.getInstance(application).contactDatabaseDao
 
-        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) isContactDeleted & (v) database  & (v) application.
+        //---------- (c) ContactDetailsViewModel <- |navigation| (v)s args: (v) isContactDeleted & (v) database & (v) application.
         val  viewModelFactory = if (arguments != null){
             ContactTrackerViewModelFactory(ContactTrackerFragmentArgs.fromBundle(requireArguments()).isContactDeleted, dbPerson, application)
         } else{
@@ -81,14 +85,13 @@ class ContactTrackerFragment : Fragment() {
         //---------- (c) ContactDetailsViewModel <-  (c) ContactTrackerViewModel.
         val contactTrackerViewModel = ViewModelProvider(this, viewModelFactory).get(ContactTrackerViewModel::class.java)
 
-
-        //---------- (v) arg: (v) millisecondsBetweenNotifications -> (c) AlarmStarterJobService
+        //---------- (v) arg: (v) millisecondsBetweenNotifications -> (c) AlarmStarterJobService.
         var millisecondsBetweenNotifications : String = INTERVAL_1_HOUR
 
 
         //--------------------------- Processing ---------------------------------------------------
-        binding.contactTrackerViewModel = contactTrackerViewModel
-        binding.lifecycleOwner = this
+        mBinding.contactTrackerViewModel = contactTrackerViewModel
+        mBinding.lifecycleOwner = this
 
         //-------------------- 'buttonCreate' <Button>;
         //---------- Observer; Navigating.
@@ -114,7 +117,7 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- 'alarmToggle' <ToggleButton>;
         //---------- Change listener;
-        binding.alarmToggle.setOnCheckedChangeListener(
+        mBinding.alarmToggle.setOnCheckedChangeListener(
 
             CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
                 //--- A. 'alarmToggle' <ToggleButton> is on.
@@ -124,8 +127,8 @@ class ContactTrackerFragment : Fragment() {
                     startService(millisecondsBetweenNotifications)
 
                     //- Disable 'seekBarNotificationFrequency' <SeekBar>
-                    binding.seekBarNotificationFrequency.isEnabled = false
-                    binding.seekBarNotificationFrequency.alpha = 0.5f
+                    mBinding.seekBarNotificationFrequency.isEnabled = false
+                    mBinding.seekBarNotificationFrequency.alpha = 0.5f
 
                     //- (v) toastMsg -"on"->.
                     "Service started"
@@ -138,55 +141,56 @@ class ContactTrackerFragment : Fragment() {
                     stopService()
 
                     //- Enable 'seekBarNotificationFrequency' <SeekBar>
-                    binding.seekBarNotificationFrequency.isEnabled = true
-                    binding.seekBarNotificationFrequency.alpha = 1F
+                    mBinding.seekBarNotificationFrequency.isEnabled = true
+                    mBinding.seekBarNotificationFrequency.alpha = 1F
 
                     //- (v) toastMsg -"off"->.
                     "Service stopped"
                 }
                 // Show toast to say the alarm is turned on or off.
                 Toast.makeText(requireContext(), toastMsg, Toast.LENGTH_SHORT).show()
+                Log.d(TAG, toastMsg)
             }
         )
 
         getActiveAlarm()?.let {
-            binding.alarmToggle.isChecked = true
+            mBinding.alarmToggle.isChecked = true
         }
+        //--------------------
 
         //-------------------- 'seekBarNotificationFrequency' <SeekBar>;
-        binding.seekBarNotificationFrequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        mBinding.seekBarNotificationFrequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 when (progress) {
                     0 -> { millisecondsBetweenNotifications =  INTERVAL_1_MIN
-                        binding.textViewNotificationFrequency.text = getString(R.string.notification_1_min)
+                        mBinding.textViewNotificationFrequency.text = getString(R.string.notification_1_min)
                     }
                     1 -> { millisecondsBetweenNotifications = INTERVAL_1_HOUR
-                        binding.textViewNotificationFrequency.text = getString(R.string.notification_1_hr)
+                        mBinding.textViewNotificationFrequency.text = getString(R.string.notification_1_hr)
                     }
                     2 -> { millisecondsBetweenNotifications = INTERVAL_6_HOURS
-                        binding.textViewNotificationFrequency.text = getString(R.string.notification_6_hrs)
+                        mBinding.textViewNotificationFrequency.text = getString(R.string.notification_6_hrs)
                     }
                     3 -> { millisecondsBetweenNotifications = INTERVAL_12_HOURS
-                        binding.textViewNotificationFrequency.text = getString(R.string.notification_12_hrs)
+                        mBinding.textViewNotificationFrequency.text = getString(R.string.notification_12_hrs)
                     }
                     else -> {
-                        binding.textViewNotificationFrequency.text = getString(R.string.notification_na)
+                        mBinding.textViewNotificationFrequency.text = getString(R.string.notification_na)
                     }
                 }
 
             }
 
+            //---------- (m)s to be empty
             override fun onStartTrackingTouch(seekBar: SeekBar) { }
-
             override fun onStopTrackingTouch(seekBar: SeekBar) { }
         })
-
         //--------------------
 
         //-------------------- 'recyclerContactListGrid' <RecyclerView>;
         //---------- SetLayoutManager; (c) GridLayoutManager.
         val manager = GridLayoutManager(activity, 3)
-        binding.recyclerViewContactListGrid.layoutManager = manager
+        mBinding.recyclerViewContactListGrid.layoutManager = manager
         manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int) =  when (position) {
                 0 -> 3
@@ -198,7 +202,7 @@ class ContactTrackerFragment : Fragment() {
                 contactId -> contactTrackerViewModel.onContactClicked(contactId)
         })
         //---------- SetAdapter; (c) ContactListAdapter.
-        binding.recyclerViewContactListGrid.adapter = adapter
+        mBinding.recyclerViewContactListGrid.adapter = adapter
         //---------- Observer; (c) ContactListAdapter <- Watching (v) persons & non empty (v) persons.
         contactTrackerViewModel.persons.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -218,19 +222,34 @@ class ContactTrackerFragment : Fragment() {
         //--------------------
 
         //--------------------------- Finish -------------------------------------------------------
-        return binding.root
+        return mBinding.root
+
     }
 
+
+    /**
+     * Overridden (m) checks if (c) AlarmStarterJobService is active or not, with push up notifications
+     */
     override fun onResume() {
         super.onResume()
 
         getActiveAlarm()?.let {
-            binding.alarmToggle.isChecked = true
+            mBinding.alarmToggle.isChecked = true
         }
-        "Service resumed"//getString(R.string.alarm_off_toast)
+
+        Toast.makeText(requireContext(), getString(R.string.alarm_off_toast), Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "Service resumed")
+
+
     }
 
 
+    /**
+     * Starts (c) AlarmStarterJobService, which sets up push up notifications
+     *
+     * @param milliseconds frequency in milliseconds how often push up notifications should be displayed
+     *
+     */
     private fun startService(milliseconds : String) {
 
         val extras = PersistableBundle().apply {
@@ -239,16 +258,17 @@ class ContactTrackerFragment : Fragment() {
 
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val componentName = ComponentName(requireContext(), AlarmStarterJobService::class.java)
-        val jobInfo = JobInfo.Builder(JOB_ID, componentName)
-            .setRequiresCharging(true)
-            .setPersisted(true)
-            .setExtras(extras)
-            .build()
+        val jobInfo = JobInfo.Builder(JOB_ID, componentName).setRequiresCharging(true).setPersisted(true).setExtras(extras).build()
 
         jobScheduler.schedule(jobInfo)
+
     }
 
 
+    /**
+     * Stops (c) AlarmStarterJobService, all push up notifications realted to service are not displayed anymore
+     *
+     */
     private fun stopService() {
         val jobScheduler = requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         jobScheduler.cancel(JOB_ID)
@@ -265,6 +285,7 @@ class ContactTrackerFragment : Fragment() {
 
         return pendingIntent
     }
+
 
 
 }
