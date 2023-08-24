@@ -95,11 +95,18 @@ class ContactTrackerFragment : Fragment() {
 
         //-------------------- 'buttonCreate' <Button>;
         //---------- Observer; Navigating.
-        contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
+/*        contactTrackerViewModel.navigateToContactCreator.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToContactCreatorFragment(0))
                 // Reset state to make sure we only navigate once, even if the device has a configuration change.
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
+            }
+        })*/
+        contactTrackerViewModel.navigateToImageCroper.observe(viewLifecycleOwner, Observer {
+            if (it == true) {
+                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToImageCropFragment())
+                // Reset state to make sure we only navigate once, even if the device has a configuration change.
+                contactTrackerViewModel.doneNavigatingToImageCropFragment()
             }
         })
         //--------------------

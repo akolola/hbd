@@ -38,7 +38,7 @@ import java.util.*
 
 
 
-private const val TAG = "ContactCreatorFragment"
+
 
 
 
@@ -46,6 +46,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     companion object {
+        private const val TAG = "ContactCreatorFragment"
         private const val PERMISSION_CODE = 1001
     }
 

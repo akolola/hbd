@@ -52,6 +52,8 @@
     <string name="fragment_contact_backup">ContactBackupFragment</string>
     <string name="fragment_contact_details">ContactDetailsFragment</string>
     <string name="fragment_storage_backup">ContactStorageFragment</string>
+    <string name="fragment_image_crop">ImageCropFragment</string>
+
 
 
     <!-- Tech inner strings -->
