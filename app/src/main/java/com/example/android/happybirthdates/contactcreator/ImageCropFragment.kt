@@ -76,8 +76,8 @@ class ImageCropFragment : Fragment() {
         intent.putExtra("outputX", 300)
         intent.putExtra("outputY", 300)
         intent.putExtra("return-data", false)
-        //croppedImageUri = getOutputMediaFileUri()
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        croppedImageUri = getOutputMediaFileUri()
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, croppedImageUri)
         startActivityForResult(intent, CROP_IMAGE_REQUEST)
     }
 
@@ -103,10 +103,16 @@ class ImageCropFragment : Fragment() {
             mediaStorageDir.mkdirs()
         }
 
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val mediaFile = File(mediaStorageDir.path + File.separator + "IMG_" + timeStamp + ".jpg")
+        //val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val mediaFile = File(mediaStorageDir.path + File.separator + "IMG_Croped" + ".jpg")
+        mediaFile.createNewFile()
         return FileProvider.getUriForFile(requireContext(), "com.example.android.happybirthdates.fileprovider", mediaFile)
 
+
+/*        val imagePath: File = File(requireContext().filesDir, "my_images")
+        val newFile = File(imagePath, "default_image.jpg")
+        val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "com.example.android.happybirthdates.fileprovider", newFile)
+        return contentUri*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
