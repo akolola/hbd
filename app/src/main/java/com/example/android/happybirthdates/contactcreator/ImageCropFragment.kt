@@ -32,11 +32,8 @@ class ImageCropFragment : Fragment() {
     private var originalImageUri: Uri? = null
     private var croppedImageUri: Uri? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_image_crop, container, false)
         imageView = view.findViewById(R.id.image_view)
         cropGalleryButton = view.findViewById(R.id.crop_gallery_button)
@@ -50,9 +47,9 @@ class ImageCropFragment : Fragment() {
             openCamera()
         }
 
-        //saveButton.setOnClickListener {
-        ///saveImageToStorage()
-        // }
+/*        saveButton.setOnClickListener {
+            saveImageToStorage()
+        }*/
 
         return view
     }
@@ -67,21 +64,28 @@ class ImageCropFragment : Fragment() {
         startActivityForResult(intent, TAKE_PICTURE_REQUEST)
     }
 
-    private fun startCropActivity(uri: Uri) {
+    private fun startCropActivity(imageUri: Uri) {
+
+        // Create an explicit intent for the crop image action
         val intent = Intent("com.android.camera.action.CROP")
-        intent.setDataAndType(uri, "image/*")
+        intent.setDataAndType(imageUri, "image/*")
+
+        // Set the crop properties
         intent.putExtra("crop", "true")
         intent.putExtra("aspectX", 1)
         intent.putExtra("aspectY", 1)
         intent.putExtra("outputX", 300)
         intent.putExtra("outputY", 300)
-        intent.putExtra("return-data", false)
-        croppedImageUri = getOutputMediaFileUri()
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, croppedImageUri)
+        intent.putExtra("scale", true)
+
+        // Set the output format
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+
+        // Start the cropping activity
         startActivityForResult(intent, CROP_IMAGE_REQUEST)
     }
 
-    private fun saveImageToStorage() {
+/*    private fun saveImageToStorage() {
         val originalImagePath = originalImageUri?.path
         val croppedImagePath = croppedImageUri?.path
 
@@ -95,25 +99,7 @@ class ImageCropFragment : Fragment() {
 
             // After saving, you can show a success message to the user
         }
-    }
-
-    private fun getOutputMediaFileUri(): Uri {
-        val mediaStorageDir = File(activity?.getExternalFilesDir(null), "CroppedImages")
-        if (!mediaStorageDir.exists()) {
-            mediaStorageDir.mkdirs()
-        }
-
-        //val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val mediaFile = File(mediaStorageDir.path + File.separator + "IMG_Croped" + ".jpg")
-        mediaFile.createNewFile()
-        return FileProvider.getUriForFile(requireContext(), "com.example.android.happybirthdates.fileprovider", mediaFile)
-
-
-/*        val imagePath: File = File(requireContext().filesDir, "my_images")
-        val newFile = File(imagePath, "default_image.jpg")
-        val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "com.example.android.happybirthdates.fileprovider", newFile)
-        return contentUri*/
-    }
+    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -128,11 +114,12 @@ class ImageCropFragment : Fragment() {
                 TAKE_PICTURE_REQUEST -> {
                     val image = data.extras?.get("data") as Bitmap
                     ///originalImageUri = saveImageToGallery(image) To be implemented
+                    originalImageUri = data.data
                     imageView.setImageBitmap(image)
                     startCropActivity(originalImageUri!!)
                 }
                 CROP_IMAGE_REQUEST -> {
-                    imageView.setImageURI(croppedImageUri)
+                    imageView.setImageURI(data.data)
                 }
             }
         }
