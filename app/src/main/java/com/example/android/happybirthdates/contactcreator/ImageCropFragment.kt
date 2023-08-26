@@ -1,9 +1,9 @@
 package com.example.android.happybirthdates.contactcreator
 
+import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,12 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.android.happybirthdates.R
-import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
+
 
 class ImageCropFragment : Fragment() {
 
@@ -47,10 +45,6 @@ class ImageCropFragment : Fragment() {
             openCamera()
         }
 
-/*        saveButton.setOnClickListener {
-            saveImageToStorage()
-        }*/
-
         return view
     }
 
@@ -61,7 +55,9 @@ class ImageCropFragment : Fragment() {
 
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, TAKE_PICTURE_REQUEST)
+        if (activity?.let { intent.resolveActivity(it.packageManager) } != null) {
+            startActivityForResult(intent, TAKE_PICTURE_REQUEST);
+        }
     }
 
     private fun startCropActivity(imageUri: Uri) {
@@ -85,21 +81,6 @@ class ImageCropFragment : Fragment() {
         startActivityForResult(intent, CROP_IMAGE_REQUEST)
     }
 
-/*    private fun saveImageToStorage() {
-        val originalImagePath = originalImageUri?.path
-        val croppedImagePath = croppedImageUri?.path
-
-        if (originalImagePath != null && croppedImagePath != null) {
-            val originalBitmap = BitmapFactory.decodeFile(originalImagePath)
-            val croppedBitmap = BitmapFactory.decodeFile(croppedImagePath)
-
-            // Save originalBitmap and croppedBitmap to internal storage
-
-            // Save the images using your desired implementation, e.g., store it in internal storage using FileOutputStream or in a local database
-
-            // After saving, you can show a success message to the user
-        }
-    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -112,11 +93,23 @@ class ImageCropFragment : Fragment() {
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
-                    val image = data.extras?.get("data") as Bitmap
+
+/*                  val image = data.extras?.get("data") as Bitmap
                     ///originalImageUri = saveImageToGallery(image) To be implemented
                     originalImageUri = data.data
                     imageView.setImageBitmap(image)
-                    startCropActivity(originalImageUri!!)
+                    startCropActivity(originalImageUri!!)*/
+                    // Photo was taken successfully, you can access it using "data" Intent
+
+
+
+                    // Photo was taken successfully, you can access it using "data" Intent
+                    val image = data.extras?.get("data") as Bitmap
+                    imageView.setImageBitmap(image)
+
+
+                    originalImageUri = data.data
+/*                    startCropActivity(originalImageUri!!)*/
                 }
                 CROP_IMAGE_REQUEST -> {
                     imageView.setImageURI(data.data)
