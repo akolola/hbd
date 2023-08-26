@@ -1,6 +1,5 @@
 package com.example.android.happybirthdates.contactcreator
 
-import android.R.attr
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,7 +13,6 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.example.android.happybirthdates.R
-import java.util.*
 
 
 class ImageCropFragment : Fragment() {
@@ -94,22 +92,13 @@ class ImageCropFragment : Fragment() {
                 }
                 TAKE_PICTURE_REQUEST -> {
 
-/*                  val image = data.extras?.get("data") as Bitmap
-                    ///originalImageUri = saveImageToGallery(image) To be implemented
-                    originalImageUri = data.data
-                    imageView.setImageBitmap(image)
-                    startCropActivity(originalImageUri!!)*/
-                    // Photo was taken successfully, you can access it using "data" Intent
-
-
-
                     // Photo was taken successfully, you can access it using "data" Intent
                     val image = data.extras?.get("data") as Bitmap
                     imageView.setImageBitmap(image)
 
+                    originalImageUri = data.data  //<-ERROR. originalImageUri=null
+                    ///startCropActivity(originalImageUri!!)
 
-                    originalImageUri = data.data
-/*                    startCropActivity(originalImageUri!!)*/
                 }
                 CROP_IMAGE_REQUEST -> {
                     imageView.setImageURI(data.data)
