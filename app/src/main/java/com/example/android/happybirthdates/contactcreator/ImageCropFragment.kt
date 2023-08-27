@@ -1,6 +1,8 @@
 package com.example.android.happybirthdates.contactcreator
 
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -17,6 +19,8 @@ import com.example.android.happybirthdates.R
 
 class ImageCropFragment : Fragment() {
 
+
+
     private val PICK_IMAGE_REQUEST = 1
     private val TAKE_PICTURE_REQUEST = 2
     private val CROP_IMAGE_REQUEST = 3
@@ -26,7 +30,7 @@ class ImageCropFragment : Fragment() {
     private lateinit var cropCameraButton: Button
 
     private var originalImageUri: Uri? = null
-    private var croppedImageUri: Uri? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -77,8 +81,35 @@ class ImageCropFragment : Fragment() {
 
         // Start the cropping activity
         startActivityForResult(intent, CROP_IMAGE_REQUEST)
+
     }
 
+    fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        uri?.let {
+            try {
+                val outputStream = contentResolver.openOutputStream(uri)
+                outputStream?.let {
+                    image.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                    return uri
+                }
+            } catch (e: Exception) {
+                contentResolver.delete(uri, null, null)
+            }
+        }
+
+        return null
+
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageData)
@@ -96,8 +127,10 @@ class ImageCropFragment : Fragment() {
                     val imageBitmap = imageData?.extras?.get("data") as Bitmap
                     imageView.setImageBitmap(imageBitmap)
 
-                    ///originalImageUri = data.data  // <- ERROR. originalImageUri=null
-                    ///startCropActivity(originalImageUri!!)
+                    // Save the image to a file and get its URI
+                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)  //saveImageToFile(imageBitmap)
+
+                    imageContentUri?.let { startCropActivity(it) }
                 }
                 CROP_IMAGE_REQUEST -> {
                     imageView.setImageURI(imageData.data)
@@ -105,4 +138,7 @@ class ImageCropFragment : Fragment() {
             }
         }
     }
+
+
+
 }
