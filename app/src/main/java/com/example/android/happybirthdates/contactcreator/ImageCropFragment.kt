@@ -80,28 +80,27 @@ class ImageCropFragment : Fragment() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, imageData)
 
-        if (resultCode == Activity.RESULT_OK && data != null) {
+        if (resultCode == Activity.RESULT_OK && imageData != null) {
             when (requestCode) {
                 PICK_IMAGE_REQUEST -> {
-                    originalImageUri = data.data
+                    originalImageUri = imageData.data
                     imageView.setImageURI(originalImageUri)
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
 
-                    // Photo was taken successfully, you can access it using "data" Intent
-                    val image = data.extras?.get("data") as Bitmap
-                    imageView.setImageBitmap(image)
+                    // Photo was taken successfully, access it using "data" Intent
+                    val imageBitmap = imageData?.extras?.get("data") as Bitmap
+                    imageView.setImageBitmap(imageBitmap)
 
-                    originalImageUri = data.data  //<-ERROR. originalImageUri=null
+                    ///originalImageUri = data.data  // <- ERROR. originalImageUri=null
                     ///startCropActivity(originalImageUri!!)
-
                 }
                 CROP_IMAGE_REQUEST -> {
-                    imageView.setImageURI(data.data)
+                    imageView.setImageURI(imageData.data)
                 }
             }
         }
