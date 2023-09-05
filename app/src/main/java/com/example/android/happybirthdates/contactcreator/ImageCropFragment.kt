@@ -3,6 +3,7 @@ package com.example.android.happybirthdates.contactcreator
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -13,8 +14,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.android.happybirthdates.R
+import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
+import com.example.android.happybirthdates.database.ContactDatabase
+import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
+import com.example.android.happybirthdates.databinding.FragmentImageCropBinding
+import java.io.ByteArrayOutputStream
 
 
 class ImageCropFragment : Fragment() {
@@ -25,30 +33,82 @@ class ImageCropFragment : Fragment() {
     private val TAKE_PICTURE_REQUEST = 2
     private val CROP_IMAGE_REQUEST = 3
 
-    private lateinit var imageView: ImageView
-    private lateinit var cropGalleryButton: Button
-    private lateinit var cropCameraButton: Button
+   // private lateinit var imageView: ImageView
+   //private lateinit var cropGalleryButton: Button
+    //private lateinit var cropCameraButton: Button
+
+    private lateinit var binding: FragmentImageCropBinding
 
     private var originalImageUri: Uri? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_image_crop, container, false)
-        imageView = view.findViewById(R.id.image_view)
-        cropGalleryButton = view.findViewById(R.id.crop_gallery_button)
-        cropCameraButton = view.findViewById(R.id.crop_camera_button)
+        //--------------------------- Preparation --------------------------------------------------
+        //---------- (c) ContactCreatorFragment <- |fragment layout| fragment_contact_creator.
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_image_crop, container, false)
 
-        cropGalleryButton.setOnClickListener {
+        //---------- Technical (v) application.
+        val application = requireNotNull(this.activity).application
+
+        //---------- |navigation| navigation's (v) args.
+        val arguments = ContactDetailsFragmentArgs.fromBundle(arguments!!)
+
+        //----------  |DB| ContactDatabase.
+        val database = ContactDatabase.getInstance(application).contactDatabaseDao
+
+
+
+        //--------------------------- Connection ---------------------------------------------------
+        //-------------------- (c) ImageCropViewModel;
+        //--- <- |navigation| (v)s args: (v) contactPersonKey & (v) database.
+        val viewModelFactory = ImageCropViewModelFactory(arguments.contactPersonKey, database)
+        //--- <- (c) ImageCropFragment.
+        val imageCropViewModel = ViewModelProvider(this, viewModelFactory).get(ImageCropViewModel::class.java)
+        //--------------------
+
+        //-------------------- |fragment layout| fragment_contact_creator.
+        //---------- <- (c) ImageCropViewModel.
+        binding.imageCropViewModel = imageCropViewModel
+        //---------- <- (c) ImageCropFragment.
+        // LifecycleOwner should be used for observing changes of LiveData in this binding, i.e. LiveData (v)s in (c) ContactCreatorViewModel.
+        // Kotlin syntax like 'binding.setLifecycleOwner(this)'.
+        binding.lifecycleOwner = this
+        //--------------------
+
+
+        //--------------------------- Processing ---------------------------------------------------
+        //val view = inflater.inflate(R.layout.fragment_image_crop, container, false)
+        //imageView = view.findViewById(R.id.image_view)//imageView =  binding.imageView
+        //cropGalleryButton = view.findViewById(R.id.crop_gallery_button)
+        //cropCameraButton = view.findViewById(R.id.crop_camera_button)
+
+
+        binding.cropGalleryButton.setOnClickListener {
+
+            //--- Step 1. Pic
             openGallery()
+
+            //--- Step 2. Create Con
+            binding.apply {
+                imageCropViewModel.onCreateContact(
+                    arguments.contactPersonKey,
+                    "John Doe",
+                    "01-01-2000",
+                    if (binding.imageView.tag != null) binding.imageView.tag.toString() else "",
+                    byteArrayOf(0b00000001, 0b00000010)
+                )
+            }
         }
 
-        cropCameraButton.setOnClickListener {
+        binding.cropCameraButton.setOnClickListener {
             openCamera()
         }
 
-        return view
+        //--------------------------- Finish -------------------------------------------------------
+        return binding.root // return view
     }
+
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -61,6 +121,7 @@ class ImageCropFragment : Fragment() {
             startActivityForResult(intent, TAKE_PICTURE_REQUEST);
         }
     }
+
 
     private fun startCropActivity(imageUri: Uri) {
 
@@ -111,6 +172,9 @@ class ImageCropFragment : Fragment() {
 
     }
 
+
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageData)
 
@@ -118,14 +182,14 @@ class ImageCropFragment : Fragment() {
             when (requestCode) {
                 PICK_IMAGE_REQUEST -> {
                     originalImageUri = imageData.data
-                    imageView.setImageURI(originalImageUri)
+                    binding.imageView.setImageURI(originalImageUri)
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
 
                     // Photo was taken successfully, access it using "data" Intent
                     val imageBitmap = imageData?.extras?.get("data") as Bitmap
-                    imageView.setImageBitmap(imageBitmap)
+                    binding.imageView.setImageBitmap(imageBitmap)
 
                     // Save the image to a file and get its URI
                     val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)  //saveImageToFile(imageBitmap)
@@ -133,11 +197,69 @@ class ImageCropFragment : Fragment() {
                     imageContentUri?.let { startCropActivity(it) }
                 }
                 CROP_IMAGE_REQUEST -> {
-                    imageView.setImageURI(imageData.data)
+
+                    ///saveImage(bitmap)
+                    ///loadImage()
+
+                    binding.imageView.setImageURI(imageData.data) //
                 }
             }
         }
     }
+
+
+/*    // Save the image in local SQLite database
+    fun saveImageToDatabase(context: Context, imageUri: Uri) {
+
+        // Get the image bitmap from the content URI
+        val bitmap = getBitmapFromUri(context.contentResolver, imageUri)
+
+
+        // Convert the image bitmap to byte array
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
+        val imageBytes = byteArrayOutputStream.toByteArray()
+
+
+        // Retrieve the image file name from the content URI
+        val fileName = getFileNameFromUri(context.contentResolver, imageUri)
+
+        // Save the image in the local SQLite database
+        val dbHelper = DatabaseHelper(context)
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put(DatabaseContract.ImageEntry.COLUMN_NAME_FILENAME, fileName)
+            put(DatabaseContract.ImageEntry.COLUMN_NAME_IMAGE, imageBytes)
+        }
+
+        db.insert(DatabaseContract.ImageEntry.TABLE_NAME, null, values)
+
+        // Close the database connection
+        dbHelper.close()
+
+    }
+    // Helper function to get the image bitmap from the content URI
+    fun getBitmapFromUri(contentResolver: ContentResolver, imageUri: Uri): Bitmap {
+
+        return BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
+
+    }
+    // Helper function to retrieve the image file name from the content URI
+    fun getFileNameFromUri(contentResolver: ContentResolver, imageUri: Uri): String {
+
+        var fileName = ""
+        val cursor = contentResolver.query(imageUri, null, null, null, null)
+
+        cursor?.use {
+            if (it.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
+            }
+        }
+
+        return fileName
+
+    }*/
 
 
 

@@ -138,7 +138,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                     arguments.contactPersonKey,
                     binding.editTextName.text.toString(),
                     binding.textViewBirthdate.text.toString(),
-                    if (binding.imageButtonAddPicture.tag != null) binding.imageButtonAddPicture.tag.toString() else ""
+                    if (binding.imageButtonAddPicture.tag != null) binding.imageButtonAddPicture.tag.toString() else "",
+                    byteArrayOf(0b00000001, 0b00000010)
                 )
             }
         }

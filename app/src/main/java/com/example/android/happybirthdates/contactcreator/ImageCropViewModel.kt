@@ -1,17 +1,15 @@
 package com.example.android.happybirthdates.contactcreator
 
-import androidx.lifecycle.*
-import com.example.android.happybirthdates.database.ContactDatabaseDao
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.happybirthdates.database.Contact
-import kotlinx.coroutines.*
+import com.example.android.happybirthdates.database.ContactDatabaseDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-
-/**
- * (c) ContactCreatorFragment's ViewModel.
- *
- * @param database (o) to |DB| where we get info about (c) Contact.
- */
-class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
+class ImageCropViewModel (private val contactKey: Long = 0L, val database: ContactDatabaseDao) : ViewModel() {
 
 
     //--------------------------- LiveData: <-(o) Person- |DB| -------------------------------------
@@ -21,6 +19,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--- (c) MediatorLiveData to observe other (o)s LiveData & react to their onChange events
     init { liveDataContact.addSource(database.getContactWithId(contactKey), liveDataContact::setValue) }
     //--------------------
+
 
 
     //--------------------------- |DB| query (m)s --------------------------------------------------
@@ -58,12 +57,12 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
             //--- 1
             if(contactId == 0L){
-            //- A. Creation Mode.
+                //- A. Creation Mode.
                 insertContactIntoDb(Contact())
                 liveDataContact.value = getLatestContactFromDb()
             }
             else{
-            //- B. Edit Mode.
+                //- B. Edit Mode.
                 liveDataContact.value = getContactByIdFromDb(contactId)
             }
             //- Check (v).
@@ -78,25 +77,11 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
 
             //--- 3
             // Set '(v) = true' --> Observer &  -> Navigation.
-            _navigateToContactTracker.value = true
+            //_navigateToContactTracker.value = true
 
         }
     }
     //--------------------
 
 
-
-    //--------------------------- Navigation -------------------------------------------------------
-    //-------------------- ContactCreatorFragment => ContactTrackerFragment.
-    private val _navigateToContactTracker = MutableLiveData<Boolean?>()
-    val navigateToContactTracker: LiveData<Boolean?>
-    get() = _navigateToContactTracker
-    fun doneNavigating() {
-        _navigateToContactTracker.value = null
-    }
-    //--------------------
-
-
-
 }
-

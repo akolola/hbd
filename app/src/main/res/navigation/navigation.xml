@@ -91,6 +91,9 @@
         android:name="com.example.android.happybirthdates.contactcreator.ImageCropFragment"
         android:label="@string/fragment_image_crop"
         tools:layout="@layout/fragment_image_crop">
+        <argument
+            android:name="contactPersonKey"
+            app:argType="long" />
     </fragment>
 
 </navigation>
