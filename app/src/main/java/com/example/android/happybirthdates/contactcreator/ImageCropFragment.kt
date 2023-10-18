@@ -1,26 +1,24 @@
 package com.example.android.happybirthdates.contactcreator
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 import com.example.android.happybirthdates.database.ContactDatabase
-import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
 import com.example.android.happybirthdates.databinding.FragmentImageCropBinding
 import java.io.ByteArrayOutputStream
 
@@ -32,10 +30,6 @@ class ImageCropFragment : Fragment() {
     private val PICK_IMAGE_REQUEST = 1
     private val TAKE_PICTURE_REQUEST = 2
     private val CROP_IMAGE_REQUEST = 3
-
-   // private lateinit var imageView: ImageView
-   //private lateinit var cropGalleryButton: Button
-    //private lateinit var cropCameraButton: Button
 
     private lateinit var binding: FragmentImageCropBinding
 
@@ -78,27 +72,10 @@ class ImageCropFragment : Fragment() {
 
 
         //--------------------------- Processing ---------------------------------------------------
-        //val view = inflater.inflate(R.layout.fragment_image_crop, container, false)
-        //imageView = view.findViewById(R.id.image_view)//imageView =  binding.imageView
-        //cropGalleryButton = view.findViewById(R.id.crop_gallery_button)
-        //cropCameraButton = view.findViewById(R.id.crop_camera_button)
-
-
         binding.cropGalleryButton.setOnClickListener {
 
             //--- Step 1. Pic
             openGallery()
-
-            //--- Step 2. Create Con
-            binding.apply {
-                imageCropViewModel.onCreateContact(
-                    arguments.contactPersonKey,
-                    "John Doe",
-                    "01-01-2000",
-                    if (binding.imageView.tag != null) binding.imageView.tag.toString() else "",
-                    byteArrayOf(0b00000001, 0b00000010)
-                )
-            }
         }
 
         binding.cropCameraButton.setOnClickListener {
@@ -106,7 +83,7 @@ class ImageCropFragment : Fragment() {
         }
 
         //--------------------------- Finish -------------------------------------------------------
-        return binding.root // return view
+        return binding.root
     }
 
 
@@ -173,8 +150,6 @@ class ImageCropFragment : Fragment() {
     }
 
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageData)
 
@@ -198,54 +173,39 @@ class ImageCropFragment : Fragment() {
                 }
                 CROP_IMAGE_REQUEST -> {
 
-                    ///saveImage(bitmap)
-                    ///loadImage()
+                    //=== saveImage(bitmap)
+                    // Get the image bitmap from the content URI
+                    var cropImageUri = imageData.data
+                    val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
 
-                    binding.imageView.setImageURI(imageData.data) //
+                    // Convert the image bitmap to byte array
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
+                    val imageBytes = byteArrayOutputStream.toByteArray()
+
+                    // Retrieve the image file name from the content URI
+                    val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)
+
+                    //ImageCropViewModel
+                    binding.apply {
+                        imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!!
+                        binding.imageView.tag = binding.imageCropViewModel?.liveDataContact?.value?.id
+                    }
+
+
                 }
             }
         }
     }
 
 
-/*    // Save the image in local SQLite database
-    fun saveImageToDatabase(context: Context, imageUri: Uri) {
-
-        // Get the image bitmap from the content URI
-        val bitmap = getBitmapFromUri(context.contentResolver, imageUri)
-
-
-        // Convert the image bitmap to byte array
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
-        val imageBytes = byteArrayOutputStream.toByteArray()
-
-
-        // Retrieve the image file name from the content URI
-        val fileName = getFileNameFromUri(context.contentResolver, imageUri)
-
-        // Save the image in the local SQLite database
-        val dbHelper = DatabaseHelper(context)
-        val db = dbHelper.writableDatabase
-
-        val values = ContentValues().apply {
-            put(DatabaseContract.ImageEntry.COLUMN_NAME_FILENAME, fileName)
-            put(DatabaseContract.ImageEntry.COLUMN_NAME_IMAGE, imageBytes)
-        }
-
-        db.insert(DatabaseContract.ImageEntry.TABLE_NAME, null, values)
-
-        // Close the database connection
-        dbHelper.close()
-
-    }
     // Helper function to get the image bitmap from the content URI
     fun getBitmapFromUri(contentResolver: ContentResolver, imageUri: Uri): Bitmap {
-
         return BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
-
     }
+
     // Helper function to retrieve the image file name from the content URI
+    @SuppressLint("Range")
     fun getFileNameFromUri(contentResolver: ContentResolver, imageUri: Uri): String {
 
         var fileName = ""
@@ -259,7 +219,7 @@ class ImageCropFragment : Fragment() {
 
         return fileName
 
-    }*/
+    }
 
 
 

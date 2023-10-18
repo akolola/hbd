@@ -53,6 +53,8 @@ class ImageCropViewModel (private val contactKey: Long = 0L, val database: Conta
 
     //-------------------- 'Create' <Button>.
     fun onCreateContact(contactId: Long, name: String, birthDate: String, imageNameId: String, imageBytes: ByteArray) {
+
+
         viewModelScope.launch {
 
             //--- 1
@@ -79,6 +81,13 @@ class ImageCropViewModel (private val contactKey: Long = 0L, val database: Conta
             // Set '(v) = true' --> Observer &  -> Navigation.
             //_navigateToContactTracker.value = true
 
+        }
+    }
+
+
+    fun onLoadContact(contactId: Long) {
+        viewModelScope.launch {
+            liveDataContact.value = getContactByIdFromDb(contactId)
         }
     }
     //--------------------

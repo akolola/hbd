@@ -3,7 +3,6 @@ package com.example.android.happybirthdates.contactdetails
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,8 @@ import com.example.android.happybirthdates.databinding.FragmentContactDetailsBin
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_contact_tracker_view_contact_list_grid_item.*
 import java.io.File
-import java.io.FileInputStream
-
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 private const val TAG = "ContactDetailsFragment"
@@ -76,10 +75,12 @@ class ContactDetailsFragment : Fragment() {
         //--------------------  'imageViewContactPicture' <ImageView>;
         //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
         contactDetailsViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
+
             // Set new img only if it was chosen by user. Otherwise Contact keeps imageNameId "Unnamed" => std 'ic_default_person' img.
             if(contactDetailsViewModel.liveDataContact.value != null && contactDetailsViewModel.liveDataContact.value!!.imageId.toString() != "Unnamed"){
-                loadImageFromInternalStorage(contactDetailsViewModel.liveDataContact.value!!.imageId.toString())
+                imageViewContactPicture.setImageURI(createImageUri(it.imageBytes))
             }
+
         })
         //--------------------
 
@@ -133,22 +134,26 @@ class ContactDetailsFragment : Fragment() {
     }
 
 
+
     /**
-     * For given filename determines path to the images resource &
-     * sets 'imageURI' param of 'imageViewContactPicture' <ImageView> to updated val.
+     * For given image from DB sets 'imageUri' param
      *
-     * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
+     * @param imageBytes representing an image to be used to compose an image file and then - its URI
      */
-    private fun loadImageFromInternalStorage(imageFileName: String) {
+    fun createImageUri(imageBytes: ByteArray): Uri? {
+        var imageUri: Uri? = null
         try {
-            val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
-            val fin = FileInputStream(absolutePath)
-            //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
-            imageViewContactPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
-            fin.close()
-        } catch (e : Exception ) {
-            Log.e(TAG, e.toString())
+            val cacheDir = context!!.cacheDir
+            val imageFile = File.createTempFile("image", ".jpg", cacheDir)
+            val fos = FileOutputStream(imageFile)
+            fos.write(imageBytes)
+            fos.flush()
+            fos.close()
+            imageUri = Uri.fromFile(imageFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
+        return imageUri
     }
 
 
