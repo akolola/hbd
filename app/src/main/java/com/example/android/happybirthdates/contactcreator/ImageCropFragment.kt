@@ -100,54 +100,7 @@ class ImageCropFragment : Fragment() {
     }
 
 
-    private fun startCropActivity(imageUri: Uri) {
 
-        // Create an explicit intent for the crop image action
-        val intent = Intent("com.android.camera.action.CROP")
-        intent.setDataAndType(imageUri, "image/*")
-
-        // Set the crop properties
-        intent.putExtra("crop", "true")
-        intent.putExtra("aspectX", 1)
-        intent.putExtra("aspectY", 1)
-        intent.putExtra("outputX", 300)
-        intent.putExtra("outputY", 300)
-        intent.putExtra("scale", true)
-
-        // Set the output format
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-
-        // Start the cropping activity
-        startActivityForResult(intent, CROP_IMAGE_REQUEST)
-
-    }
-
-    fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
-
-        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-        uri?.let {
-            try {
-                val outputStream = contentResolver.openOutputStream(uri)
-                outputStream?.let {
-                    image.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-                    outputStream.flush()
-                    outputStream.close()
-                    return uri
-                }
-            } catch (e: Exception) {
-                contentResolver.delete(uri, null, null)
-            }
-        }
-
-        return null
-
-    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
@@ -222,5 +175,55 @@ class ImageCropFragment : Fragment() {
     }
 
 
+
+
+    private fun startCropActivity(imageUri: Uri) {
+
+        // Create an explicit intent for the crop image action
+        val intent = Intent("com.android.camera.action.CROP")
+        intent.setDataAndType(imageUri, "image/*")
+
+        // Set the crop properties
+        intent.putExtra("crop", "true")
+        intent.putExtra("aspectX", 1)
+        intent.putExtra("aspectY", 1)
+        intent.putExtra("outputX", 300)
+        intent.putExtra("outputY", 300)
+        intent.putExtra("scale", true)
+
+        // Set the output format
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+
+        // Start the cropping activity
+        startActivityForResult(intent, CROP_IMAGE_REQUEST)
+
+    }
+
+    fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        uri?.let {
+            try {
+                val outputStream = contentResolver.openOutputStream(uri)
+                outputStream?.let {
+                    image.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                    return uri
+                }
+            } catch (e: Exception) {
+                contentResolver.delete(uri, null, null)
+            }
+        }
+
+        return null
+
+    }
 
 }
