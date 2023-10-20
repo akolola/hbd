@@ -87,7 +87,7 @@ class ImageCropFragment : Fragment() {
     }
 
 
-    private fun openGallery() {
+    private fun  openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
@@ -120,7 +120,7 @@ class ImageCropFragment : Fragment() {
                     binding.imageView.setImageBitmap(imageBitmap)
 
                     // Save the image to a file and get its URI
-                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)  //saveImageToFile(imageBitmap)
+                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)
 
                     imageContentUri?.let { startCropActivity(it) }
                 }

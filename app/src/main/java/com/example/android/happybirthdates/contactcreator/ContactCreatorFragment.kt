@@ -56,7 +56,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         private val TAKE_PICTURE_REQUEST = 2
         private val CROP_IMAGE_REQUEST = 3
 
-        private lateinit var binding: FragmentImageCropBinding
+        private lateinit var binding: FragmentContactCreatorBinding
+
 
         private var originalImageUri: Uri? = null
 
@@ -73,7 +74,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         //--------------------------- Preparation --------------------------------------------------
         //---------- (c) ContactCreatorFragment <- |fragment layout| fragment_contact_creator.
-        val binding: FragmentContactCreatorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact_creator, container, false)
+
 
         //---------- Technical (v) application.
         val application = requireNotNull(this.activity).application
@@ -227,7 +229,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
             }
         }
-    }*/
+    }
+*/
 
 /*    private fun saveImageToInternalStorage(imageBitmap : Bitmap, fileName: String) {
         try {
@@ -282,17 +285,17 @@ class ContactCreatorFragment : Fragment(), DateSelected {
             when (requestCode) {
                 PICK_IMAGE_REQUEST -> {
                     originalImageUri = imageData.data
-                    binding.imageView.setImageURI(originalImageUri)
+                    binding.imageButtonAddPicture.setImageURI(originalImageUri)
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
 
                     // Photo was taken successfully, access it using "data" Intent
                     val imageBitmap = imageData?.extras?.get("data") as Bitmap
-                    binding.imageView.setImageBitmap(imageBitmap)
+                    binding.imageButtonAddPicture.setImageBitmap(imageBitmap)
 
                     // Save the image to a file and get its URI
-                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)  //saveImageToFile(imageBitmap)
+                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)
 
                     imageContentUri?.let { startCropActivity(it) }
                 }
@@ -313,8 +316,13 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
                     //ImageCropViewModel
                     binding.apply {
-                        imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!!
-                        binding.imageView.tag = binding.imageCropViewModel?.liveDataContact?.value?.id
+
+                        //---------------------------------
+                        // imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!! //<====== ContactDetailsViewModel <- imageCropViewModel
+                        binding.imageButtonAddPicture.tag = binding.contactCreatorViewModel?.liveDataContact?.value?.id
+                        //---------------------------------
+
+
                     }
 
 

@@ -35,6 +35,27 @@ class ContactDetailsViewModel constructor(private val contactKey: Long = 0L, val
         }
     }
 
+    private suspend fun getLatestContactFromDb(): Contact? {
+        return database.getLatestContact()
+    }
+
+    private suspend fun getContactByIdFromDb(contactId: Long): Contact? {
+        return database.getContactWithIdNotLiveData(contactId)
+    }
+
+
+    private suspend fun insertContactIntoDb(person: Contact) {
+        withContext(Dispatchers.IO) {
+            database.insertContact(person)
+        }
+    }
+
+    private suspend fun updateContactInDb(person: Contact) {
+        withContext(Dispatchers.IO) {
+            database.updateContact(person)
+        }
+    }
+
 
 
     //--------------------------- GUI Elements -----------------------------------------------------
