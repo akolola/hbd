@@ -44,12 +44,11 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         private const val TAG = "ContactCreatorFragment"
 
+        private lateinit var binding: FragmentContactCreatorBinding
+
         private val PICK_IMAGE_REQUEST = 1
         private val TAKE_PICTURE_REQUEST = 2
         private val CROP_IMAGE_REQUEST = 3
-
-        private lateinit var binding: FragmentContactCreatorBinding
-
 
         private var originalImageUri: Uri? = null
         private var cropImageUri: Uri? = null
@@ -108,10 +107,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                 .setItems(arrayOf("Camera", "Gallery")) {  _ ,dialog   ->
                     when (dialog) {
                         0 -> {
-                            openCamera()
+                            startCameraActivity()
                         }
                         1 -> {
-                            openGallery()
+                            startGalleryActivity()
                         }
                     }
                 }
@@ -180,18 +179,40 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     //--------------------------- Image Picker -----------------------------------------------------
-    private fun openCamera() {
+    private fun startCameraActivity() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (activity?.let { intent.resolveActivity(it.packageManager) } != null) {
             startActivityForResult(intent, TAKE_PICTURE_REQUEST);
         }
     }
 
-
-    private fun openGallery() {
+    private fun startGalleryActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
+
+    private fun startCropActivity(imageUri: Uri) {
+
+        // Create an explicit intent for the crop image action
+        val intent = Intent("com.android.camera.action.CROP")
+        intent.setDataAndType(imageUri, "image/*")
+
+        // Set the crop properties
+        intent.putExtra("crop", "true")
+        intent.putExtra("aspectX", 1)
+        intent.putExtra("aspectY", 1)
+        intent.putExtra("outputX", 300)
+        intent.putExtra("outputY", 300)
+        intent.putExtra("scale", true)
+
+        // Set the output format
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+
+        // Start the cropping activity
+        startActivityForResult(intent, CROP_IMAGE_REQUEST)
+
+    }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageIntent: Intent?) {
@@ -209,11 +230,11 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                 // Camera activity result
                 TAKE_PICTURE_REQUEST -> {
                     //  (c) Bitmap
-                    val imageBitmap = imageIntent?.extras?.get("data") as Bitmap
+                    val originalImageBitmap = imageIntent?.extras?.get("data") as Bitmap
                     // (c) Uri
-                    val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)
+                    val orignialImageContentUri = getImageContentUri(originalImageBitmap, requireActivity().contentResolver)
                     // Crop Image Activity Start. (v) imageContentUri -> (c') CropActivity
-                    imageContentUri?.let { startCropActivity(it) }
+                    orignialImageContentUri?.let { startCropActivity(it) }
                 }
                 // Crop activity result
                 CROP_IMAGE_REQUEST -> {
@@ -277,29 +298,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         }
 
         return null
-
-    }
-
-
-    private fun startCropActivity(imageUri: Uri) {
-
-        // Create an explicit intent for the crop image action
-        val intent = Intent("com.android.camera.action.CROP")
-        intent.setDataAndType(imageUri, "image/*")
-
-        // Set the crop properties
-        intent.putExtra("crop", "true")
-        intent.putExtra("aspectX", 1)
-        intent.putExtra("aspectY", 1)
-        intent.putExtra("outputX", 300)
-        intent.putExtra("outputY", 300)
-        intent.putExtra("scale", true)
-
-        // Set the output format
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-
-        // Start the cropping activity
-        startActivityForResult(intent, CROP_IMAGE_REQUEST)
 
     }
 
