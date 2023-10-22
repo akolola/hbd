@@ -10,7 +10,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -38,13 +37,12 @@ import java.util.*
 
 
 
-
 class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     companion object {
+
         private const val TAG = "ContactCreatorFragment"
-/*        private const val PERMISSION_CODE = 1001*/
 
         private val PICK_IMAGE_REQUEST = 1
         private val TAKE_PICTURE_REQUEST = 2
@@ -55,7 +53,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         private var originalImageUri: Uri? = null
         private var cropImageUri: Uri? = null
-
 
     }
 
@@ -111,12 +108,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                 .setItems(arrayOf("Camera", "Gallery")) {  _ ,dialog   ->
                     when (dialog) {
                         0 -> {
-                            // Camera option selected, handle accordingly
                             openCamera()
                         }
                         1 -> {
-                            // Gallery option selected, handle accordingly
-                            // Example: launch gallery intent
                             openGallery()
                         }
                     }
@@ -129,16 +123,15 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         //--------------------  'imageViewContactPicture' <ImageView>;
         //---------- Observer; (v) ldContact, if (v)'s 'value' has 'imageNameId' => -> 'imageURI' param.
-/*        contactCreatorViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
+        /*
+        contactCreatorViewModel.liveDataContact.observe(viewLifecycleOwner, Observer {
             if(contactCreatorViewModel.liveDataContact.value != null){
                 loadImageFromInternalStorage(contactCreatorViewModel.liveDataContact.value!!.imageId.toString())
             }
-        })*/
+        })
+        */
         //--------------------
 
-        //-------------------- 'editTextName' <EditText>;
-        // n.a.
-        // --------------------
 
         //-------------------- 'datePickerButton' <Button>;
         //---------- Click listener; Create & display (c) DatePickerFragment.
@@ -154,22 +147,24 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
 
-                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
-                val imageBytes = byteArrayOutputStream.toByteArray()
-
-                // Retrieve the image file name from the content URI
+                // (v) fileName of image from content URI <- (v) content URI
                 val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)
 
+                // (v) imageBytes of image <- (v) content URI
+                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                val imageBytes = byteArrayOutputStream.toByteArray()
+
+                // (c) Contact -> |DB|
                 contactCreatorViewModel.onCreateContact(arguments.contactPersonKey, binding.editTextName.text.toString(), binding.textViewBirthdate.text.toString(), fileName, imageBytes)
+
             }
         }
         //---------- Observer; Navigating.
         contactCreatorViewModel.navigateToContactTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed state is true.
-                this.findNavController().navigate(
-                    ContactCreatorFragmentDirections.actionContactCreatorFragmentToContactTrackerFragment(false))
+                this.findNavController().navigate(ContactCreatorFragmentDirections.actionContactCreatorFragmentToContactTrackerFragment(false))
                 // Reset state to make sure we only navigate once, even if the device has a config change.
                 contactCreatorViewModel.doneNavigating()
             }
@@ -185,84 +180,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
     //--------------------------- Image Picker -----------------------------------------------------
-/*    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode) {
-            PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    chooseImageGallery()
-                } else {
-                    Toast.makeText(context!!, "Permission denied", Toast.LENGTH_SHORT).show()
-                    Log.i(TAG, "Pick image permission required")
-                }
-            }
-        }
-    }*/
-
-    /**
-     * The (m) starts picker to get image for cropping and then use the image in cropping activity.
-     */
-/*
-    private fun chooseImageGallery() {
-        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
-    }
-*/
-
-/*    override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
-        if(resultCode == Activity.RESULT_OK && imagePickResultIntent!=null){
-
-            // handle result of CropImageActivity
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-
-                val result = CropImage.getActivityResult(imagePickResultIntent)
-
-                if (resultCode == Activity.RESULT_OK){
-                    val resultImageUri: Uri? = result.uri
-                    val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, resultImageUri)
-                    imageButtonAddPicture.tag = "${UUID.randomUUID()}.png"
-                    val fileName = imageButtonAddPicture.tag.toString()
-                    saveImageToInternalStorage(bitmap, fileName)
-                    loadImageFromInternalStorage(fileName)
-
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Log.e(TAG, result.error.toString())
-                }
-
-            }
-        }
-    }
-*/
-
-/*    private fun saveImageToInternalStorage(imageBitmap : Bitmap, fileName: String) {
-        try {
-            // Use compress (m) on (o) Bitmap for: image -> OutputStream
-            val fos = context!!.openFileOutput(fileName, Context.MODE_PRIVATE)
-            // bitmap -> OutputStream
-            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            fos.close()
-        } catch (e : Exception ) {
-            Log.e(TAG, e.toString())
-        }
-    }*/
-
-    /**
-     * For given filename determines path to the images resource &
-     * sets 'imageURI' param of 'imageViewContactPicture' <ImageView> to updated val.
-     *
-     * @param imageFileName to be found in app memory & set as val for imageViewContactPicture' <ImageView>
-     */
-/*    private fun loadImageFromInternalStorage(imageFileName: String)   {
-        try {
-            val absolutePath = context!!.getFileStreamPath(imageFileName).absolutePath
-            val fin = FileInputStream(absolutePath)
-            //--- Update of 'imageViewContactPicture' <ImageView>'s 'URI' param by given image file
-            imageButtonAddPicture.setImageURI(Uri.parse(File(absolutePath).toString()))
-            fin.close()
-        } catch (e : Exception ) {
-            Log.e(TAG, e.toString())
-        }
-    }*/
-
-
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (activity?.let { intent.resolveActivity(it.packageManager) } != null) {
@@ -277,71 +194,51 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageIntent)
 
         if (resultCode == Activity.RESULT_OK && imageIntent != null) {
             when (requestCode) {
+                // Gallery activity result
                 PICK_IMAGE_REQUEST -> {
+                    // (c) Uri
                     originalImageUri = imageIntent.data
-                    binding.imageButtonAddPicture.setImageURI(originalImageUri)
+                    // Crop Image Activity Start. (v) imageContentUri -> (c') CropActivity
                     startCropActivity(originalImageUri!!)
                 }
+                // Camera activity result
                 TAKE_PICTURE_REQUEST -> {
-
-                    // Photo was taken successfully, access it using "data" Intent
+                    //  (c) Bitmap
                     val imageBitmap = imageIntent?.extras?.get("data") as Bitmap
-                    binding.imageButtonAddPicture.setImageBitmap(imageBitmap)
-
-                    // Save the image to a file and get its URI
+                    // (c) Uri
                     val imageContentUri = getImageContentUri(imageBitmap, requireActivity().contentResolver)
-
+                    // Crop Image Activity Start. (v) imageContentUri -> (c') CropActivity
                     imageContentUri?.let { startCropActivity(it) }
                 }
+                // Crop activity result
                 CROP_IMAGE_REQUEST -> {
-
-                    //=== saveImage(bitmap)
-                    // Get the image bitmap from the content URI
+                    // (c) Uri
                     cropImageUri = imageIntent.data
-                    val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
-
-                    // Convert the image bitmap to byte array
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-
-                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
-                    val imageBytes = byteArrayOutputStream.toByteArray()
-
-                    // Retrieve the image file name from the content URI
-                    val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)
-
-                    //ImageCropViewModel
+                    // 'imageButtonAddPicture' <imageButton>;
                     binding.apply {
-
-                        //---------------------------------
-                        // imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!!
                         binding.imageButtonAddPicture.tag = binding.contactCreatorViewModel?.liveDataContact?.value?.id
                         binding.imageButtonAddPicture.setImageURI(cropImageUri)
-                        //---------------------------------
-
-
                     }
-
-
                 }
             }
         }
+
     }
 
 
-    // Helper function to get the image bitmap from the content URI
-    fun getBitmapFromUri(contentResolver: ContentResolver, imageUri: Uri): Bitmap {
+
+    private fun getBitmapFromUri(contentResolver: ContentResolver, imageUri: Uri): Bitmap {
         return BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri))
     }
 
-    // Helper function to retrieve the image file name from the content URI
+
     @SuppressLint("Range")
-    fun getFileNameFromUri(contentResolver: ContentResolver, imageUri: Uri): String {
+    private fun getFileNameFromUri(contentResolver: ContentResolver, imageUri: Uri): String {
 
         var fileName = ""
         val cursor = contentResolver.query(imageUri, null, null, null, null)
@@ -356,7 +253,32 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     }
 
+    private fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
 
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        uri?.let {
+            try {
+                val outputStream = contentResolver.openOutputStream(uri)
+                outputStream?.let {
+                    image.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                    return uri
+                }
+            } catch (e: Exception) {
+                contentResolver.delete(uri, null, null)
+            }
+        }
+
+        return null
+
+    }
 
 
     private fun startCropActivity(imageUri: Uri) {
@@ -381,32 +303,6 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
     }
 
-    fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
-
-        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-        uri?.let {
-            try {
-                val outputStream = contentResolver.openOutputStream(uri)
-                outputStream?.let {
-                    image.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-                    outputStream.flush()
-                    outputStream.close()
-                    return uri
-                }
-            } catch (e: Exception) {
-                contentResolver.delete(uri, null, null)
-            }
-        }
-
-        return null
-
-    }
 
 
 
