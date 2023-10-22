@@ -7,20 +7,17 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -31,9 +28,6 @@ import com.example.android.happybirthdates.R
 import com.example.android.happybirthdates.contactdetails.ContactDetailsFragmentArgs
 import com.example.android.happybirthdates.database.ContactDatabase
 import com.example.android.happybirthdates.databinding.FragmentContactCreatorBinding
-import com.example.android.happybirthdates.databinding.FragmentImageCropBinding
-import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.fragment_contact_creator.*
 import java.io.*
 import java.text.SimpleDateFormat
@@ -60,6 +54,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
         private var originalImageUri: Uri? = null
+        private var cropImageUri: Uri? = null
 
 
     }
@@ -158,13 +153,16 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         //---------- Click listener; (c) CreatorViewModel <- (v)s picture info & name & birthdate.
         binding.buttonSubmit.setOnClickListener {
             binding.apply {
-                contactCreatorViewModel.onCreateContact(
-                    arguments.contactPersonKey,
-                    binding.editTextName.text.toString(),
-                    binding.textViewBirthdate.text.toString(),
-                    if (binding.imageButtonAddPicture.tag != null) binding.imageButtonAddPicture.tag.toString() else "",
-                    byteArrayOf(0b00000001, 0b00000010)
-                )
+
+                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
+                val imageBytes = byteArrayOutputStream.toByteArray()
+
+                // Retrieve the image file name from the content URI
+                val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)
+
+                contactCreatorViewModel.onCreateContact(arguments.contactPersonKey, binding.editTextName.text.toString(), binding.textViewBirthdate.text.toString(), fileName, imageBytes)
             }
         }
         //---------- Observer; Navigating.
@@ -203,9 +201,11 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     /**
      * The (m) starts picker to get image for cropping and then use the image in cropping activity.
      */
-/*    private fun chooseImageGallery() {
+/*
+    private fun chooseImageGallery() {
         CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).start(context!!, this)
-    }*/
+    }
+*/
 
 /*    override fun onActivityResult(requestCode: Int, resultCode: Int, imagePickResultIntent: Intent?) {
         if(resultCode == Activity.RESULT_OK && imagePickResultIntent!=null){
@@ -278,20 +278,20 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, imageData)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, imageIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, imageIntent)
 
-        if (resultCode == Activity.RESULT_OK && imageData != null) {
+        if (resultCode == Activity.RESULT_OK && imageIntent != null) {
             when (requestCode) {
                 PICK_IMAGE_REQUEST -> {
-                    originalImageUri = imageData.data
+                    originalImageUri = imageIntent.data
                     binding.imageButtonAddPicture.setImageURI(originalImageUri)
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
 
                     // Photo was taken successfully, access it using "data" Intent
-                    val imageBitmap = imageData?.extras?.get("data") as Bitmap
+                    val imageBitmap = imageIntent?.extras?.get("data") as Bitmap
                     binding.imageButtonAddPicture.setImageBitmap(imageBitmap)
 
                     // Save the image to a file and get its URI
@@ -303,11 +303,12 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
                     //=== saveImage(bitmap)
                     // Get the image bitmap from the content URI
-                    var cropImageUri = imageData.data
+                    cropImageUri = imageIntent.data
                     val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
 
                     // Convert the image bitmap to byte array
                     val byteArrayOutputStream = ByteArrayOutputStream()
+
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
                     val imageBytes = byteArrayOutputStream.toByteArray()
 
@@ -318,8 +319,9 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                     binding.apply {
 
                         //---------------------------------
-                        // imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!! //<====== ContactDetailsViewModel <- imageCropViewModel
+                        // imageCropViewModel?.onCreateContact(0L, "Jane Doe", "01-01-2000", fileName, imageBytes)!!
                         binding.imageButtonAddPicture.tag = binding.contactCreatorViewModel?.liveDataContact?.value?.id
+                        binding.imageButtonAddPicture.setImageURI(cropImageUri)
                         //---------------------------------
 
 
@@ -405,6 +407,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
         return null
 
     }
+
 
 
     //--------------------------- Date Picker ------------------------------------------------------

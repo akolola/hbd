@@ -103,20 +103,20 @@ class ImageCropFragment : Fragment() {
 
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, imageData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, imageData)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, imageIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, imageIntent)
 
-        if (resultCode == Activity.RESULT_OK && imageData != null) {
+        if (resultCode == Activity.RESULT_OK && imageIntent != null) {
             when (requestCode) {
                 PICK_IMAGE_REQUEST -> {
-                    originalImageUri = imageData.data
+                    originalImageUri = imageIntent.data
                     binding.imageView.setImageURI(originalImageUri)
                     startCropActivity(originalImageUri!!)
                 }
                 TAKE_PICTURE_REQUEST -> {
 
                     // Photo was taken successfully, access it using "data" Intent
-                    val imageBitmap = imageData?.extras?.get("data") as Bitmap
+                    val imageBitmap = imageIntent?.extras?.get("data") as Bitmap
                     binding.imageView.setImageBitmap(imageBitmap)
 
                     // Save the image to a file and get its URI
@@ -128,10 +128,9 @@ class ImageCropFragment : Fragment() {
 
                     //=== saveImage(bitmap)
                     // Get the image bitmap from the content URI
-                    var cropImageUri = imageData.data
-                    val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
+                    var cropImageUri = imageIntent.data
 
-                    // Convert the image bitmap to byte array
+                    val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)
                     val byteArrayOutputStream = ByteArrayOutputStream()
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream)
                     val imageBytes = byteArrayOutputStream.toByteArray()
