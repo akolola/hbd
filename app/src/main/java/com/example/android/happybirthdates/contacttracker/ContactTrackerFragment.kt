@@ -102,13 +102,6 @@ class ContactTrackerFragment : Fragment() {
                 contactTrackerViewModel.doneNavigatingToContactCreatorFragment()
             }
         })
-        contactTrackerViewModel.navigateToImageCroper.observe(viewLifecycleOwner, Observer {
-            if (it == true) {
-                this.findNavController().navigate(ContactTrackerFragmentDirections.actionContactTrackerFragmentToImageCropFragment(0))
-                // Reset state to make sure we only navigate once, even if the device has a configuration change.
-                contactTrackerViewModel.doneNavigatingToImageCropFragment()
-            }
-        })
         //--------------------
 
         //-------------------- 'buttonBackup' <Button>;

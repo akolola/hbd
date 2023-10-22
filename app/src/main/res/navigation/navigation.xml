@@ -20,11 +20,6 @@
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
         <action
-            android:id="@+id/action_contact_tracker_fragment_to_image_crop_fragment"
-            app:destination="@id/fragment_image_crop"
-            app:enterAnim="@anim/slide_in_right"
-            app:popEnterAnim="@anim/slide_in_right" />
-        <action
             android:id="@+id/action_contact_tracker_fragment_to_contact_details_fragment"
             app:destination="@id/contact_details_fragment"
             app:enterAnim="@anim/slide_in_right"
@@ -84,16 +79,6 @@
             app:destination="@id/contact_creator_fragment"
             app:enterAnim="@anim/slide_in_right"
             app:popEnterAnim="@anim/slide_in_right" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/fragment_image_crop"
-        android:name="com.example.android.happybirthdates.contactcreator.ImageCropFragment"
-        android:label="@string/fragment_image_crop"
-        tools:layout="@layout/fragment_image_crop">
-        <argument
-            android:name="contactPersonKey"
-            app:argType="long" />
     </fragment>
 
 </navigation>

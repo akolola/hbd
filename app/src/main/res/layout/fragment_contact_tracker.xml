@@ -15,20 +15,6 @@
         android:layout_height="match_parent"
         tools:context=".contacttracker.ContactTrackerFragment">
 
-        <Button
-            android:id="@+id/buttonCreate"
-            style="@style/ContactButtons"
-            android:layout_width="100dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="24dp"
-            android:onClick="@{() -> contactTrackerViewModel.onCreateIcTracking()}"
-            android:text="@string/create"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.083"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ToggleButton
             android:id="@+id/alarmToggle"
             android:layout_width="100dp"
@@ -36,9 +22,9 @@
             android:layout_marginTop="24dp"
             android:textOff="@string/alarm_off"
             android:textOn="@string/alarm_on"
-            app:layout_constraintEnd_toStartOf="@+id/buttonStorage"
-            app:layout_constraintHorizontal_bias="0.568"
-            app:layout_constraintStart_toEndOf="@+id/buttonCreate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.228"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -46,12 +32,11 @@
             style="@style/ContactButtons"
             android:layout_width="100dp"
             android:layout_height="48dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="24dp"
             android:onClick="@{() -> contactTrackerViewModel.onStorageTracking()}"
             android:text="@string/storage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.847"
-            app:layout_constraintStart_toEndOf="@+id/buttonCreate"
+            app:layout_constraintStart_toEndOf="@+id/alarmToggle"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
