@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/textViewContactName"
             android:layout_width="63dp"
-            android:layout_height="23dp"
+            android:layout_height="40dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/imageViewContactPicture"
             app:layout_constraintStart_toStartOf="@+id/imageViewContactPicture"
