@@ -237,7 +237,6 @@ class ContactTrackerFragment : Fragment() {
             mBinding.alarmToggle.isChecked = true
         }
 
-        Toast.makeText(requireContext(), getString(R.string.alarm_off_toast), Toast.LENGTH_SHORT).show()
         Log.d(TAG, "Service resumed")
 
 
