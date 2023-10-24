@@ -53,7 +53,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
     //--------------------
 
     //-------------------- 'Create' <Button>.
-    fun onCreateContact(contactId: Long, name: String, birthDate: String, imageNameId: String) {
+    fun onCreateContact(contactId: Long, name: String, birthDate: String, imageNameId: String, imageBytes: ByteArray) {
         viewModelScope.launch {
 
             //--- 1
@@ -73,6 +73,7 @@ class ContactCreatorViewModel constructor (private val contactKey: Long = 0L, va
             liveDataContact.name = name                                     // May be updated with empty string ""
             liveDataContact.birthDate = birthDate                           // May be updated with empty string ""
             if(imageNameId != "") liveDataContact.imageId = imageNameId // May NOT be updated with empty string ""
+            liveDataContact.imageBytes = imageBytes
             updateContactInDb(liveDataContact)
 
             //--- 3

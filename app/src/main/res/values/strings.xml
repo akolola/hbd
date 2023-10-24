@@ -26,14 +26,16 @@
     <!-- Descriptions and titles in GUI -->
     <string name="create_new_contact">Create new contact</string>
     <string name="cleared_message">Contacts deleted</string>
-    <string name="header_text">Your Contacts</string>
+    <string name="header_text">Your contacts</string>
     <string name="birthdate">&#160;Set birthdate</string>
     <string name="alarm_on_toast">Alarms activated</string>
     <string name="alarm_off_toast">Alarms deactivated</string>
     <string name="confirm_delete">Confirm delete</string>
     <string name="delete_confirmation_msg">Do you want to delete this contact?</string>
     <string name="input_name_text">Set name</string>
-
+    <string name="chose_option">"Choose an option"</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <!-- Push notification -->
     <string name="notification_title">Reminder</string>
@@ -52,6 +54,8 @@
     <string name="fragment_contact_backup">ContactBackupFragment</string>
     <string name="fragment_contact_details">ContactDetailsFragment</string>
     <string name="fragment_storage_backup">ContactStorageFragment</string>
+    <string name="fragment_image_crop">ImageCropFragment</string>
+
 
 
     <!-- Tech inner strings -->

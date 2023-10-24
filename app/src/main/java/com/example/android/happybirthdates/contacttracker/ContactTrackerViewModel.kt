@@ -31,6 +31,12 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
             _navigateToContactCreator.value = true
         }
     }
+
+    fun onCreateIcTracking() {
+        viewModelScope.launch {
+            _navigateToImageCrop.value = true
+        }
+    }
     //--------------------
     //---------- <ImageView> 'imageViewContactPicture' is clicked.
     fun onContactClicked(contactId: Long) {
@@ -55,14 +61,23 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     fun doneNavigatingToContactCreatorFragment() {
         _navigateToContactCreator.value = null
     }
+
+    //---------- (c) ContactTrackerFragment => (c) ImageCropFragment.
+    private val _navigateToImageCrop = MutableLiveData<Boolean?>()
+    val navigateToImageCroper: LiveData<Boolean?>
+        get() = _navigateToImageCrop
+    fun doneNavigatingToImageCropFragment() {
+        _navigateToImageCrop.value = null
+    }
+
     //---------- (c) ContactTrackerFragment => (c) ContactDetailsFragment.
     private val _navigateToContactDetails = MutableLiveData<Long>()
-
     val navigateToContactDetails
         get() = _navigateToContactDetails
     fun doneNavigatingToContactDetailsFragment() {
         _navigateToContactDetails.value = null
     }
+
     //---------- (c) ContactTrackerFragment => (c) ContactStorageFragment.
     private val _navigateToContactStorage = MutableLiveData<Boolean?>()
     val navigateToContactStorage: LiveData<Boolean?>
@@ -70,5 +85,8 @@ class ContactTrackerViewModel constructor(isContactDeleted : Boolean, val databa
     fun doneNavigatingToContactStorageFragment() {
         _navigateToContactStorage.value = null
     }
+
+
+
 
 }

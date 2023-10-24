@@ -51,6 +51,19 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <!--                                 Provider                                                -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.happybirthdates.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
+
+
 
 </manifest>
