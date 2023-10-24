@@ -161,10 +161,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
                 // (v) fileName of image from content URI <- (v) content URI
-                val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)///if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
+                val fileName = getFileNameFromUri(requireActivity().contentResolver, if(cropImageUri != null)  cropImageUri!! else preSavedImageUri!!)
 
                 // (v) imageBytes of image <- (v) content URI
-                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)///if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
+                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, if(cropImageUri != null)  cropImageUri!! else preSavedImageUri!!)
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
                 val imageBytes = byteArrayOutputStream.toByteArray()
