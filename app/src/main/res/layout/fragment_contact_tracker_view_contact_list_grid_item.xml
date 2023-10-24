@@ -35,6 +35,7 @@
             android:layout_width="63dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="@+id/imageViewContactPicture"
             app:layout_constraintStart_toStartOf="@+id/imageViewContactPicture"
             app:layout_constraintTop_toBottomOf="@+id/imageViewContactPicture"

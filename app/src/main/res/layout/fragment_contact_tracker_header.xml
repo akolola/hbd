@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:text="@string/header_text"
-    android:padding="8dp" />
+    android:padding="8dp"
+    android:gravity="center"/>
