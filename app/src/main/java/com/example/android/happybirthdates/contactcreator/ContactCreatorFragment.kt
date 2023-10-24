@@ -1,5 +1,6 @@
 package com.example.android.happybirthdates.contactcreator
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -8,6 +9,7 @@ import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -17,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -43,6 +46,8 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     companion object {
 
         private const val TAG = "ContactCreatorFragment"
+
+        private const val READ_EXTERNAL_STORAGE_REQUEST_CODE = 123
 
         private lateinit var binding: FragmentContactCreatorBinding
 
@@ -156,10 +161,10 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
 
                 // (v) fileName of image from content URI <- (v) content URI
-                val fileName = getFileNameFromUri(requireActivity().contentResolver, if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
+                val fileName = getFileNameFromUri(requireActivity().contentResolver, cropImageUri!!)///if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
 
                 // (v) imageBytes of image <- (v) content URI
-                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
+                val imageBitmap = getBitmapFromUri(requireActivity().contentResolver, cropImageUri!!)///if(cropImageUri!! != null && preSavedImageUri!! != null)  cropImageUri!! else preSavedImageUri!!)
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
                 val imageBytes = byteArrayOutputStream.toByteArray()
@@ -275,7 +280,20 @@ class ContactCreatorFragment : Fragment(), DateSelected {
                     // 'imageButtonAddPicture' <imageButton>;
                     binding.apply {
                         binding.imageButtonAddPicture.tag = binding.contactCreatorViewModel?.liveDataContact?.value?.id
-                        binding.imageButtonAddPicture.setImageURI(cropImageUri)
+
+                        // Checking if permission is granted and requesting it if not
+                        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            // Permission not granted, request it
+                            requestPermissions(
+                                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                                READ_EXTERNAL_STORAGE_REQUEST_CODE
+                            )
+                        } else {
+                            // Permission already granted, proceed with setting the image URI
+                            binding.imageButtonAddPicture.setImageURI(cropImageUri)
+                        }
                     }
                 }
             }
@@ -309,7 +327,7 @@ class ContactCreatorFragment : Fragment(), DateSelected {
     private fun getImageContentUri(image: Bitmap, contentResolver: ContentResolver): Uri? {
 
         val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "image.jpg")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "${UUID.randomUUID()}.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
 
@@ -331,6 +349,21 @@ class ContactCreatorFragment : Fragment(), DateSelected {
 
         return null
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with setting the image URI
+                binding.imageButtonAddPicture.setImageURI(cropImageUri)
+            } else {
+                // Permission denied, handle this case
+            }
+        }
     }
 
 
