@@ -6,12 +6,12 @@ The simple Android application storing birthdays of contacts (e.g. people, organ
 The contact list is editable and its backup copy can be stored on a Google Drive.  
 A push notification, after activated, reminds about soon or today's contact birthday (2,1 days before and at the birthday).
 
-![Contact_Creation](screenshots/Contact_Creation.jpg)
-![Contact_List](screenshots/Contact_List.jpg)
-![Datepicker](screenshots/Datepicker.jpg)
-![Image_Crop](screenshots/Image_Crop.jpg)
-![Backup](screenshots/Backup.jpg)
-![Push_Notification](screenshots/Push_Notification.jpg)
+![Contact_Creation](screenshots/Contact_Creation.jpg =558x1240) 
+![Contact_List](screenshots/Contact_List.jpg =558x1240)
+![Datepicker](screenshots/Datepicker.jpg =558x1240)
+![Image_Crop](screenshots/Image_Crop.jpg =558x1240)
+![Backup](screenshots/Backup.jpg =558x1240)
+![Push_Notification](screenshots/Push_Notification.jpg =558x1240)
 
 ## Download and run the application
 
