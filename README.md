@@ -7,12 +7,11 @@ The contact list is editable and its backup copy can be stored on a Google Drive
 A push notification, after activated, reminds about soon or today's contact birthday (2,1 days before and at the birthday).
 
 <img src="screenshots/Contact_Creation.jpg" width="200" height="444">
-![Contact_Creation](screenshots/Contact_Creation.jpg) 
-![Contact_List](screenshots/Contact_List.jpg =558x1240)
-![Datepicker](screenshots/Datepicker.jpg =558x1240)
-![Image_Crop](screenshots/Image_Crop.jpg =558x1240)
-![Backup](screenshots/Backup.jpg =558x1240)
-![Push_Notification](screenshots/Push_Notification.jpg =558x1240)
+<img src="screenshots/Contact_List.jpg.jpg" width="200" height="444">
+<img src="screenshots/Datepicker.jpg" width="200" height="444">
+<img src="screenshots/Image_Crop.jpg" width="200" height="444">
+<img src="screenshots/Backup.jpg" width="200" height="444">
+<img src="screenshots/Push_Notification.jpg" width="200" height="444">
 
 ## Download and run the application
 
